@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tv="http://schemas.android.com/apk/res/com.tv.mytv"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+   >
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="visible" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="该分类暂时没有内容"
+            android:textSize="35px"
+            android:visibility="gone"
+            android:id="@+id/none"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/color_gray_text"
+            >
+        </TextView>
+    <!--<GridView-->
+        <!--android:visibility="gone"-->
+        <!--android:listSelector="@android:color/transparent"-->
+        <!--android:numColumns="3"-->
+        <!--android:id="@+id/rv_more"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_marginTop="42px" />-->
+
+    <!--<android.support.v7.widget.RecyclerView-->
+    <!--android:layout_marginTop="42px"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/rv_more"-->
+    <!--&gt;-->
+
+    <!--</android.support.v7.widget.RecyclerView>-->
+    <!--<TextView-->
+    <!--android:id="@+id/tv"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:textColor="#f00" />-->
+
+    <!-- 此处有五个自定义参数:
+      cursorRes指定光标图片
+      itemWidth为子项宽度
+      itemHeight为子项高度
+      rows为行数
+      animationType 动画类型 默认效果为跃迁 也可设为 TRANSLATE 平移 -->
+
+    <!--initFocus 禁止控件初始化时获取焦点-->
+
+    <reco.frame.tv.view.TvGridView
+        android:id="@+id/rv_more"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/px1920"
+        android:layout_marginTop="30px"
+        tv:cursorRes="@drawable/border_selected"
+        tv:itemWidth="@dimen/px398"
+        tv:itemHeight="@dimen/px395"
+        tv:columns="3"
+        android:visibility="gone"
+        tv:paddingLeft="@dimen/px21"
+        tv:paddingTop="@dimen/px21"
+        tv:animationType="DEFAULT"
+        tv:initFocus="false"
+        />
+</RelativeLayout>

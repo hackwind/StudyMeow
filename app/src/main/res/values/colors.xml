@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="color_gray">#D0D0D0</color>
+    <color name="color_gray_text">#A3A3A3</color>
+    <color name="gridview_bg">#373737</color>
+    <color name="orange_bg">#FE6F02</color>
+    <color name="transparent_gray">#8000</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="selector">#3EAF05</color>
+
+    <color name="transparent">#00000000</color>
+    <color name="mediacontroller_bg_pressed">#ff53c1bd</color>
+    <color name="mediacontroller_bg">#99000000</color>
+    <color name="menu_selector">#3EAF05</color>
+</resources>

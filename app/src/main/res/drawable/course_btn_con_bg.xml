@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--触摸模式下点击时候的背景图片-->
+    <item android:drawable="@drawable/collection_down" android:state_selected="true"></item>
+    <!--默认时候的背景图片-->
+    <item android:drawable="@drawable/collection_up" android:state_selected="false"></item>
+</selector>

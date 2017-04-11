@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFF"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/input_tv"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical"
+        android:textSize="25sp" />
+
+    <com.open.androidtvwidget.keyboard.SkbContainer
+        android:id="@+id/skbContainer"
+        android:layout_width="match_parent"
+        android:layout_height="300dp">
+    </com.open.androidtvwidget.keyboard.SkbContainer>
+
+    <reco.frame.tv.view.TvHorizontalGridView
+        xmlns:tv="http://schemas.android.com/apk/res/com.tv.mytv"
+        android:id="@+id/tgv_list"
+        android:layout_width="@dimen/px1280"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30px"
+        tv:cursorRes="@drawable/border_selected"
+        tv:itemWidth="@dimen/px398"
+        tv:itemHeight="@dimen/px395"
+        tv:columns="3"
+        tv:paddingLeft="@dimen/px21"
+        tv:paddingTop="@dimen/px21"
+        tv:animationType="DEFAULT"
+        tv:initFocus="false"
+        />
+
+</LinearLayout>
