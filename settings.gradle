@@ -1,1 +1,1 @@
-include ':app', ':PushSDK', ':androidtvwidget'
+include ':app', ':androidtvwidget'

@@ -24,7 +24,6 @@ import com.tv.mytv.util.LogUtil;
 import com.tv.mytv.util.SharePrefUtil;
 import com.tv.mytv.view.MyListView;
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.message.PushAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (null == savedInstanceState){
-            PushAgent.getInstance(this).onAppStart();
             setContentView(R.layout.activity_main);
             initViews();
             initData();

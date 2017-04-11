@@ -29,7 +29,6 @@ import com.tv.mytv.util.LogUtil;
 import com.tv.mytv.util.ToastUtil;
 import com.tv.mytv.util.Util;
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.message.PushAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -86,7 +85,6 @@ public class CourseDetailsActivity extends Activity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PushAgent.getInstance(this).onAppStart();
         setContentView(R.layout.activity_coursedetails);
         videoId = getIntent().getStringExtra("id");
         catId = getIntent().getStringExtra("catId");

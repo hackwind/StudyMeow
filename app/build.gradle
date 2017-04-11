@@ -53,6 +53,5 @@ dependencies {
     compile 'com.orhanobut:logger:1.15'
     compile files('libs/universal-image-loader-1.9.5.jar')
     compile 'com.umeng.analytics:analytics:latest.integration'
-    compile project(':PushSDK')
     compile project(':androidtvwidget')
 }

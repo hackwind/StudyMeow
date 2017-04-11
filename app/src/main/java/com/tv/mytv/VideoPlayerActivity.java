@@ -28,7 +28,6 @@ import com.tv.mytv.util.ToastUtil;
 import com.tv.mytv.util.Util;
 import com.tv.mytv.view.MyMediaController;
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.message.PushAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +101,6 @@ public class VideoPlayerActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_videoplayer);
-        PushAgent.getInstance(this).onAppStart();
 //        videoPath = getIntent().getStringExtra("videoPath");
         title = getIntent().getStringExtra("title");
         source = getIntent().getStringExtra("source");
