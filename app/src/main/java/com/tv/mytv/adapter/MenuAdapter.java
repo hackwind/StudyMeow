@@ -1,6 +1,7 @@
 package com.tv.mytv.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -44,6 +45,9 @@ public class MenuAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         View view = View.inflate(context, R.layout.menu_list_item, null);
         TextView radioButton = (TextView)view.findViewById(R.id.rb_item);
+//        Drawable leftDraw = context.getResources().getDrawable(msg.get(position).getResId());
+
+        radioButton.setCompoundDrawablesWithIntrinsicBounds(msg.get(position).getResId(),0,0,0);
 //        radioButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {

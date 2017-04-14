@@ -12,8 +12,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.tv.mytv.CourseDetailsActivity;
-import com.tv.mytv.MyApplication;
+import com.tv.mytv.activity.CourseDetailsActivity;
+import com.tv.mytv.activity.MyApplication;
 import com.tv.mytv.R;
 import com.tv.mytv.adapter.CenterContentAdapter;
 import com.tv.mytv.adapter.GridViewAdapter;

@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.ImageView;
 
-import com.tv.mytv.MyApplication;
+import com.tv.mytv.activity.MyApplication;
 import com.tv.mytv.R;
 import com.tv.mytv.util.LogUtil;
 import com.tv.mytv.util.ToastUtil;

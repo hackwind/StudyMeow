@@ -41,6 +41,7 @@ public class MenuList {
 
         private String catid;
         private String catname;
+        private int resId;
 
         public String getCatid() {
             return catid;
@@ -57,5 +58,9 @@ public class MenuList {
         public void setCatname(String catname) {
             this.catname = catname;
         }
+
+        public void setResId(int resId) {this.resId = resId;}
+
+        public int getResId() {return this.resId;}
     }
 }

@@ -6,7 +6,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 
-import com.tv.mytv.MyApplication;
+import com.tv.mytv.activity.MyApplication;
 import com.tv.mytv.util.LogUtil;
 import com.tv.mytv.util.ToastUtil;
 import com.tv.mytv.util.Util;

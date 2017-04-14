@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.tv.mytv.CourseDetailsActivity;
+import com.tv.mytv.activity.CourseDetailsActivity;
 import com.tv.mytv.R;
 import com.tv.mytv.bean.VedioList;
 import com.tv.mytv.fragment.VedioListAllHotFragment;

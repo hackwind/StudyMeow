@@ -5,7 +5,7 @@ import android.content.Context;
 import android.os.Looper;
 
 import com.orhanobut.logger.Logger;
-import com.tv.mytv.MyApplication;
+import com.tv.mytv.activity.MyApplication;
 import com.umeng.analytics.MobclickAgent;
 
 import java.text.DateFormat;

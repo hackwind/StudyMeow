@@ -1,93 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tv="http://schemas.android.com/apk/res/com.tv.mytv"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000"
-    android:orientation="horizontal">
+    android:background="@mipmap/main_background"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="415px"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginTop="130px">
+    <ImageView
+        android:layout_width="@dimen/w_184"
+        android:layout_height="@dimen/h_50"
+        android:background="@mipmap/logo"
+        android:layout_marginLeft="@dimen/w_80"
+        android:layout_marginTop="@dimen/w_40"
+        android:layout_alignParentLeft="true"/>
 
-        <LinearLayout
-            android:id="@+id/search_linear"
+
+    <RelativeLayout
+        android:id="@+id/user_container"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/h_40"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/w_40"
+        android:layout_marginRight="@dimen/w_80">
+
+        <com.tv.mytv.widget.TimerView
+            android:id="@+id/time"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="120px"
-            android:layout_marginTop="145px"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:visibility="gone">
+            android:layout_height="@dimen/h_40"
+            android:textSize="@dimen/w_30"
+            android:textColor="#66FFFFFF"
+            android:text="22:00"
+            android:gravity="bottom"
+            android:layout_marginRight="@dimen/w_60"/>
 
-            <ImageView
-                android:layout_width="48px"
-                android:layout_height="48px"
-                android:background="@mipmap/search" />
-
-            <Button
-                android:id="@+id/tv_search"
-                android:layout_width="90px"
-                android:layout_height="50px"
-                android:layout_marginLeft="20px"
-                android:background="@android:color/transparent"
-                android:text="搜索"
-                android:textColor="@drawable/button_seletor"
-                android:textSize="42px" />
-
-        </LinearLayout>
-
-        <com.tv.mytv.view.MyListView
-            android:id="@+id/lv_menu"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="72px"
-            android:background="@android:color/transparent"
-            android:divider="@null"
-            android:listSelector="@android:color/transparent" />
-
-        <!--tv:itemWidth="@dimen/px1122"-->
-        <!--tv:itemHeight="@dimen/px80"-->
-        <!--tv:paddingLeft="@dimen/px21"-->
-        <!---->
-        <!--tv:paddingTop="@dimen/px4"-->
-        <!-- 此处有四个自定义参数: cursorRes指定光标图片 itemWidth为子项宽度 itemHeight为子项高度 focusOption为焦点模式(默认子控件得焦点)-->
-        <!--<reco.frame.tv.view.TvListView-->
-            <!--android:id="@+id/lv_menu"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_marginLeft="72px"-->
-            <!--tv:cursorRes="@drawable/cursor_rectangle_boarder_orange"-->
-            <!--android:divider="@null"-->
-            <!--android:layout_below="@+id/search_linear"-->
-            <!--tv:itemWidth="236px"-->
-            <!--tv:itemHeight="64px"-->
-            <!--&gt;-->
-        <!--</reco.frame.tv.view.TvListView>-->
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/user_icon"
+            android:layout_width="@dimen/w_42"
+            android:layout_height="@dimen/h_40"
+            android:layout_gravity="bottom"
+            android:layout_toRightOf="@id/time"
+            android:src="@mipmap/login"
+            android:visibility="gone"/>
 
         <TextView
-            android:id="@+id/tv_menu"
+            android:id="@+id/login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24px"
-            android:textSize="42px" />
+            android:layout_toRightOf="@id/time"
+            android:drawableLeft="@mipmap/login"
+            android:drawablePadding="@dimen/w_12"
+            android:gravity="bottom"
+            android:text="@string/login"
+            android:textColor="#66FFFFFF"
+            android:textSize="@dimen/w_30" />
 
-        <FrameLayout
-            android:id="@+id/fl_vedio_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
 
-    </LinearLayout>
 
-</LinearLayout>
+    </RelativeLayout>
+
+    <com.tv.mytv.view.MyListView
+        android:id="@+id/lv_menu"
+        android:layout_width="@dimen/w_268"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/w_80"
+        android:layout_marginRight="@dimen/w_90"
+        android:layout_marginTop="@dimen/h_274"
+        android:divider="@null"
+        android:listSelector="@android:color/transparent" />
+
+    <FrameLayout
+        android:id="@+id/fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/h_120"
+        android:layout_toRightOf="@id/lv_menu"
+        android:layout_marginRight="@dimen/w_80"
+        android:background="@android:color/white"/>
+
+
+
+</RelativeLayout>
