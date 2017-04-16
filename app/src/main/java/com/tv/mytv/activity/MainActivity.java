@@ -18,9 +18,6 @@ import com.tv.mytv.R;
 import com.tv.mytv.adapter.MenuAdapter;
 import com.tv.mytv.bean.MenuList;
 import com.tv.mytv.fragment.MainFragment;
-import com.tv.mytv.fragment.VedioListFragment;
-import com.tv.mytv.http.HttpAddress;
-import com.tv.mytv.http.HttpRequest;
 import com.tv.mytv.util.LogUtil;
 import com.tv.mytv.util.SharePrefUtil;
 import com.tv.mytv.view.MyListView;
@@ -29,19 +26,20 @@ import com.umeng.analytics.MobclickAgent;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Fragment[] fragments;
+    private MainFragment fragment;
     private int currentTabIndex;
     private MyListView menuListView;
     private List<MenuList.MsgBean> msg;
     private MenuAdapter menuAdapter;
-    private String menu;
     private int keyBackClickCount = 0;
+    private TextView tvLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-//        menuListView.setOnItemSelectListener(new TvListView.OnItemSelectListener() {
+//        menuListView.setOnItemSelectListener(new MyListView.OnItemSelectListener() {
 //
 //            @Override
 //            public void onItemSelect(View item, int position) {
@@ -92,41 +90,45 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        tvLogin = (TextView)findViewById(R.id.login);
+        tvLogin.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) {
+                    tvLogin.setSelected(true);
+                } else {
+                    tvLogin.setSelected(false);
+                }
+            }
+        });
     }
 
     private void initData() {
-//        menu = SharePrefUtil.getString(MainActivity.this, "menu", "");
-        menu = "{\"status\":true,\"msg\":[{\"catid\":\"1\",\"catname\":\"我的\",\"resId\":" + R.drawable.selector_menu_my + "},{\"catid\":\"2\",\"catname\":\"分类\",\"resId\":" + R.drawable.selector_menu_category + "},{\"catid\":\"3\",\"catname\":\"设置\",\"resId\":" + R.drawable.selector_menu_setup +"}]}";
-        if (!TextUtils.isEmpty(menu)) {
-            onSuccess(menu);
-        }
 //        HttpRequest.get(HttpAddress.MENU_URL,null,MainActivity.this,"MyResult",null,MainActivity.this);
+        List<MenuList.MsgBean> menus = new ArrayList<MenuList.MsgBean>();
+        MenuList.MsgBean beanMy = new MenuList.MsgBean();
+        beanMy.setCatname("我的");
+        beanMy.setResId(R.drawable.selector_menu_my);
+        menus.add(beanMy);
 
+        MenuList.MsgBean beanCategory = new MenuList.MsgBean();
+        beanCategory.setCatname("分类");
+        beanCategory.setResId(R.drawable.selector_menu_category);
+        menus.add(beanCategory);
+
+        MenuList.MsgBean beanSetup = new MenuList.MsgBean();
+        beanSetup.setCatname("设置");
+        beanSetup.setResId(R.drawable.selector_menu_setup);
+        menus.add(beanSetup);
+
+        initMenu(menus);
     }
 
-    public void MyResult(String result){
-        LogUtil.i(result);
-        try {
-            JSONObject jsonObject = new JSONObject(result);
-            if (jsonObject.getBoolean("status")){
-                SharePrefUtil.saveString(MainActivity.this, "menu", result);
-                Gson gson = new Gson();
-                MenuList menuList = gson.fromJson(result, MenuList.class);
-                msg = menuList.getMsg();
-                if (TextUtils.isEmpty(menu)){
-                    menuAdapter = new MenuAdapter(MainActivity.this, msg);
-                    menuListView.setAdapter(menuAdapter);
-                    menuListView.setItemChecked(0,true);
-                    initFragments();
-                }else {
-                    menuAdapter.notifyDataSetChanged();
-                }
-            } else {
-                Toast.makeText(MainActivity.this, jsonObject.getString("msg"), Toast.LENGTH_SHORT).show();
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    public void initMenu(List<MenuList.MsgBean> menus){
+            menuAdapter = new MenuAdapter(MainActivity.this, menus);
+            menuListView.setAdapter(menuAdapter);
+            menuListView.setItemChecked(0,true);
+            initFragments();
     }
 
     private void onSuccess(String result) {
@@ -153,25 +155,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void initFragments() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        fragments = new Fragment[msg.size()];
-        for (int i = 0; i < msg.size(); i++) {
-            MainFragment vedioListFragment = new MainFragment();
-//            vedioListFragment.setcatid(msg.get(i).getCatid());
-            if (i == 0) {
-                ft.add(R.id.fragment, vedioListFragment).show(vedioListFragment).commit();
-            }
-            fragments[i] = vedioListFragment;
-        }
+        fragment = new MainFragment();
+        ft.add(R.id.fragment,fragment);
+        ft.show(fragment).commit();
     }
 
     public void changeFragment(int index) {
         if (currentTabIndex != index) {
             FragmentTransaction fragmentManager = getSupportFragmentManager().beginTransaction();
-            fragmentManager.hide(fragments[currentTabIndex]);
-            if (!fragments[index].isAdded()) {
-                fragmentManager.add(R.id.fragment, fragments[index]);
-            }
-            fragmentManager.show(fragments[index]).commit();
+            fragmentManager.show(fragment).commit();
             currentTabIndex = index;
         }
     }

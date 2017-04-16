@@ -48,7 +48,7 @@ public class TimerView extends AppCompatTextView {
                 DateFormat sdf = new SimpleDateFormat("HH:mm");
                 formatDate = sdf.format(date);
                 setText(formatDate);
-                sendMessageDelayed(Message.obtain(),60000);
+                sendMessageDelayed(Message.obtain(),10000);
             }
         }
     }

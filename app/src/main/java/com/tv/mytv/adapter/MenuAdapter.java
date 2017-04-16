@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -45,26 +46,19 @@ public class MenuAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         View view = View.inflate(context, R.layout.menu_list_item, null);
         TextView radioButton = (TextView)view.findViewById(R.id.rb_item);
+        ImageView raidoIcon = (ImageView)view.findViewById(R.id.icon);
+        raidoIcon.setImageResource(msg.get(position).getResId());
 //        Drawable leftDraw = context.getResources().getDrawable(msg.get(position).getResId());
-
-        radioButton.setCompoundDrawablesWithIntrinsicBounds(msg.get(position).getResId(),0,0,0);
-//        radioButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (radioButton != checked){
-//                    checked.setChecked(fToastUtilalse);
-//                    checked = radioButton;
 //
-//                    ((MainActivity)context).changeFragment(position);
-//
-//                }
-//            }
-//        });
+//        radioButton.setCompoundDrawablesWithIntrinsicBounds(msg.get(position).getResId(),0,0,0);
+//        radioButton.setCompoundDrawablePadding((int)context.getResources().getDimension(R.dimen.w_40));
         radioButton.setText(msg.get(position).getCatname());
-//        if (position == 0){
-//            radioButton.setChecked(true);
-//            checked = radioButton;
-//        }
+        if (position == 0){
+            view.setSelected(true);
+            view.requestFocus();
+        } else {
+            view.setSelected(false);
+        }
         return view;
     }
 }

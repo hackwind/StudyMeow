@@ -34,27 +34,28 @@
             android:gravity="bottom"
             android:layout_marginRight="@dimen/w_60"/>
 
-        <ImageView
-            android:id="@+id/user_icon"
-            android:layout_width="@dimen/w_42"
-            android:layout_height="@dimen/h_40"
-            android:layout_gravity="bottom"
-            android:layout_toRightOf="@id/time"
-            android:src="@mipmap/login"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/login"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/time"
-            android:drawableLeft="@mipmap/login"
-            android:drawablePadding="@dimen/w_12"
-            android:gravity="bottom"
-            android:text="@string/login"
-            android:textColor="#66FFFFFF"
-            android:textSize="@dimen/w_30" />
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/w_12"
+            android:layout_toRightOf="@id/time">
+            <ImageView
+                android:id="@+id/user_icon"
+                android:layout_width="@dimen/w_42"
+                android:layout_height="@dimen/h_40"
+                android:layout_gravity="bottom"
+                android:src="@mipmap/login"/>
 
+            <TextView
+                android:id="@+id/login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="bottom"
+                android:text="@string/login"
+                android:textColor="#66FFFFFF"
+                android:textSize="@dimen/w_30" />
+        </LinearLayout>
 
 
     </RelativeLayout>
@@ -64,9 +65,10 @@
         android:layout_width="@dimen/w_268"
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/w_80"
-        android:layout_marginRight="@dimen/w_90"
+        android:layout_marginRight="@dimen/w_70"
         android:layout_marginTop="@dimen/h_274"
         android:divider="@null"
+        android:dividerHeight="@dimen/h_46"
         android:listSelector="@android:color/transparent" />
 
     <FrameLayout
@@ -75,8 +77,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/h_120"
         android:layout_toRightOf="@id/lv_menu"
-        android:layout_marginRight="@dimen/w_80"
-        android:background="@android:color/white"/>
+        android:layout_marginRight="@dimen/w_80"/>
 
 
 
