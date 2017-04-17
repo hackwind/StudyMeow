@@ -54,6 +54,8 @@ public class ListActivity extends AppCompatActivity implements RecyclerViewTV.On
     private GeneralAdapter mMyGeneralAdapter;
     private RecyclerViewBridge mRecyclerViewBridge;
 
+    private MainUpView mainUpView1;
+
     private TextView categoryName;
     private TextView pageCount;
     private View oldView;
@@ -62,6 +64,7 @@ public class ListActivity extends AppCompatActivity implements RecyclerViewTV.On
     private String catName;
     private int page = 1;
     private int pageSize = 10;
+    private int leftMenuSelectedIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,26 +134,17 @@ public class ListActivity extends AppCompatActivity implements RecyclerViewTV.On
 
             @Override
             public void onItemSelected(RecyclerViewTV parent, View itemView, int position) {
+                leftMenuSelectedIndex = position;
                 mainUpView.setFocusView(itemView, 1.0f);
                 oldView = itemView;
 //                onViewItemClick(itemView, position,false);
 
-                switch (position) {
-                    case 0:
-                        itemView.setBackgroundResource(R.drawable.left_menu_checkde);
-                        leftMenu.getChildAt(1).setBackgroundColor(Color.TRANSPARENT);
-                        leftMenu.getChildAt(2).setBackgroundColor(Color.TRANSPARENT);
-                        break;
-                    case 1:
-                        itemView.setBackgroundResource(R.drawable.left_menu_checkde);
-                        leftMenu.getChildAt(0).setBackgroundColor(Color.TRANSPARENT);
-                        leftMenu.getChildAt(2).setBackgroundColor(Color.TRANSPARENT);
-                        break;
-                    case 2:
-                        itemView.setBackgroundResource(R.drawable.left_menu_checkde);
-                        leftMenu.getChildAt(1).setBackgroundColor(Color.TRANSPARENT);
-                        leftMenu.getChildAt(0).setBackgroundColor(Color.TRANSPARENT);
-                        break;
+                for(int i = 0 ;i < leftMenu.getChildCount(); i ++) {
+                    leftMenu.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+                }
+                leftMenu.getChildAt(leftMenuSelectedIndex).setBackgroundResource(R.drawable.left_menu_checkde);
+                if(mainUpView1 != null) {
+                    mainUpView1.setVisibility(View.GONE);
                 }
             }
 
@@ -229,7 +223,7 @@ public class ListActivity extends AppCompatActivity implements RecyclerViewTV.On
         mMyGeneralAdapter = new GeneralAdapter(mMyRecyclerViewPresenter);
         contentView.setAdapter(mMyGeneralAdapter);
 
-        MainUpView mainUpView1 = (MainUpView) findViewById(R.id.mainUpView1);
+        mainUpView1 = (MainUpView) findViewById(R.id.mainUpView1);
         mainUpView1.setEffectBridge(new RecyclerViewBridge());
         // 注意这里，需要使用 RecyclerViewBridge 的移动边框 Bridge.
         mRecyclerViewBridge = (RecyclerViewBridge) mainUpView1.getEffectBridge();
@@ -298,7 +292,7 @@ public class ListActivity extends AppCompatActivity implements RecyclerViewTV.On
             for(int i = 0 ;i < leftMenu.getChildCount(); i ++) {
                 leftMenu.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
             }
-            leftMenu.getChildAt(1).setBackgroundResource(R.drawable.left_menu_selected_unfocus);
+            leftMenu.getChildAt(leftMenuSelectedIndex).setBackgroundResource(R.drawable.left_menu_selected_unfocus);
         }
     }
 

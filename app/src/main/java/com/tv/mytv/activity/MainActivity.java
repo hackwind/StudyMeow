@@ -185,22 +185,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
                 oldView = itemView;
                 onViewItemClick(itemView, position,false);
 
-                switch (position) {
-                    case 0:
-                        itemView.setBackgroundResource(R.drawable.left_menu_checkde);
-                        menuListView.getChildAt(1).setBackgroundColor(Color.TRANSPARENT);
-                        menuListView.getChildAt(2).setBackgroundColor(Color.TRANSPARENT);
-                        break;
-                    case 1:
-                        itemView.setBackgroundResource(R.drawable.left_menu_checkde);
-                        menuListView.getChildAt(0).setBackgroundColor(Color.TRANSPARENT);
-                        menuListView.getChildAt(2).setBackgroundColor(Color.TRANSPARENT);
-                        break;
-                    case 2:
-                        itemView.setBackgroundResource(R.drawable.left_menu_checkde);
-                        menuListView.getChildAt(1).setBackgroundColor(Color.TRANSPARENT);
-                        menuListView.getChildAt(0).setBackgroundColor(Color.TRANSPARENT);
-                        break;
+                for(int i = 0 ;i < menuListView.getChildCount(); i ++) {
+                    menuListView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+                }
+                itemView.setBackgroundResource(R.drawable.left_menu_checkde);
+
+                if(mainUpView1 != null) {
+                    mainUpView1.setVisibility(View.GONE);
                 }
             }
 
