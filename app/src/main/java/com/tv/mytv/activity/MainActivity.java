@@ -1,10 +1,13 @@
 package com.tv.mytv.activity;
 
+import android.animation.Animator;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,11 +19,13 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.open.androidtvwidget.bridge.OpenEffectBridge;
 import com.open.androidtvwidget.bridge.RecyclerViewBridge;
 import com.open.androidtvwidget.leanback.adapter.GeneralAdapter;
 import com.open.androidtvwidget.leanback.recycle.GridLayoutManagerTV;
 import com.open.androidtvwidget.leanback.recycle.LinearLayoutManagerTV;
 import com.open.androidtvwidget.leanback.recycle.RecyclerViewTV;
+import com.open.androidtvwidget.menu.OpenMenuImpl;
 import com.open.androidtvwidget.view.MainUpView;
 import com.tv.mytv.R;
 import com.tv.mytv.adapter.MenuAdapter;
@@ -35,20 +40,14 @@ import java.util.TimerTask;
 
 import adapter.MenuPresenter;
 import adapter.RecyclerViewPresenter;
+import adapter.TreeMenuPresenter;
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewTV.OnItemListener{
 
-    private MainFragment fragment;
-    private int currentTabIndex;
     private RecyclerViewTV menuListView;
-    private List<MenuList.MsgBean> msg;
-    private MenuAdapter menuAdapter;
     private int keyBackClickCount = 0;
     private TextView tvLogin;
-    private MenuPresenter mMenuRecyclerViewPresenter;
-    private GeneralAdapter mMenuGeneralAdapter;
     private MainUpView mainUpView1;
-    private RecyclerViewBridge mMenuRecyclerViewBridge;
     private View oldView;
 
     private RecyclerViewTV rvMy;
@@ -74,31 +73,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
 
             setContentView(R.layout.activity_main);
             initViews();
-            initData();
         }
     }
 
     private void initViews(){
-        menuListView = (RecyclerViewTV) findViewById(R.id.lv_menu);
-        menuListView.setOnItemListener(new RecyclerViewTV.OnItemListener() {
-            @Override
-            public void onItemPreSelected(RecyclerViewTV parent, View itemView, int position) {
-
-            }
-            @Override
-            public void onItemSelected(RecyclerViewTV parent, View itemView, int position) {
-
-            }
-            @Override
-            public void onReviseFocusFollow(RecyclerViewTV parent, View itemView, int position) {
-
-            }
-        });
-        LinearLayoutManagerTV managerMenu = new LinearLayoutManagerTV(this);
-        managerMenu.setOrientation(LinearLayoutManager.VERTICAL);
-        managerMenu.setSmoothScrollbarEnabled(false);
-        menuListView.setLayoutManager(managerMenu);
-
         tvLogin = (TextView)findViewById(R.id.login);
         tvLogin.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -110,15 +88,33 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
                 }
             }
         });
+        scrollView = (ScrollView)findViewById(R.id.content_scroll_view);
+        txtMy = (TextView)findViewById(R.id.text_my);
+        txtCategory = (TextView)findViewById(R.id.text_category);
+        initLeftMenu();
+        initRightViews();
+    }
+    public float getDimension(int id) {
+        return getResources().getDimension(id);
+    }
 
-        mainUpView1 = (MainUpView) findViewById(R.id.mainUpView1);
-        mainUpView1.setEffectBridge(new RecyclerViewBridge());
-        // 注意这里，需要使用 RecyclerViewBridge 的移动边框 Bridge.
-        mMenuRecyclerViewBridge = (RecyclerViewBridge) mainUpView1.getEffectBridge();
-        mMenuRecyclerViewBridge.setUpRectResource(R.drawable.left_menu_bg_selector);
-        RectF receF = new RectF(getDimension(R.dimen.w_12), getDimension(R.dimen.w_12) ,
-                getDimension(R.dimen.w_12) , getDimension(R.dimen.h_12) );
-        mMenuRecyclerViewBridge.setDrawUpRectPadding(receF);
+    public void initLeftMenu(){
+        OpenMenuImpl openMenu = new OpenMenuImpl();
+        openMenu.add("我的").setIconRes(R.drawable.selector_menu_my);
+        openMenu.add("分类").setIconRes(R.drawable.selector_menu_category);
+        openMenu.add("设置").setIconRes(R.drawable.selector_menu_setup);
+        final MainUpView mainUpView = new MainUpView(this);
+        mainUpView.setEffectBridge(new OpenEffectBridge());
+        mainUpView.setUpRectResource(R.drawable.left_menu_bg_selector);
+        menuListView = (RecyclerViewTV) findViewById(R.id.lv_menu);
+
+        LinearLayoutManagerTV managerMenu = new LinearLayoutManagerTV(this);
+        managerMenu.setOrientation(LinearLayoutManager.VERTICAL);
+        managerMenu.setSmoothScrollbarEnabled(false);
+        menuListView.setLayoutManager(managerMenu);
+        GeneralAdapter menuAdapter = new GeneralAdapter(new TreeMenuPresenter(menuListView, openMenu));
+        menuListView.setAdapter(menuAdapter);
+        menuListView.setItemAnimator(new DefaultItemAnimator());
 
         //
 //        menuListView.setOnItemListener(this);
@@ -128,47 +124,37 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
 //            public void onItemClick(RecyclerViewTV parent, View itemView, int position) {
 //            }
 //        });
-    }
-    public float getDimension(int id) {
-        return getResources().getDimension(id);
-    }
-    private void initData() {
-//        HttpRequest.get(HttpAddress.MENU_URL,null,MainActivity.this,"MyResult",null,MainActivity.this);
-        List<MenuList.MsgBean> menus = new ArrayList<MenuList.MsgBean>();
-        MenuList.MsgBean beanMy = new MenuList.MsgBean();
-        beanMy.setCatname("我的");
-        beanMy.setResId(R.drawable.selector_menu_my);
-        menus.add(beanMy);
-
-        MenuList.MsgBean beanCategory = new MenuList.MsgBean();
-        beanCategory.setCatname("分类");
-        beanCategory.setResId(R.drawable.selector_menu_category);
-        menus.add(beanCategory);
-
-        MenuList.MsgBean beanSetup = new MenuList.MsgBean();
-        beanSetup.setCatname("设置");
-        beanSetup.setResId(R.drawable.selector_menu_setup);
-        menus.add(beanSetup);
-
-        initMenu(menus);
-    }
-
-    public void initMenu(List<MenuList.MsgBean> menus){
-        mMenuRecyclerViewPresenter = new MenuPresenter(menus);
-        mMenuGeneralAdapter = new GeneralAdapter(mMenuRecyclerViewPresenter);
-        menuListView.setAdapter(mMenuGeneralAdapter);
 
         menuListView.setOnItemListener(new RecyclerViewTV.OnItemListener() {
             @Override
             public void onItemPreSelected(RecyclerViewTV parent, View itemView, int position) {
                 // 传入 itemView也可以, 自己保存的 oldView也可以.
-                mMenuRecyclerViewBridge.setUnFocusView(itemView);
+                mainUpView.setUnFocusView(itemView);
             }
 
             @Override
             public void onItemSelected(RecyclerViewTV parent, View itemView, int position) {
-                mMenuRecyclerViewBridge.setFocusView(itemView, 1.0f);
+                mainUpView.setFocusView(itemView, 1.0f);
                 oldView = itemView;
+                onViewItemClick(itemView, position);
+
+                switch (position) {
+                    case 0:
+                        itemView.setBackgroundResource(R.drawable.left_menu_checkde);
+                        menuListView.getChildAt(1).setBackgroundColor(Color.TRANSPARENT);
+                        menuListView.getChildAt(2).setBackgroundColor(Color.TRANSPARENT);
+                        break;
+                    case 1:
+                        itemView.setBackgroundResource(R.drawable.left_menu_checkde);
+                        menuListView.getChildAt(0).setBackgroundColor(Color.TRANSPARENT);
+                        menuListView.getChildAt(2).setBackgroundColor(Color.TRANSPARENT);
+                        break;
+                    case 2:
+                        itemView.setBackgroundResource(R.drawable.left_menu_checkde);
+                        menuListView.getChildAt(1).setBackgroundColor(Color.TRANSPARENT);
+                        menuListView.getChildAt(0).setBackgroundColor(Color.TRANSPARENT);
+                        break;
+                }
             }
 
             /**
@@ -176,22 +162,34 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
              */
             @Override
             public void onReviseFocusFollow(RecyclerViewTV parent, View itemView, int position) {
-                mMenuRecyclerViewBridge.setFocusView(itemView, 1.0f);
+                mainUpView.setFocusView(itemView, 1.0f);
                 oldView = itemView;
             }
         });
         menuListView.setOnItemClickListener(new RecyclerViewTV.OnItemClickListener() {
             @Override
             public void onItemClick(RecyclerViewTV parent, View itemView, int position) {
-                // 测试.
-                mMenuRecyclerViewBridge.setFocusView(itemView, oldView, 1.0f);
-                oldView = itemView;
+                // 测试.点击效果，实际电视没有点击
+                mainUpView.setFocusView(itemView, oldView, 1.0f);
+//                oldView = itemView;
                 //
-//                onViewItemClick(itemView, position);
+                onViewItemClick(itemView, position);
             }
         });
         menuListView.setDefaultSelect(0);
-        initRightViews();
+
+    }
+
+    private void onViewItemClick(View itemView, int position) {
+        switch (position) {
+            case 0:
+                scrollView.scrollTo(0,(int)txtMy.getY());
+                break;
+            case 1:
+                scrollView.scrollTo(0,(int)txtCategory.getY());
+                break;
+        }
+
     }
 
     private void initRightViews(){
@@ -224,6 +222,21 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
         RectF receF = new RectF(getDimension(R.dimen.w_92), getDimension(R.dimen.w_22) ,
                 getDimension(R.dimen.w_92) , getDimension(R.dimen.h_92) );
         mRecyclerViewBridge.setDrawUpRectPadding(receF);
+        //防止切换焦点时，亮框移动幅度太大
+        mRecyclerViewBridge.setOnAnimatorListener(new OpenEffectBridge.NewAnimatorListener() {
+            @Override
+            public void onAnimationStart(OpenEffectBridge bridge, View view,
+                                         Animator animation) {
+                mRecyclerViewBridge.setVisibleWidget(true);
+            }
+
+            @Override
+            public void onAnimationEnd(OpenEffectBridge bridge, View view,
+                                       Animator animation) {
+                if (view.hasFocus())
+                    mRecyclerViewBridge.setVisibleWidget(false);
+            }
+        });
 
         //
         rvMy.setOnItemListener(this);
@@ -302,7 +315,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
     @Override
     public void onItemPreSelected(RecyclerViewTV parent, View itemView, int position) {
         if(parent == menuListView) {
-            mMenuRecyclerViewBridge.setUnFocusView(oldView);
+//            mMenuRecyclerViewBridge.setUnFocusView(oldView);
         } else {
             mRecyclerViewBridge.setUnFocusView(oldView);
         }
@@ -311,24 +324,29 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
     @Override
     public void onItemSelected(RecyclerViewTV parent, View itemView, int position) {
         if(parent == menuListView) {
-            mMenuRecyclerViewBridge.setFocusView(itemView, 1.0f);
+//            mMenuRecyclerViewBridge.setFocusView(itemView, 1.0f);
         } else {
             mRecyclerViewBridge.setFocusView(itemView, 1.1f);
         }
         oldView = itemView;
 
-//        if(parent == rvCategory) {
-//            Log.d("hjs:parent is rvCategory,y:" + (int)txtCategory.getY(),"");
-//            scrollView.scrollTo(0,(int)txtCategory.getY() );
-//        } else {
-//            scrollView.scrollTo(0,(int)txtMy.getY());
-//        }
+        if(parent == rvCategory) {
+            scrollView.scrollTo(0,(int)txtCategory.getY() );
+            menuListView.getChildAt(1).setBackgroundResource(R.drawable.left_menu_selected_unfocus);
+            menuListView.getChildAt(0).setBackgroundColor(Color.TRANSPARENT);
+            menuListView.getChildAt(2).setBackgroundColor(Color.TRANSPARENT);
+        } else {
+            scrollView.scrollTo(0,(int)txtMy.getY());
+            menuListView.getChildAt(0).setBackgroundResource(R.drawable.left_menu_selected_unfocus);
+            menuListView.getChildAt(1).setBackgroundColor(Color.TRANSPARENT);
+            menuListView.getChildAt(2).setBackgroundColor(Color.TRANSPARENT);
+        }
     }
 
     @Override
     public void onReviseFocusFollow(RecyclerViewTV parent, View itemView, int position) {
         if(parent == menuListView) {
-            mMenuRecyclerViewBridge.setFocusView(itemView, 1.0f);
+//            mMenuRecyclerViewBridge.setFocusView(itemView, 1.0f);
         } else {
             mRecyclerViewBridge.setFocusView(itemView, 1.1f);
         }

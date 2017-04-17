@@ -45,7 +45,7 @@ public class MenuAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         View view = View.inflate(context, R.layout.menu_list_item, null);
-        TextView radioButton = (TextView)view.findViewById(R.id.rb_item);
+        TextView radioButton = (TextView)view.findViewById(R.id.title_tv);
         ImageView raidoIcon = (ImageView)view.findViewById(R.id.icon);
         raidoIcon.setImageResource(msg.get(position).getResId());
 //        Drawable leftDraw = context.getResources().getDrawable(msg.get(position).getResId());

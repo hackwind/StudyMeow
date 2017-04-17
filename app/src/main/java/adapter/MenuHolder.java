@@ -15,7 +15,7 @@ public class MenuHolder extends OpenPresenter.ViewHolder {
 	public MenuHolder(View itemView) {
 		super(itemView);
 		iv = (ImageView)itemView.findViewById(R.id.icon);
-		tv = (TextView)itemView.findViewById(R.id.rb_item);
+		tv = (TextView)itemView.findViewById(R.id.title_tv);
 	}
 
 }

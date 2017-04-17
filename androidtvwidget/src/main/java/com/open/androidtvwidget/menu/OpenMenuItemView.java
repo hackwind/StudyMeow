@@ -49,6 +49,7 @@ public class OpenMenuItemView extends LinearLayout implements OpenMenuItem.ItemV
     protected void onFinishInflate() {
         super.onFinishInflate();
         mTitleView = (TextView) findViewById(R.id.title_tv);
+        mIconView = (ImageView)findViewById(R.id.icon);
     }
 
     @Override
@@ -57,7 +58,7 @@ public class OpenMenuItemView extends LinearLayout implements OpenMenuItem.ItemV
         //
         setTitle(itemData.getTitle());
         setIcon(itemData.getIconRes());
-        setTextSize(itemData.getTextSize());
+//        setTextSize(itemData.getTextSize());
         setChecked(itemData, itemData.isChecked());
         // 如果没有设置菜单ITEM ID，则默认设置ID.
         if (itemData.getId() == 0) {
