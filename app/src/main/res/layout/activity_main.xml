@@ -60,7 +60,7 @@
 
     </RelativeLayout>
 
-    <com.tv.mytv.view.MyListView
+    <com.open.androidtvwidget.leanback.recycle.RecyclerViewTV
         android:id="@+id/lv_menu"
         android:layout_width="@dimen/w_268"
         android:layout_height="match_parent"
@@ -71,14 +71,58 @@
         android:dividerHeight="@dimen/h_46"
         android:listSelector="@android:color/transparent" />
 
-    <FrameLayout
-        android:id="@+id/fragment"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/h_120"
         android:layout_toRightOf="@id/lv_menu"
-        android:layout_marginRight="@dimen/w_80"/>
+        android:layout_below="@id/user_container"
+        android:scrollbars="none">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/w_20">
 
+            <TextView
+                android:id="@+id/text_my"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/h_40"
+                android:textSize="@dimen/w_50"
+                android:textColor="@color/trans_white"
+                android:text="我的电视"/>
 
+            <com.open.androidtvwidget.leanback.recycle.RecyclerViewTV
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/recyclerview_my">
+
+            </com.open.androidtvwidget.leanback.recycle.RecyclerViewTV>
+
+            <TextView
+                android:id="@+id/text_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/h_100"
+                android:layout_marginBottom="@dimen/h_40"
+                android:textSize="@dimen/w_50"
+                android:textColor="@color/trans_white"
+                android:text="热门分类"/>
+            <com.open.androidtvwidget.leanback.recycle.RecyclerViewTV
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/h_20"
+                android:id="@+id/recyclerview_category">
+
+            </com.open.androidtvwidget.leanback.recycle.RecyclerViewTV>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- 最顶层边框 -->
+    <com.open.androidtvwidget.view.MainUpView
+        android:id="@+id/mainUpView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>
