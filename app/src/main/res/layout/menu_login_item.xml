@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.open.androidtvwidget.menu.OpenMenuItemView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/h_60"
+    android:minHeight="@dimen/h_60"
+    android:orientation="horizontal"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:paddingLeft="@dimen/w_15"
+    android:paddingRight="@dimen/w_15"
+    android:paddingBottom="@dimen/h_8"
+    android:paddingTop="@dimen/h_8"
+    android:background="@drawable/left_menu_bg_selector">
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="@dimen/w_42"
+        android:layout_height="@dimen/w_40"
+        android:layout_marginRight="@dimen/w_12"/>
+    <TextView
+        android:id="@+id/title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@drawable/left_menu_textcolor_selector"
+        android:layout_gravity="bottom"
+        android:gravity="bottom"
+        android:textSize="@dimen/w_30" />
+
+</com.open.androidtvwidget.menu.OpenMenuItemView>

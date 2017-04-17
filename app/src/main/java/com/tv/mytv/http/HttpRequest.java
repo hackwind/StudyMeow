@@ -6,7 +6,9 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 
+import com.google.gson.Gson;
 import com.tv.mytv.activity.MyApplication;
+import com.tv.mytv.entity.BaseEntity;
 import com.tv.mytv.util.LogUtil;
 import com.tv.mytv.util.ToastUtil;
 import com.tv.mytv.util.Util;
@@ -25,17 +27,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Http请求公共类 xUtils库
- * 
- * @author caogenqing 2016.6.29
- */
 public class HttpRequest {
 
 	/**
 	 * 发送get请求
 	 */
-	public static void get(String url, Map<String, Object> map, final Object obj, final String mothod, final View view, final  Context context) {
+	public static <T extends BaseEntity> void get(String url, Map<String, Object> map, final Object obj, final String mothod, final View view, final  Context context,final Class<T> clazz) {
 		if (view != null) {
 			view.setVisibility(View.VISIBLE);
 		}
@@ -77,27 +74,40 @@ public class HttpRequest {
 			}
 
 			@Override
-			public void onSuccess(String arg0) {
+			public void onSuccess(String result) {
 				if (view != null) {
 					view.setVisibility(View.GONE);
 				}
-				Class objClass = obj.getClass();
-				Method method = null;
-				try {
-					method = objClass.getDeclaredMethod(mothod, String.class);
-					method.invoke(obj, arg0.toString());
-				} catch (NoSuchMethodException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				} catch (IllegalArgumentException e) {
-					e.printStackTrace();
-				} catch (InvocationTargetException e) {
-					e.printStackTrace();
+				Log.d("hjs",result);
+				Gson gson = new Gson();
+				BaseEntity entity = gson.fromJson(result,BaseEntity.class);
+				if(entity.status == true) {
+					T responseResult = gson.fromJson(result, clazz);
+					Class objClass = obj.getClass();
+					Method method = null;
+					try {
+						method = objClass.getDeclaredMethod(mothod, clazz,String.class);
+						method.invoke(obj, responseResult,result);
+					} catch (NoSuchMethodException e) {
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						e.printStackTrace();
+					} catch (IllegalArgumentException e) {
+						e.printStackTrace();
+					} catch (InvocationTargetException e) {
+						e.printStackTrace();
+					}
+				} else {
+					ToastUtil.showShort(MyApplication.getContext(), "接口调用失败");
 				}
+
 
 			}
 		});
+	}
+
+	public static  void get(String url, Map<String, Object> map, final Object obj, final String mothod, final View view, final  Context context) {
+
 	}
 
 	/**

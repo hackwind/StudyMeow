@@ -47,6 +47,15 @@
             android:name=".activity.MainActivity"
             android:screenOrientation="landscape" />
         <activity
+            android:name=".activity.ListActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activity.SettingActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:screenOrientation="landscape" />
+        <activity
             android:name=".activity.HomePageActivity"
             android:screenOrientation="landscape">
         </activity>

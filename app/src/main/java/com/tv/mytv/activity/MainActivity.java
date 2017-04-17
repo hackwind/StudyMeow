@@ -1,16 +1,19 @@
 package com.tv.mytv.activity;
 
 import android.animation.Animator;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -28,25 +31,28 @@ import com.open.androidtvwidget.leanback.recycle.RecyclerViewTV;
 import com.open.androidtvwidget.menu.OpenMenuImpl;
 import com.open.androidtvwidget.view.MainUpView;
 import com.tv.mytv.R;
-import com.tv.mytv.adapter.MenuAdapter;
-import com.tv.mytv.bean.MenuList;
-import com.tv.mytv.fragment.MainFragment;
+import com.tv.mytv.entity.BaseEntity;
+import com.tv.mytv.entity.CategoryEntity;
+import com.tv.mytv.entity.TokenEntity;
+import com.tv.mytv.http.HttpAddress;
+import com.tv.mytv.http.HttpRequest;
+import com.tv.mytv.util.SharePrefUtil;
+import com.tv.mytv.widget.SpaceItemDecoration;
 import com.umeng.analytics.MobclickAgent;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import adapter.MenuPresenter;
+import adapter.CategoryRecyclerViewPresenter;
+import adapter.LoginMenuPresenter;
 import adapter.RecyclerViewPresenter;
 import adapter.TreeMenuPresenter;
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewTV.OnItemListener{
 
     private RecyclerViewTV menuListView;
+    private RecyclerViewTV loginView;
     private int keyBackClickCount = 0;
-    private TextView tvLogin;
     private MainUpView mainUpView1;
     private View oldView;
 
@@ -54,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
     private RecyclerViewTV rvCategory;
     private RecyclerViewPresenter mMyRecyclerViewPresenter;
     private GeneralAdapter mMyGeneralAdapter;
-    private RecyclerViewPresenter mCategoryRecyclerViewPresenter;
+    private CategoryRecyclerViewPresenter mCategoryRecyclerViewPresenter;
     private GeneralAdapter mCategoryGeneralAdapter;
     private RecyclerViewBridge mRecyclerViewBridge;
     private ScrollView scrollView;
@@ -64,41 +70,91 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (null == savedInstanceState){
-            // 隐藏标题栏
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
-            // 隐藏状态栏
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        // 隐藏标题栏
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        // 隐藏状态栏
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-            setContentView(R.layout.activity_main);
-            initViews();
-        }
+        setContentView(R.layout.activity_main);
+        getToken();
+        initViews();
+    }
+    private void getToken() {
+        HttpRequest.get(HttpAddress.getToken(Settings.System.getString(getContentResolver(), Settings.System.ANDROID_ID)),null,MainActivity.this,"getTokenBack",null,this, TokenEntity.class);
+    }
+
+    private void getCategory() {
+        HttpRequest.get(HttpAddress.getCategory(),null,MainActivity.this,"getCategoryBack",null,this, CategoryEntity.class);
+    }
+
+    public void getTokenBack(TokenEntity entity,String totalResult) {
+        String token = entity.data.auth;
+        HttpAddress.token = token;
+        SharePrefUtil.saveString(this, "token", token);
+        getCategory();
+    }
+
+    public void getCategoryBack(CategoryEntity entity,String totalResult) {
+        initCategoryRecyclerViewGridLayout(entity);
+        SharePrefUtil.saveString(this,"category",totalResult);
     }
 
     private void initViews(){
-        tvLogin = (TextView)findViewById(R.id.login);
-        tvLogin.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) {
-                    tvLogin.setSelected(true);
-                } else {
-                    tvLogin.setSelected(false);
-                }
-            }
-        });
         scrollView = (ScrollView)findViewById(R.id.content_scroll_view);
         txtMy = (TextView)findViewById(R.id.text_my);
         txtCategory = (TextView)findViewById(R.id.text_category);
+        initLoginView();
         initLeftMenu();
         initRightViews();
     }
     public float getDimension(int id) {
         return getResources().getDimension(id);
     }
+    private void initLoginView() {
+        OpenMenuImpl openMenu = new OpenMenuImpl();
+        openMenu.add("登陆").setIconRes(R.mipmap.login);
+        final MainUpView mainUpView = new MainUpView(this);
+        mainUpView.setEffectBridge(new OpenEffectBridge());
+        mainUpView.setUpRectResource(R.drawable.left_menu_bg_selector);
+        loginView = (RecyclerViewTV) findViewById(R.id.login);
 
-    public void initLeftMenu(){
+        LinearLayoutManagerTV managerMenu = new LinearLayoutManagerTV(this);
+        managerMenu.setOrientation(LinearLayoutManager.HORIZONTAL);
+        managerMenu.setSmoothScrollbarEnabled(false);
+        loginView.setLayoutManager(managerMenu);
+        final GeneralAdapter menuAdapter = new GeneralAdapter(new LoginMenuPresenter(loginView, openMenu));
+        loginView.setAdapter(menuAdapter);
+        loginView.setItemAnimator(new DefaultItemAnimator());
+        loginView.setOnItemListener(new RecyclerViewTV.OnItemListener() {
+            @Override
+            public void onItemPreSelected(RecyclerViewTV parent, View itemView, int position) {
+
+            }
+
+            @Override
+            public void onItemSelected(RecyclerViewTV parent, View itemView, int position) {
+                int count = menuListView.getChildCount();
+                for(int i = 0; i < count;i ++) {
+                    menuListView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+                }
+                mainUpView1.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onReviseFocusFollow(RecyclerViewTV parent, View itemView, int position) {
+
+            }
+        });
+        loginView.setOnItemClickListener(new RecyclerViewTV.OnItemClickListener() {
+            @Override
+            public void onItemClick(RecyclerViewTV parent, View itemView, int position) {
+                Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+    private void initLeftMenu(){
         OpenMenuImpl openMenu = new OpenMenuImpl();
         openMenu.add("我的").setIconRes(R.drawable.selector_menu_my);
         openMenu.add("分类").setIconRes(R.drawable.selector_menu_category);
@@ -116,15 +172,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
         menuListView.setAdapter(menuAdapter);
         menuListView.setItemAnimator(new DefaultItemAnimator());
 
-        //
-//        menuListView.setOnItemListener(this);
-//        // item 单击事件处理.
-//        menuListView.setOnItemClickListener(new RecyclerViewTV.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(RecyclerViewTV parent, View itemView, int position) {
-//            }
-//        });
-
         menuListView.setOnItemListener(new RecyclerViewTV.OnItemListener() {
             @Override
             public void onItemPreSelected(RecyclerViewTV parent, View itemView, int position) {
@@ -136,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
             public void onItemSelected(RecyclerViewTV parent, View itemView, int position) {
                 mainUpView.setFocusView(itemView, 1.0f);
                 oldView = itemView;
-                onViewItemClick(itemView, position);
+                onViewItemClick(itemView, position,false);
 
                 switch (position) {
                     case 0:
@@ -173,20 +220,26 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
                 mainUpView.setFocusView(itemView, oldView, 1.0f);
 //                oldView = itemView;
                 //
-                onViewItemClick(itemView, position);
+                onViewItemClick(itemView, position,true);
             }
         });
         menuListView.setDefaultSelect(0);
 
     }
 
-    private void onViewItemClick(View itemView, int position) {
+    private void onViewItemClick(View itemView, int position,boolean isRealClick) {
         switch (position) {
             case 0:
                 scrollView.scrollTo(0,(int)txtMy.getY());
                 break;
             case 1:
                 scrollView.scrollTo(0,(int)txtCategory.getY());
+                break;
+            case 2:
+                if(isRealClick) {
+                    Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                    startActivity(intent);
+                }
                 break;
         }
 
@@ -195,11 +248,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
     private void initRightViews(){
         rvMy = (RecyclerViewTV)findViewById(R.id.recyclerview_my);
         rvCategory = (RecyclerViewTV)findViewById(R.id.recyclerview_category);
-//        scrollView = (ScrollView) rootView;
         txtMy = (TextView)findViewById(R.id.text_my);
         txtCategory = (TextView)findViewById(R.id.text_category);
         initMyRecyclerViewGridLayout();
-        initCategoryRecyclerViewGridLayout();
+//        initCategoryRecyclerViewGridLayout();
     }
 
     private void initMyRecyclerViewGridLayout() {
@@ -207,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
         gridlayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         gridlayoutManager.setSmoothScrollbarEnabled(false);
         rvMy.setLayoutManager(gridlayoutManager);
-        rvMy.addItemDecoration(new SpaceItemDecoration((int)getDimension(R.dimen.h_94),(int)getDimension(R.dimen.h_12)));
+        rvMy.addItemDecoration(new SpaceItemDecoration((int)getDimension(R.dimen.h_94),(int)getDimension(R.dimen.h_12),6));
         rvMy.setFocusable(false);
         rvMy.setSelectedItemAtCentered(true); // 设置item在中间移动.
         mMyRecyclerViewPresenter = new RecyclerViewPresenter(12);
@@ -248,14 +300,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
         });
     }
 
-    private void initCategoryRecyclerViewGridLayout() {
+    private void initCategoryRecyclerViewGridLayout(final CategoryEntity categoryEntity) {
         GridLayoutManagerTV gridlayoutManager = new GridLayoutManagerTV(this, 6); // 解决快速长按焦点丢失问题.
         gridlayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         gridlayoutManager.setSmoothScrollbarEnabled(false);
         rvCategory.setLayoutManager(gridlayoutManager);
         rvCategory.setFocusable(false);
         rvCategory.setSelectedItemAtCentered(true); // 设置item在中间移动.
-        mCategoryRecyclerViewPresenter = new RecyclerViewPresenter(6);
+        mCategoryRecyclerViewPresenter = new CategoryRecyclerViewPresenter(categoryEntity.data.catergory);
         mCategoryGeneralAdapter = new GeneralAdapter(mCategoryRecyclerViewPresenter);
         rvCategory.setAdapter(mCategoryGeneralAdapter);
 
@@ -265,6 +317,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
         rvCategory.setOnItemClickListener(new RecyclerViewTV.OnItemClickListener() {
             @Override
             public void onItemClick(RecyclerViewTV parent, View itemView, int position) {
+                Intent intent = new Intent(MainActivity.this,ListActivity.class);
+                intent.putExtra("catid",categoryEntity.data.catergory.get(position).catid);
+                intent.putExtra("catname",categoryEntity.data.catergory.get(position).catname);
+                startActivity(intent);
             }
         });
     }
@@ -353,27 +409,5 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
         oldView = itemView;
     }
 
-    public class SpaceItemDecoration extends RecyclerViewTV.ItemDecoration{
 
-        private int bottomSpace;
-        private int rightSpace;
-
-        public SpaceItemDecoration(int bottomSpace,int rightSpace) {
-            this.bottomSpace = bottomSpace;
-            this.rightSpace = rightSpace;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            //不是第一个的格子都设一个左边和底部的间距
-            if (parent.getChildLayoutPosition(view) < 6) {
-                outRect.bottom = bottomSpace;
-            }
-//            outRect.left = rightSpace;
-            //由于每行都只有6个，所以第一个都是6的倍数，把左边距设为0
-//            if (parent.getChildLayoutPosition(view) %6 == 0) {
-//                outRect.left = rightSpace;
-//            }
-        }
-    }
 }

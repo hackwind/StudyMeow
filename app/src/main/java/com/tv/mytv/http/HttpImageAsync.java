@@ -24,7 +24,7 @@ public class HttpImageAsync {
 	 */
 	public static ImageOptions options = new ImageOptions.Builder()
 			// 设置加载过程中的图片
-			.setLoadingDrawableId(R.mipmap.nopic)
+//			.setLoadingDrawableId(R.mipmap.nopic)
 			// 设置加载失败后的图片
 			.setFailureDrawableId(R.mipmap.nopic)
 			// 设置使用缓存
