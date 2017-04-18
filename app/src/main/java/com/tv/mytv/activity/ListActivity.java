@@ -463,6 +463,7 @@ public class ListActivity extends AppCompatActivity {
             // 注意这里，需要使用 RecyclerViewBridge 的移动边框 Bridge.
             mRecyclerViewBridge = (RecyclerViewBridge) mainUpView1.getEffectBridge();
             mRecyclerViewBridge.setUpRectResource(R.drawable.select_cover);
+            //87 是左边间距 23是绿色框的厚度
             RectF receF = new RectF(getResources().getDimension(R.dimen.w_87) + getResources().getDimension(R.dimen.w_23), getResources().getDimension(R.dimen.h_29)+ getResources().getDimension(R.dimen.h_23) ,
                     getResources().getDimension(R.dimen.w_87)+ getResources().getDimension(R.dimen.w_23) , getResources().getDimension(R.dimen.h_89)+ getResources().getDimension(R.dimen.h_23) );
             mRecyclerViewBridge.setDrawUpRectPadding(receF);

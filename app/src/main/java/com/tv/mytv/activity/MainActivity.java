@@ -265,8 +265,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
         // 注意这里，需要使用 RecyclerViewBridge 的移动边框 Bridge.
         mRecyclerViewBridge = (RecyclerViewBridge) mainUpView1.getEffectBridge();
         mRecyclerViewBridge.setUpRectResource(R.drawable.select_cover);
-        RectF receF = new RectF(getResources().getDimension(R.dimen.w_87), getResources().getDimension(R.dimen.w_29) ,
-                getResources().getDimension(R.dimen.w_87) , getResources().getDimension(R.dimen.h_89));
+        RectF receF = new RectF(getResources().getDimension(R.dimen.w_87) + getResources().getDimension(R.dimen.w_23),
+                getResources().getDimension(R.dimen.w_29) + getResources().getDimension(R.dimen.h_23) ,
+                getResources().getDimension(R.dimen.w_87) + getResources().getDimension(R.dimen.w_23) ,
+                getResources().getDimension(R.dimen.h_89) + getResources().getDimension(R.dimen.h_23));
         mRecyclerViewBridge.setDrawUpRectPadding(receF);
         //防止切换焦点时，亮框移动幅度太大
         mRecyclerViewBridge.setOnAnimatorListener(new OpenEffectBridge.NewAnimatorListener() {
