@@ -176,13 +176,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
             @Override
             public void onItemPreSelected(RecyclerViewTV parent, View itemView, int position) {
                 // 传入 itemView也可以, 自己保存的 oldView也可以.
-                mainUpView.setUnFocusView(itemView);
+//                if(mainUpView1 != null) {
+//                    mainUpView.setUnFocusView(itemView);
+//                }
             }
 
             @Override
             public void onItemSelected(RecyclerViewTV parent, View itemView, int position) {
-                mainUpView.setFocusView(itemView, 1.0f);
-                oldView = itemView;
+
                 onViewItemClick(itemView, position,false);
 
                 for(int i = 0 ;i < menuListView.getChildCount(); i ++) {
@@ -190,9 +191,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
                 }
                 itemView.setBackgroundResource(R.drawable.left_menu_checkde);
 
-                if(mainUpView1 != null) {
-                    mainUpView1.setVisibility(View.GONE);
-                }
+//                if(mainUpView1 != null) {
+//                    mainUpView.setFocusView(itemView, 1.0f);
+//                    oldView = itemView;
+//                    mainUpView1.setVisibility(View.GONE);
+//                }
             }
 
             /**
@@ -200,15 +203,15 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
              */
             @Override
             public void onReviseFocusFollow(RecyclerViewTV parent, View itemView, int position) {
-                mainUpView.setFocusView(itemView, 1.0f);
-                oldView = itemView;
+//                mainUpView.setFocusView(itemView, 1.0f);
+//                oldView = itemView;
             }
         });
         menuListView.setOnItemClickListener(new RecyclerViewTV.OnItemClickListener() {
             @Override
             public void onItemClick(RecyclerViewTV parent, View itemView, int position) {
                 // 测试.点击效果，实际电视没有点击
-                mainUpView.setFocusView(itemView, oldView, 1.0f);
+//                mainUpView.setFocusView(itemView, oldView, 1.0f);
 //                oldView = itemView;
                 //
                 onViewItemClick(itemView, position,true);
@@ -262,8 +265,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
         // 注意这里，需要使用 RecyclerViewBridge 的移动边框 Bridge.
         mRecyclerViewBridge = (RecyclerViewBridge) mainUpView1.getEffectBridge();
         mRecyclerViewBridge.setUpRectResource(R.drawable.select_cover);
-        RectF receF = new RectF(getDimension(R.dimen.w_92), getDimension(R.dimen.w_22) ,
-                getDimension(R.dimen.w_92) , getDimension(R.dimen.h_92) );
+        RectF receF = new RectF(getResources().getDimension(R.dimen.w_87), getResources().getDimension(R.dimen.w_29) ,
+                getResources().getDimension(R.dimen.w_87) , getResources().getDimension(R.dimen.h_89));
         mRecyclerViewBridge.setDrawUpRectPadding(receF);
         //防止切换焦点时，亮框移动幅度太大
         mRecyclerViewBridge.setOnAnimatorListener(new OpenEffectBridge.NewAnimatorListener() {

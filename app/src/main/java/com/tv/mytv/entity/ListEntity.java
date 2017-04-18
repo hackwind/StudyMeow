@@ -11,10 +11,6 @@ public class ListEntity extends BaseEntity {
     public VideoData data;
 
     public static class VideoData {
-        public VideoList videoList;
-    }
-
-    public static class VideoList {
         public int pageCount;
         public int total;
         public List<VideoRow> rows;
@@ -25,6 +21,6 @@ public class ListEntity extends BaseEntity {
         public String title;
         public String thumb;
         public String catid;
-        public String money;
+        public int money;
     }
 }

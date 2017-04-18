@@ -33,7 +33,7 @@ public class VideoListRecyclerViewPresenter extends OpenPresenter {
 
     @Override
     public int getItemCount() {
-        return rows.size();
+        return rows == null ? 0 : rows.size();
     }
 
     @Override

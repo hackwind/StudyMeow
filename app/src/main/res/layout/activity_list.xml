@@ -24,6 +24,7 @@
         android:layout_height="@dimen/h_60"
         android:layout_marginTop="@dimen/w_50"
         android:layout_marginRight="@dimen/w_80"
+        android:gravity="bottom"
         android:layout_toRightOf="@id/lv_menu">
 
         <TextView
@@ -39,6 +40,7 @@
             android:id="@+id/free_menu"
             android:layout_width="@dimen/h_300"
             android:layout_height="@dimen/h_60"
+            android:layout_marginTop="@dimen/h_12"
             android:divider="@null"
             android:layout_toRightOf="@id/category_name"
             android:layout_alignParentBottom="true"
@@ -57,21 +59,17 @@
 
     </RelativeLayout>
 
-    <com.open.androidtvwidget.leanback.recycle.RecyclerViewTV
+    <fr.castorflex.android.verticalviewpager.VerticalViewPager
+        android:id="@+id/vertical_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/recyclerview_content"
         android:layout_below="@id/top_container"
         android:layout_marginTop="@dimen/h_60"
         android:layout_marginRight="@dimen/w_80"
+        android:padding="@dimen/w_20"
         android:layout_toRightOf="@id/lv_menu">
 
-    </com.open.androidtvwidget.leanback.recycle.RecyclerViewTV>
+    </fr.castorflex.android.verticalviewpager.VerticalViewPager>
 
-    <!-- 最顶层边框 -->
-    <com.open.androidtvwidget.view.MainUpView
-        android:id="@+id/mainUpView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
 </RelativeLayout>
