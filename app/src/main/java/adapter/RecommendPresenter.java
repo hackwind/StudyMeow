@@ -3,11 +3,14 @@ package adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.open.androidtvwidget.leanback.adapter.GeneralAdapter;
 import com.open.androidtvwidget.leanback.mode.OpenPresenter;
 import com.tv.mytv.R;
+import com.tv.mytv.entity.RecommendEntity;
+import com.tv.mytv.http.HttpImageAsync;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,14 +18,11 @@ import java.util.List;
 
 public class RecyclerViewPresenter extends OpenPresenter {
 
-    private final List<String> labels;
+    private List<RecommendEntity.Poster> posters;
     private GeneralAdapter mAdapter;
 
-    public RecyclerViewPresenter(int count) {
-        this.labels = new ArrayList<String>(count);
-        for (int i = 0; i < count; i++) {
-            labels.add(String.valueOf(i));
-        }
+    public RecyclerViewPresenter(List<RecommendEntity.Poster> posters) {
+        this.posters = posters;
     }
 
     @Override
@@ -30,20 +30,10 @@ public class RecyclerViewPresenter extends OpenPresenter {
         this.mAdapter = adapter;
     }
 
-    /**
-     * 用于数据加载更多测试.
-     */
-    public void addDatas(int count) {
-        int sum = labels.size();
-        for (int i = sum; i < sum + count; i++) {
-            labels.add(String.valueOf(i));
-        }
-        this.mAdapter.notifyDataSetChanged();
-    }
 
     @Override
     public int getItemCount() {
-        return labels.size();
+        return posters == null ? 0 : posters.size();
     }
 
     @Override
@@ -60,8 +50,8 @@ public class RecyclerViewPresenter extends OpenPresenter {
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         GridViewHolder gridViewHolder = (GridViewHolder) viewHolder;
-        TextView textView = (TextView) gridViewHolder.tv;
-        textView.setText("item " + labels.get(position));
+        ImageView icon = gridViewHolder.iv;
+        HttpImageAsync.loadingImage(icon,posters.get(position).image);
     }
 
 }
