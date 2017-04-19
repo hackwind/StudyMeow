@@ -79,13 +79,6 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private TimerTask task = new TimerTask() {
-        @Override
-        public void run() {
-            getLoginInfoRepeat();
-        }
-    };
-
     public void getLoginInfoBack(GetLoginInfoEntity entity,String totalResult) {
         if(entity != null && entity.status == true) {
             timer.cancel();
@@ -100,7 +93,13 @@ public class LoginActivity extends AppCompatActivity {
         if (timer == null) {
             timer = new Timer();
         }
-        timer.schedule(task, REPEAT_INTERVAL);
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                getLoginInfoRepeat();
+            }
+        }, REPEAT_INTERVAL);
     }
 
     @Override
