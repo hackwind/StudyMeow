@@ -34,7 +34,7 @@ public class CategoryRecyclerViewPresenter extends OpenPresenter {
 
     @Override
     public int getItemCount() {
-        return categories.size();
+        return categories == null ? 0 : categories.size();
     }
 
     @Override

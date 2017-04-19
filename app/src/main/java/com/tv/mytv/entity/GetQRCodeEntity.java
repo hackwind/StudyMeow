@@ -5,4 +5,10 @@ package com.tv.mytv.entity;
  */
 
 public class GetQRCodeEntity extends BaseEntity {
+    public QRData data;
+
+    public static class QRData {
+        public int sessionid;
+        public String erweima;
+    }
 }

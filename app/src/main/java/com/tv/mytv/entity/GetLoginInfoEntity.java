@@ -4,11 +4,15 @@ package com.tv.mytv.entity;
  * Created by Administrator on 2017/4/19.
  */
 
-public class GetQRCodeEntity extends BaseEntity {
-    public QRData data;
+public class GetLoginInfoEntity extends BaseEntity {
+    public LoginData data;
 
-    public static class QRData {
-        public int sessionid;
-        public String erweima;
+    public static class LoginData {
+        public String nickname;
+        public String userid;
+        public String username;
+        public String auth;
+        public String thumb;
+        public String groupid;
     }
 }

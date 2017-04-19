@@ -8,7 +8,8 @@ import android.provider.Settings;
 
 public class HttpAddress {
 
-    public static final  String  WEB_URL="http://120.77.182.205/52feed/index.php?";
+//    public static final  String  WEB_URL="http://120.77.182.205/52feed/index.php?";
+    public static final String WEB_URL = "http://op.sintoon.com/index.php?";
 
     public static String token = "";
 
@@ -34,6 +35,30 @@ public class HttpAddress {
      */
     public static String getList(String catid,int page,int pageSize) {
         return  WEB_URL+"m=member&c=app2&a=listinfo&auth=" + token + "&catid=" + catid + "&page=" + page + "&pageSize=" + pageSize;
+    }
+
+    /**
+     * 获取推荐
+     * @return
+     */
+    public static String getRecommend() {
+        return  WEB_URL+"m=member&c=app2&a=poster&auth=" + token ;
+    }
+
+    /**
+     * 获取微信登陆二维码
+     * @return
+     */
+    public static String getQRCode() {
+        return  WEB_URL+"m=member&c=app2&a=public_login&auth=" + token ;
+    }
+
+    /**
+     * 获取是否扫描微信二维码登陆成功
+     * @return
+     */
+    public static String getWhetherLogin(int sessionId) {
+        return  WEB_URL+"m=member&c=app2&a=public_login&type=checkLogin&auth=" + token +"&sessionid=" + sessionId;
     }
 
     /**

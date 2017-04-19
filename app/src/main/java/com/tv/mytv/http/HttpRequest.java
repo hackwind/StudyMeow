@@ -36,7 +36,7 @@ public class HttpRequest {
 		if (view != null) {
 			view.setVisibility(View.VISIBLE);
 		}
-		LogUtil.i(url);
+		Log.d("hjs",url);
 		String urls = null;// 调试
 		if (map != null) {
 			Set<String> set = map.keySet();

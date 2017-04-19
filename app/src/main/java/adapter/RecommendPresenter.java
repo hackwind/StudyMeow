@@ -16,12 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class RecyclerViewPresenter extends OpenPresenter {
+public class RecommendPresenter extends OpenPresenter {
 
     private List<RecommendEntity.Poster> posters;
     private GeneralAdapter mAdapter;
 
-    public RecyclerViewPresenter(List<RecommendEntity.Poster> posters) {
+    public RecommendPresenter(List<RecommendEntity.Poster> posters) {
         this.posters = posters;
     }
 
@@ -43,7 +43,7 @@ public class RecyclerViewPresenter extends OpenPresenter {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recyclerview_view, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recommend_view, parent, false);
         return new GridViewHolder(view);
     }
 

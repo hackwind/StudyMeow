@@ -59,16 +59,21 @@
 
     </RelativeLayout>
 
-    <fr.castorflex.android.verticalviewpager.VerticalViewPager
-        android:id="@+id/vertical_viewpager"
+    <com.open.androidtvwidget.leanback.recycle.RecyclerViewTV
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/top_container"
+        android:layout_toRightOf="@id/lv_menu"
         android:layout_marginTop="@dimen/h_60"
         android:layout_marginRight="@dimen/w_80"
-        android:layout_toRightOf="@id/lv_menu">
-
-    </fr.castorflex.android.verticalviewpager.VerticalViewPager>
+        android:id="@+id/recyclerview_content"
+        >
+    </com.open.androidtvwidget.leanback.recycle.RecyclerViewTV>
+    <!-- 最顶层边框 -->
+    <com.open.androidtvwidget.view.MainUpView
+        android:id="@+id/mainUpView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 
 </RelativeLayout>

@@ -5,7 +5,6 @@
     android:layout_height="@dimen/h_322"
     android:focusableInTouchMode="true"
     android:layout_margin="@dimen/w_12"
-    android:background="#49325d"
     android:gravity="center"
     android:layout_gravity="center"
     android:focusable="true">

@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/main_background"
-    android:orientation="vertical">
-
-    <WebView
-        android:id="@+id/webview"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"/>
-    <ProgressBar
-        android:id="@+id/pb_progress"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/h_5"
-        android:indeterminateOnly="false"
-        android:max="100"
-        android:progress="0"
-        android:layout_alignParentTop="true"
-        android:progressDrawable="@drawable/progress_bar_states" >
-    </ProgressBar>
-</RelativeLayout>
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:gravity="center">
+    <TextView
+        android:text="联系我们"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textSize="@dimen/w_106"
+        android:textColor="@color/trans_white"/>
+    <TextView
+        android:text="微信扫一扫提交"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textSize="@dimen/w_60"
+        android:layout_marginTop="@dimen/h_40"
+        android:layout_marginBottom="@dimen/h_40"
+        android:textColor="@color/trans_white"/>
+    <ImageView
+        android:id="@+id/wechat_image"
+        android:layout_width="@dimen/w_424"
+        android:layout_height="@dimen/w_424" >
+    </ImageView>
+</LinearLayout>

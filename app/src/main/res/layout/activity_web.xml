@@ -6,117 +6,19 @@
     android:background="@mipmap/main_background"
     android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="@dimen/w_184"
-        android:layout_height="@dimen/h_50"
-        android:background="@mipmap/logo"
-        android:layout_marginLeft="@dimen/w_80"
-        android:layout_marginTop="@dimen/w_40"
-        android:layout_alignParentLeft="true"/>
-
-
-    <RelativeLayout
-        android:id="@+id/user_container"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/h_60"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="@dimen/w_40"
-        android:layout_marginRight="@dimen/w_80">
-
-        <com.tv.mytv.widget.TimerView
-            android:id="@+id/time"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/h_40"
-            android:textSize="@dimen/w_30"
-            android:textColor="#66FFFFFF"
-            android:text="22:00"
-            android:gravity="bottom"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/w_60"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/w_12"
-            android:layout_toRightOf="@id/time">
-            <com.open.androidtvwidget.leanback.recycle.RecyclerViewTV
-            android:id="@+id/login"
-            android:layout_width="@dimen/h_150"
-            android:layout_height="@dimen/h_60"
-            android:divider="@null"
-            android:listSelector="@android:color/transparent" />
-        </LinearLayout>
-
-
-    </RelativeLayout>
-
-    <com.open.androidtvwidget.leanback.recycle.RecyclerViewTV
-        android:id="@+id/lv_menu"
-        android:layout_width="@dimen/w_268"
+    <WebView
+        android:id="@+id/webview"
         android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/w_80"
-        android:layout_marginRight="@dimen/w_70"
-        android:layout_marginTop="@dimen/h_274"
-        android:divider="@null"
-        android:dividerHeight="@dimen/h_46"
-        android:listSelector="@android:color/transparent" />
-
-    <ScrollView
-        android:id="@+id/content_scroll_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_toRightOf="@id/lv_menu"
-        android:layout_below="@id/user_container"
-        android:scrollbars="none">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/w_20">
-
-            <TextView
-                android:id="@+id/text_my"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/h_40"
-                android:textSize="@dimen/w_50"
-                android:textColor="@color/trans_white"
-                android:layout_marginLeft="@dimen/w_12"
-                android:text="我的电视"/>
-
-            <com.open.androidtvwidget.leanback.recycle.RecyclerViewTV
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/recyclerview_my">
-
-            </com.open.androidtvwidget.leanback.recycle.RecyclerViewTV>
-
-            <TextView
-                android:id="@+id/text_category"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/h_80"
-                android:layout_marginBottom="@dimen/h_40"
-                android:layout_marginLeft="@dimen/w_12"
-                android:textSize="@dimen/w_50"
-                android:textColor="@color/trans_white"
-                android:text="热门分类"/>
-            <com.open.androidtvwidget.leanback.recycle.RecyclerViewTV
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/h_20"
-                android:id="@+id/recyclerview_category">
-
-            </com.open.androidtvwidget.leanback.recycle.RecyclerViewTV>
-
-        </LinearLayout>
-    </ScrollView>
-
-    <!-- 最顶层边框 -->
-    <com.open.androidtvwidget.view.MainUpView
-        android:id="@+id/mainUpView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
+        android:layout_width="match_parent"/>
+    <ProgressBar
+        android:id="@+id/pb_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/h_5"
+        android:indeterminateOnly="false"
+        android:max="100"
+        android:progress="0"
+        android:layout_alignParentTop="true"
+        android:progressDrawable="@drawable/progress_bar_states" >
+    </ProgressBar>
 </RelativeLayout>

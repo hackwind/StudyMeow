@@ -6,7 +6,7 @@ import android.os.Bundle;
  * Created by Administrator on 2017/4/19.
  */
 
-public class MyActivity extends BaseActivity {
+public class HistoryActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

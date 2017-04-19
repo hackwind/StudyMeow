@@ -13,25 +13,25 @@ import com.open.androidtvwidget.leanback.recycle.RecyclerViewTV;
 public class SpaceItemDecoration extends RecyclerViewTV.ItemDecoration{
 
     private int bottomSpace;
-    private int rightSpace;
     private int count;
+    private int rowSize;
+    private int rowCount;
 
-    public SpaceItemDecoration(int bottomSpace,int rightSpace,int rowcount) {
+    public SpaceItemDecoration(int bottomSpace,int rowSize,int count) {
         this.bottomSpace = bottomSpace;
-        this.rightSpace = rightSpace;
-        this.count = rowcount;
+        this.count = count;
+        this.rowSize = rowSize;
+        rowCount = count % rowSize == 0 ? count/rowSize : count/rowSize + 1;
     }
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-        //不是第一个的格子都设一个左边和底部的间距
-        if (parent.getChildLayoutPosition(view) < count) {
+        //不是最后一行格子都设一个底部的间距
+        int pos = parent.getChildLayoutPosition(view) + 1;
+        int curRow = pos % rowSize == 0 ? pos / rowSize :
+                pos / rowSize + 1;
+        if ( curRow != rowCount) {
             outRect.bottom = bottomSpace;
         }
-//            outRect.left = rightSpace;
-        //由于每行都只有6个，所以第一个都是6的倍数，把左边距设为0
-//            if (parent.getChildLayoutPosition(view) %6 == 0) {
-//                outRect.left = rightSpace;
-//            }
     }
 }

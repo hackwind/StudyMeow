@@ -18,14 +18,15 @@
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/h_72"
         android:layout_below="@id/image"
-        android:gravity="left"
+        android:gravity="left|center_vertical"
+        android:layout_centerVertical="true"
+        android:paddingLeft="@dimen/w_2"
         android:textColor="@drawable/selector_video_title_color"
         android:text="item"
         android:singleLine="true"
         android:ellipsize="marquee"
-        android:paddingTop="@dimen/w_20"
         android:background="@drawable/selector_video_title_bg"
         android:textSize="@dimen/w_36" />
 

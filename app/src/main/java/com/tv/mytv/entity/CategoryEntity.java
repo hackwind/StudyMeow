@@ -10,7 +10,7 @@ public class CategoryEntity extends BaseEntity {
     public CategoryData data;
 
     public static class CategoryData {
-        public List<Category> catergory;
+        public List<Category> category;
     }
     public static class Category {
         public String catid;
