@@ -11,19 +11,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.open.androidtvwidget.leanback.adapter.GeneralAdapter;
-import com.open.androidtvwidget.leanback.recycle.GridLayoutManagerTV;
 import com.open.androidtvwidget.leanback.recycle.RecyclerViewTV;
 import com.tv.mytv.R;
-import com.tv.mytv.entity.RecommendEntity;
 import com.tv.mytv.entity.VideoDetailEntity;
 import com.tv.mytv.http.HttpAddress;
 import com.tv.mytv.http.HttpImageAsync;
 import com.tv.mytv.http.HttpRequest;
-import com.tv.mytv.widget.SpaceItemDecoration;
 
 import java.util.List;
 
-import adapter.RecommendPresenter;
 import adapter.VideoListPresenter;
 
 /**
@@ -37,6 +33,7 @@ public class VideoDetailActivity extends BaseActivity {
     private TextView updateTime;
     private TextView author;
     private TextView thumbDesc;
+    private TextView bugYet;
     private LinearLayout buttonPlay;
     private LinearLayout buttonBuy;
     private LinearLayout buttonCollect;
@@ -44,6 +41,10 @@ public class VideoDetailActivity extends BaseActivity {
     private LinearLayout progressBar;
     private VideoListPresenter presenter;
     private GeneralAdapter generalAdapter;
+
+    private TextView subTitle;
+    private TextView subDesc;
+    private ImageView subIcon;
 
 
     private String id;
@@ -69,14 +70,19 @@ public class VideoDetailActivity extends BaseActivity {
         updateTime = (TextView)findViewById(R.id.thumb_update_time);
         author  = (TextView)findViewById(R.id.thumb_author);
         thumbDesc = (TextView)findViewById(R.id.thumb_desc);
+        bugYet = (TextView)findViewById(R.id.thumb_buy_yet);
         buttonPlay = (LinearLayout)findViewById(R.id.button_play);
         buttonBuy = (LinearLayout)findViewById(R.id.button_buy);
         buttonCollect = (LinearLayout)findViewById(R.id.button_collect);
         videoList = (RecyclerViewTV)findViewById(R.id.video_list);
         progressBar = (LinearLayout)findViewById(R.id.progressBar);
+
+        subTitle = (TextView)findViewById(R.id.sub_title);
+        subDesc = (TextView)findViewById(R.id.sub_title);
+        subIcon = (ImageView)findViewById(R.id.sub_icon);
     }
 
-    private void initVideoListRecyclerView(List<VideoDetailEntity.Video> list) {
+    private void initVideoListRecyclerView(final List<VideoDetailEntity.Video> list) {
         LinearLayoutManager gridlayoutManager = new LinearLayoutManager(this); // 解决快速长按焦点丢失问题.
         gridlayoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
         gridlayoutManager.setSmoothScrollbarEnabled(false);
@@ -88,6 +94,25 @@ public class VideoDetailActivity extends BaseActivity {
         generalAdapter = new GeneralAdapter(presenter);
         videoList.setAdapter(generalAdapter);
         videoList.setDefaultSelect(0);
+
+        videoList.setOnItemListener(new RecyclerViewTV.OnItemListener() {
+            @Override
+            public void onItemPreSelected(RecyclerViewTV parent, View itemView, int position) {
+            }
+
+            @Override
+            public void onItemSelected(RecyclerViewTV parent, View itemView, int position) {
+                VideoDetailEntity.Video video = list.get(position);
+                subTitle.setText(video.title);
+                subDesc.setText(video.describe);
+                HttpImageAsync.loadingImage(subIcon,video.thumb);
+            }
+
+            @Override
+            public void onReviseFocusFollow(RecyclerViewTV parent, View itemView, int position) {
+
+            }
+        });
     }
 
     private void getVideoDetail() {
@@ -102,6 +127,7 @@ public class VideoDetailActivity extends BaseActivity {
         thumbName.setText(entity.data.title);
         if(entity.data.money == 0 || entity.data.validity > 0) {
             buttonBuy.setVisibility(View.GONE);
+            bugYet.setVisibility(View.VISIBLE);
         } else {
             buttonPlay.setVisibility(View.GONE);
         }
