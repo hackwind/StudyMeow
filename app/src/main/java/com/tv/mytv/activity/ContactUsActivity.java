@@ -17,7 +17,6 @@ import com.tv.mytv.entity.GetQRCodeEntity;
 import com.tv.mytv.http.HttpAddress;
 import com.tv.mytv.http.HttpImageAsync;
 import com.tv.mytv.http.HttpRequest;
-import com.tv.mytv.util.SharePrefUtil;
 import com.tv.mytv.util.Util;
 
 import java.util.Timer;
@@ -27,7 +26,7 @@ import java.util.TimerTask;
  * Created by Administrator on 2017/4/17.
  */
 
-public class LoginActivity extends BaseActivity {
+public class ContactUsActivity extends BaseActivity {
     private final static int REPEAT_INTERVAL = 2000;
     private ImageView wxImage;
     private int sessionId;
@@ -36,7 +35,7 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_contactus);
         wxImage = (ImageView)findViewById(R.id.wechat_image);
 
         getQRCode();
@@ -58,11 +57,11 @@ public class LoginActivity extends BaseActivity {
 
 
     private void getQRCode() {
-        HttpRequest.get(HttpAddress.getQRCode(),null,LoginActivity.this,"getQRCodeBack",null,this, GetQRCodeEntity.class);
+        HttpRequest.get(HttpAddress.getQRCode(),null,ContactUsActivity.this,"getQRCodeBack",null,this, GetQRCodeEntity.class);
     }
 
     private void getLoginInfoRepeat() {
-        HttpRequest.get(HttpAddress.getWhetherLogin(sessionId),null,LoginActivity.this,"getLoginInfoBack",null,this, GetLoginInfoEntity.class);
+        HttpRequest.get(HttpAddress.getWhetherLogin(sessionId),null,ContactUsActivity.this,"getLoginInfoBack",null,this, GetLoginInfoEntity.class);
     }
 
     public void getQRCodeBack(GetQRCodeEntity entity,String totalResult) {
@@ -81,10 +80,6 @@ public class LoginActivity extends BaseActivity {
             timer.cancel();
             HttpAddress.token = entity.data.auth;//替换token
             //TODO 保存其他用户信息
-            SharePrefUtil.saveString(this,"userid",entity.data.userid);
-            SharePrefUtil.saveString(this,"nickname",entity.data.nickname);
-            SharePrefUtil.saveString(this,"userid",entity.data.userid);
-            SharePrefUtil.saveString(this,"thumb",entity.data.thumb);
             Intent intent = new Intent(this,MyActivity.class);
             startActivity(intent);
         } else {

@@ -1,11 +1,11 @@
 package adapter;
 
-import android.support.v7.widget.RecyclerView;
+import android.content.pm.PackageInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.open.androidtvwidget.leanback.adapter.GeneralAdapter;
@@ -13,7 +13,6 @@ import com.open.androidtvwidget.leanback.mode.OpenPresenter;
 import com.open.androidtvwidget.leanback.recycle.RecyclerViewTV;
 import com.open.androidtvwidget.menu.OpenMenu;
 import com.open.androidtvwidget.menu.OpenMenuItem;
-import com.open.androidtvwidget.menu.OpenMenuItemView;
 import com.tv.mytv.R;
 
 import java.util.ArrayList;
@@ -80,14 +79,22 @@ public class SettingPresenter extends OpenPresenter {
         ArrayList<OpenMenuItem> items = mOpenMenu.getMenuDatas();
         OpenMenuItem menuItem = items.get(position);
         ContainerViewHolder holder = (ContainerViewHolder) viewHolder;
-        LinearLayout openMenuItemView = (LinearLayout)holder.view;
+        RelativeLayout openMenuItemView = (RelativeLayout)holder.view;
         ImageView icon = (ImageView)openMenuItemView.findViewById(R.id.icon);
         TextView title = (TextView)openMenuItemView.findViewById(R.id.title_tv);
+        ImageView arrow = (ImageView)openMenuItemView.findViewById(R.id.arrow);
+        TextView version = (TextView)openMenuItemView.findViewById(R.id.version);
         icon.setImageResource(menuItem.getIconRes());
         title.setText(menuItem.getTitle());
-//        OpenMenuItemView openMenuItemView = (OpenMenuItemView) holder.view;
-//        openMenuItemView.initialize(menuItem);
-
+        if(position == getItemCount() - 1) {
+            arrow.setVisibility(View.GONE);
+            try {
+                PackageInfo pkg = mRecyclerViewTV.getContext().getPackageManager().getPackageInfo(mRecyclerViewTV.getContext().getApplicationContext().getPackageName(), 0);
+                String versionName = pkg.versionName;
+                version.setText("V" + versionName);
+                version.setVisibility(View.VISIBLE);
+            } catch(Exception e) {}
+        }
     }
 
     @Override

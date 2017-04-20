@@ -84,27 +84,6 @@ public class TreeMenuPresenter extends OpenPresenter {
             RecyclerView.LayoutParams lp = (RecyclerView.LayoutParams) openMenuItemView.getLayoutParams();
             lp.leftMargin = menuItem.getMenu().getTreeDepth() * 45;
         }
-        // item 单击处理.
-        mRecyclerViewTV.setOnItemClickListener(new RecyclerViewTV.OnItemClickListener() {
-            @Override
-            public void onItemClick(RecyclerViewTV parent, View itemView, int position) {
-                GeneralAdapter menuAdapter = getAdapter();
-                OpenMenuItem menuItem = getItemPosition(position);
-                // 判断是否存在子菜单.
-                if (menuItem.hasSubMenu()) {
-                    if (!menuItem.isShowSubMenu()) {
-                        // 显示菜单.
-                        addAll(menuItem.getSubMenu().getMenuDatas(), position + 1);
-                        mRecyclerViewTV.scrollToPosition(position + 1);
-                    } else {
-                        // 隐藏菜单.
-                        removeAll(menuItem.getSubMenu().getMenuDatas(), position + 1);
-                        mRecyclerViewTV.scrollToPosition(position + 1);
-                    }
-                    menuItem.setShowSubMenu(!menuItem.isShowSubMenu());
-                }
-            }
-        });
     }
 
     @Override

@@ -74,6 +74,23 @@
         android:id="@+id/mainUpView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
-
+    <LinearLayout
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/progressbar_style"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/w_30"
+            android:textColor="@color/trans_white"
+            android:text="@string/loading"
+            android:layout_marginTop="@dimen/h_40"/>
+    </LinearLayout>
 </RelativeLayout>

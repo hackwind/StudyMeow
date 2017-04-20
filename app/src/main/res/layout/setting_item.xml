@@ -6,6 +6,8 @@
     android:orientation="horizontal"
     android:layout_gravity="center"
     android:gravity="center_vertical"
+    android:focusableInTouchMode="true"
+    android:focusable="true"
     android:background="@drawable/selector_setting_item_bg">
     <ImageView
         android:id="@+id/icon"
@@ -24,10 +26,21 @@
         android:textSize="@dimen/w_36"
         android:layout_toRightOf="@id/icon"/>
     <ImageView
+        android:id="@+id/arrow"
         android:layout_width="@dimen/w_42"
         android:layout_height="@dimen/w_40"
         android:layout_gravity="right|center_vertical"
         android:src="@drawable/selector_setting_arrow"
         android:layout_marginRight="@dimen/w_46"
         android:layout_alignParentRight="true"/>
+    <TextView
+        android:id="@+id/version"
+        android:text="1.0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@drawable/left_menu_textcolor_selector"
+        android:textSize="@dimen/w_36"
+        android:layout_marginRight="@dimen/w_46"
+        android:layout_alignParentRight="true"
+        android:visibility="gone"/>
 </RelativeLayout>

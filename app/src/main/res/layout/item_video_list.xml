@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--focusableInTouchMode只是测试鼠标效果-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/w_282"
+    android:layout_height="@dimen/h_90"
+    android:focusableInTouchMode="true"
+    android:layout_margin="0dp"
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:background="@drawable/selector_video_detail_list"
+    android:focusable="true">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="@dimen/w_36"
+        android:gravity="center"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:text="人类简史"
+        android:textColor="@drawable/selector_corner_text"/>
+
+    <TextView
+        android:id="@+id/free"
+        android:layout_width="@dimen/w_56"
+        android:layout_height="@dimen/h_24"
+        android:textSize="@dimen/w_18"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:text="收费"
+        android:background="@drawable/selector_corner_text_bg"
+        android:textColor="@drawable/selector_corner_text"/>
+
+</RelativeLayout>

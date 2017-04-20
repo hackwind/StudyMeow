@@ -115,6 +115,10 @@ public class OpenMenuItemView extends LinearLayout implements OpenMenuItem.ItemV
         }
     }
 
+    public void setTextColor(int color) {
+        mTitleView.setTextColor(color);
+    }
+
     private void insertIconView() {
         LayoutInflater inflater = getInflater();
         mIconView = (ImageView) inflater.inflate(R.layout.list_menu_item_icon, this, false);

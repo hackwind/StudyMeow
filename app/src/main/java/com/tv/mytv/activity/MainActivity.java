@@ -147,7 +147,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
                 for(int i = 0; i < count;i ++) {
                     menuListView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
                 }
-                mainUpView1.setVisibility(View.GONE);
+                if(mainUpView1 != null) {
+                    mainUpView1.setVisibility(View.GONE);
+                }
             }
 
             @Override

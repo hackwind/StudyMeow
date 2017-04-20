@@ -10,6 +10,8 @@
     android:paddingRight="@dimen/w_15"
     android:paddingBottom="@dimen/h_8"
     android:paddingTop="@dimen/h_8"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:background="@drawable/left_menu_bg_selector">
     <ImageView
         android:id="@+id/icon"

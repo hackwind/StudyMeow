@@ -68,12 +68,12 @@
             android:name=".activity.LoginActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.HomePageActivity"
-            android:screenOrientation="landscape">
-        </activity>
-        <activity android:name=".activity.SearchActivity"
-            android:screenOrientation="landscape">
-        </activity>
+            android:name=".activity.ContactUsActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activity.VideoDetailActivity"
+            android:screenOrientation="landscape" />
+
         <meta-data
             android:name="design_width"
             android:value="1920">

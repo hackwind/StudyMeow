@@ -2,9 +2,11 @@ package com.tv.mytv.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.open.androidtvwidget.bridge.OpenEffectBridge;
@@ -48,6 +50,7 @@ public class SettingActivity extends BaseActivity {
         managerMenu.setOrientation(LinearLayoutManager.VERTICAL);
         managerMenu.setSmoothScrollbarEnabled(false);
         settingListView.setLayoutManager(managerMenu);
+        settingListView.addItemDecoration(new SpaceItemDecoration((int)getResources().getDimension(R.dimen.h_20)));
         GeneralAdapter menuAdapter = new GeneralAdapter(new SettingPresenter(settingListView, openMenu));
         settingListView.setAdapter(menuAdapter);
         settingListView.setItemAnimator(new DefaultItemAnimator());
@@ -60,13 +63,10 @@ public class SettingActivity extends BaseActivity {
             @Override
             public void onItemSelected(RecyclerViewTV parent, View itemView, int position) {
 
-                onViewItemClick(itemView, position,false);
-
-                for(int i = 0; i < settingListView.getChildCount(); i ++) {
-                    settingListView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+                for(int i = 0 ;i < settingListView.getChildCount(); i ++) {
+                    settingListView.getChildAt(i).setBackgroundResource(R.drawable.setting_item_bg_normal);
                 }
-                itemView.setBackgroundResource(R.drawable.left_menu_checkde);
-
+                itemView.setBackgroundResource(R.drawable.setting_item_bg_selected);
             }
 
             /**
@@ -79,13 +79,13 @@ public class SettingActivity extends BaseActivity {
         settingListView.setOnItemClickListener(new RecyclerViewTV.OnItemClickListener() {
             @Override
             public void onItemClick(RecyclerViewTV parent, View itemView, int position) {
-                onViewItemClick(itemView, position,true);
+                onViewItemClick(itemView, position);
             }
         });
         settingListView.setDefaultSelect(0);
     }
 
-    private void onViewItemClick(View itemView, int position,boolean isRealClick) {
+    private void onViewItemClick(View itemView, int position) {
         switch (position) {
             case 0:
 
@@ -94,13 +94,28 @@ public class SettingActivity extends BaseActivity {
 
                 break;
             case 2:
-                if(isRealClick) {
-                    Intent intent = new Intent(SettingActivity.this, SettingActivity.class);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(SettingActivity.this, ContactUsActivity.class);
+                startActivity(intent);
+
                 break;
 
         }
 
+    }
+
+    public class SpaceItemDecoration extends RecyclerViewTV.ItemDecoration{
+
+        private int space;
+
+        public SpaceItemDecoration(int space) {
+            this.space = space;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerViewTV.State state) {
+
+            if(parent.getChildLayoutPosition(view) != 0)
+                outRect.top = space;
+        }
     }
 }

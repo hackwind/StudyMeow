@@ -66,7 +66,7 @@ public class HttpAddress {
      * @return
      */
      public static String getVideoDetails(String catid, String id){
-          return  WEB_URL+"m=member&c=app2&a=get&catid="+catid+"&id="+id;
+          return  WEB_URL+"m=member&c=app2&a=get&catid="+catid+"&id="+id + "&auth=" + token;
 //          return  WEB_URL+"index.php?m=member&c=app&a=get&catid=2&id=483";
      }
 

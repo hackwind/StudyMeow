@@ -20,6 +20,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -82,6 +84,7 @@ public class ListActivity extends AppCompatActivity {
 
     private List<ListEntity.VideoRow> videoList;
     private boolean loading = false;
+    private LinearLayout mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +126,7 @@ public class ListActivity extends AppCompatActivity {
         categoryName = (TextView)findViewById(R.id.category_name) ;
         pageCountView = (TextView)findViewById(R.id.category_page) ;
         categoryName.setText(catName);
-
+        mProgressBar = (LinearLayout) findViewById(R.id.progressBar);
         initLeftMenu();
         initFreeMenu();
     }
@@ -167,10 +170,6 @@ public class ListActivity extends AppCompatActivity {
         leftMenu.setOnItemListener(new RecyclerViewTV.OnItemListener() {
             @Override
             public void onItemPreSelected(RecyclerViewTV parent, View itemView, int position) {
-                // 传入 itemView也可以, 自己保存的 oldView也可以.
-//                if(mainUpView != null) {
-//                    mainUpView.setUnFocusView(itemView);
-//                }
             }
 
             @Override
@@ -183,6 +182,10 @@ public class ListActivity extends AppCompatActivity {
                 }
                 leftMenu.getChildAt(leftMenuSelectedIndex).setBackgroundResource(R.drawable.left_menu_checkde);
 
+                if(mainUpView1 != null) {
+                    mainUpView1.setVisibility(View.GONE);
+                }
+
                 CategoryEntity.Category category = categoryEntity.data.category.get(position);
                 if(!catId.equals(category.catid) ) {
                     catId = category.catid;
@@ -190,7 +193,9 @@ public class ListActivity extends AppCompatActivity {
                     page = 1;
                     total = 0;
                     pageCount = 0;
-                    videoList = null;
+                    if(videoList != null) {
+                        videoList.clear();
+                    }
                     categoryName.setText(catName);
                     getPageData();
                 }
@@ -256,6 +261,24 @@ public class ListActivity extends AppCompatActivity {
                     forFree = false;
                 } else {
                     forFree = true;
+                }
+                page = 1;
+                total = 0;
+                pageCount = 0;
+                if(videoList != null) {
+                    videoList.clear();
+                }
+                if(mainUpView1 != null) {
+                    mainUpView1.setVisibility(View.GONE);
+                }
+                TextView allButton = (TextView)(freeMenu.findViewHolderForAdapterPosition(0).itemView.findViewById(R.id.title_tv));
+                TextView freeButton = (TextView)(freeMenu.findViewHolderForAdapterPosition(1).itemView.findViewById(R.id.title_tv));
+                if(forFree) {
+                    allButton.setTextColor(getResources().getColor(R.color.trans_white));
+                    freeButton.setTextColor(getResources().getColor(R.color.selector));
+                } else {
+                    allButton.setTextColor(getResources().getColor(R.color.selector));
+                    freeButton.setTextColor(getResources().getColor(R.color.trans_white));
                 }
                 getPageData();
             }
@@ -334,6 +357,16 @@ public class ListActivity extends AppCompatActivity {
                     page ++;
                     getPageData();
                 }
+
+                TextView allButton = (TextView)(freeMenu.findViewHolderForAdapterPosition(0).itemView.findViewById(R.id.title_tv));
+                TextView freeButton = (TextView)(freeMenu.findViewHolderForAdapterPosition(1).itemView.findViewById(R.id.title_tv));
+                if(forFree) {
+                    allButton.setTextColor(getResources().getColor(R.color.trans_white));
+                    freeButton.setTextColor(getResources().getColor(R.color.selector));
+                } else {
+                    allButton.setTextColor(getResources().getColor(R.color.selector));
+                    freeButton.setTextColor(getResources().getColor(R.color.trans_white));
+                }
             }
 
             @Override
@@ -346,6 +379,11 @@ public class ListActivity extends AppCompatActivity {
         contentView.setOnItemClickListener(new RecyclerViewTV.OnItemClickListener() {
             @Override
             public void onItemClick(RecyclerViewTV parent, View itemView, int position) {
+                ListEntity.VideoRow row = videoList.get(position);
+                Intent intent = new Intent(ListActivity.this,VideoDetailActivity.class);
+                intent.putExtra("id",row.id);
+                intent.putExtra("catid",row.catid);
+                startActivity(intent);
             }
         });
     }
@@ -360,7 +398,7 @@ public class ListActivity extends AppCompatActivity {
         if(forFree) {
             map.put("isFree", forFree ? 1 : 0);
         }
-        HttpRequest.get(HttpAddress.getList(catId,page,pageSize),map,ListActivity.this,"getListBack",null,this,ListEntity.class);
+        HttpRequest.get(HttpAddress.getList(catId,page,pageSize),map,ListActivity.this,"getListBack",page > 1 ? null : mProgressBar,this,ListEntity.class);
     }
 
     /**
@@ -376,9 +414,11 @@ public class ListActivity extends AppCompatActivity {
         }
         pageCount = entity.data.pageCount;
         total = entity.data.total;
-        if(videoList == null) {
+        if(videoList == null || videoList.size() == 0) {
             rowCount = entity.data.total / ROW_SIZE + 1;
             pageCountView.setText("1/" + rowCount);
+        }
+        if(videoList == null) {
             videoList = entity.data.rows;
             initContentView();
         }else {
