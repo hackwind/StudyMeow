@@ -1,7 +1,5 @@
 package com.tv.mytv.http;
 
-import android.provider.Settings;
-
 /**
  * Created by Administrator on 2016/11/14.
  */
@@ -11,7 +9,7 @@ public class HttpAddress {
 //    public static final  String  WEB_URL="http://120.77.182.205/52feed/index.php?";
     public static final String WEB_URL = "http://op.sintoon.com/index.php?";
 
-    public static String token = "";
+    public static String auth = "";
 
     /**
      * 获取token
@@ -26,7 +24,7 @@ public class HttpAddress {
      * @return
      */
     public static String getCategory() {
-        return  WEB_URL+"m=member&c=app2&a=category&auth=" + token;
+        return  WEB_URL+"m=member&c=app2&a=category&auth=" + auth;
     }
 
     /**
@@ -34,7 +32,7 @@ public class HttpAddress {
      * @return
      */
     public static String getList(String catid,int page,int pageSize) {
-        return  WEB_URL+"m=member&c=app2&a=listinfo&auth=" + token + "&catid=" + catid + "&page=" + page + "&pageSize=" + pageSize;
+        return  WEB_URL+"m=member&c=app2&a=listinfo&auth=" + auth + "&catid=" + catid + "&page=" + page + "&pageSize=" + pageSize;
     }
 
     /**
@@ -42,7 +40,7 @@ public class HttpAddress {
      * @return
      */
     public static String getRecommend() {
-        return  WEB_URL+"m=member&c=app2&a=poster&auth=" + token ;
+        return  WEB_URL+"m=member&c=app2&a=poster&auth=" + auth;
     }
 
     /**
@@ -50,7 +48,7 @@ public class HttpAddress {
      * @return
      */
     public static String getQRCode() {
-        return  WEB_URL+"m=member&c=app2&a=public_login&auth=" + token ;
+        return  WEB_URL+"m=member&c=app2&a=public_login&auth=" + auth;
     }
 
     /**
@@ -58,7 +56,7 @@ public class HttpAddress {
      * @return
      */
     public static String getWhetherLogin(int sessionId) {
-        return  WEB_URL+"m=member&c=app2&a=public_login&type=checkLogin&auth=" + token +"&sessionid=" + sessionId;
+        return  WEB_URL+"m=member&c=app2&a=public_login&type=checkLogin&auth=" + auth +"&sessionid=" + sessionId;
     }
 
     /**
@@ -66,7 +64,7 @@ public class HttpAddress {
      * @return
      */
      public static String getVideoDetails(String catid, String id){
-          return  WEB_URL+"m=member&c=app2&a=get&catid="+catid+"&id="+id + "&auth=" + token;
+          return  WEB_URL+"m=member&c=app2&a=get&catid="+catid+"&id="+id + "&auth=" + auth;
 //          return  WEB_URL+"index.php?m=member&c=app&a=get&catid=2&id=483";
      }
 
@@ -75,7 +73,7 @@ public class HttpAddress {
      * @return
      */
     public static String addCollection(String courseid){
-        return  WEB_URL+"m=member&c=app2&a=collection_add&courseid=" + courseid + "&auth=" + token;
+        return  WEB_URL+"m=member&c=app2&a=collection_add&courseid=" + courseid + "&auth=" + auth;
 //          return  WEB_URL+"index.php?m=member&c=app&a=get&catid=2&id=483";
     }
 
@@ -94,7 +92,7 @@ public class HttpAddress {
      * @return
      */
      public static String getVideoPath(String id){
-        return  WEB_URL+"m=member&c=app2&a=getViewSource&id=" + id + "&auth=" + token;
+        return  WEB_URL+"m=member&c=app2&a=getViewSource&id=" + id + "&auth=" + auth;
      }
 
     /**

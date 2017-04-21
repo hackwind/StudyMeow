@@ -34,6 +34,7 @@ import com.tv.mytv.entity.TokenEntity;
 import com.tv.mytv.http.HttpAddress;
 import com.tv.mytv.http.HttpRequest;
 import com.tv.mytv.util.SharePrefUtil;
+import com.tv.mytv.widget.MyOpenMenuImpl;
 import com.tv.mytv.widget.SpaceItemDecoration;
 import com.umeng.analytics.MobclickAgent;
 
@@ -80,7 +81,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
         getToken();
     }
     private void getToken() {
-        HttpRequest.get(HttpAddress.getToken(Settings.System.getString(getContentResolver(), Settings.System.ANDROID_ID)),null,MainActivity.this,"getTokenBack",null,this, TokenEntity.class);
+        if(TextUtils.isEmpty(SharePrefUtil.getString(this,SharePrefUtil.KEY_USER_ID,""))) { // 还未登陆
+            HttpRequest.get(HttpAddress.getToken(Settings.System.getString(getContentResolver(), Settings.System.ANDROID_ID)), null, MainActivity.this, "getTokenBack", null, this, TokenEntity.class);
+        } else {
+            HttpAddress.auth = SharePrefUtil.getString(this,SharePrefUtil.KEY_AUTH,"");
+        }
     }
 
     private void getCategory() {
@@ -93,9 +98,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
 
     /** 获取token回调 */
     public void getTokenBack(TokenEntity entity,String totalResult) {
-        String token = entity.data.auth;
-        HttpAddress.token = token;
-        SharePrefUtil.saveString(this, "token", token);
+        String auth = entity.data.auth;
+        HttpAddress.auth = auth;
+        SharePrefUtil.saveString(this, SharePrefUtil.KEY_AUTH, auth);
         getRecommend();
         getCategory();
     }
@@ -121,8 +126,17 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
         return getResources().getDimension(id);
     }
     private void initLoginView() {
-        OpenMenuImpl openMenu = new OpenMenuImpl();
-        openMenu.add("登陆").setIconRes(R.mipmap.login);
+        MyOpenMenuImpl openMenu = new MyOpenMenuImpl();
+        if(TextUtils.isEmpty(SharePrefUtil.getString(this,SharePrefUtil.KEY_USER_ID,""))) {//未登录
+            openMenu.add("登陆").setIconRes(R.mipmap.login);
+        } else {
+            String nickName = SharePrefUtil.getString(this,SharePrefUtil.KEY_NICK_NAME,"");
+            String url = SharePrefUtil.getString(this,SharePrefUtil.KEY_THUMB,"");
+            openMenu.add(nickName,url);
+        }
+//        OpenMenuImpl openMenu = new OpenMenuImpl();
+//        openMenu.add("登陆").setIconRes(R.mipmap.login);
+
         final MainUpView mainUpView = new MainUpView(this);
         mainUpView.setEffectBridge(new OpenEffectBridge());
         mainUpView.setUpRectResource(R.drawable.left_menu_bg_selector);
@@ -160,8 +174,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
         loginView.setOnItemClickListener(new RecyclerViewTV.OnItemClickListener() {
             @Override
             public void onItemClick(RecyclerViewTV parent, View itemView, int position) {
-                Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-                startActivity(intent);
+                if(TextUtils.isEmpty(SharePrefUtil.getString(MainActivity.this,SharePrefUtil.KEY_USER_ID,""))) {//未登录
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(MainActivity.this, MyActivity.class);
+                    startActivity(intent);
+                }
             }
         });
     }

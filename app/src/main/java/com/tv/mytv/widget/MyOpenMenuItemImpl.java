@@ -23,6 +23,12 @@ public class MyOpenMenuItemImpl implements OpenMenuItem {
         this.mTitle = title;
     }
 
+    MyOpenMenuItemImpl(OpenMenu menu, int iconRes, CharSequence title) {
+        this.mMenu = menu;
+        this.mIconID = iconRes;
+        this.mTitle = title;
+    }
+
     @Override
     public OpenMenuItem showSubMenu() {
         if (mSubMenu != null) {

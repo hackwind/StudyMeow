@@ -5,10 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.tv.mytv.R;
@@ -78,7 +75,7 @@ public class ContactUsActivity extends BaseActivity {
     public void getLoginInfoBack(GetLoginInfoEntity entity,String totalResult) {
         if(entity != null && entity.status == true) {
             timer.cancel();
-            HttpAddress.token = entity.data.auth;//替换token
+            HttpAddress.auth = entity.data.auth;//替换token
             //TODO 保存其他用户信息
             Intent intent = new Intent(this,MyActivity.class);
             startActivity(intent);

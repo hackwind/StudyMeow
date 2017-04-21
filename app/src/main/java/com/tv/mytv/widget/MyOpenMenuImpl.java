@@ -106,8 +106,8 @@ public class MyOpenMenuImpl implements OpenMenu {
         return this;
     }
 
-    private OpenMenuItem addInternal(String iconUrl, CharSequence title) {
-        final OpenMenuItem item = new MyOpenMenuItemImpl(this, iconUrl, title);
+    private MyOpenMenuItemImpl addInternal(String iconUrl, CharSequence title) {
+        final MyOpenMenuItemImpl item = new MyOpenMenuItemImpl(this, iconUrl, title);
         item.setTextSize(mTextSize);
         mItems.add(item);
         return item;

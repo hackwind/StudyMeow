@@ -86,7 +86,7 @@ public class VideoPlayerActivity extends BaseActivity {
     private String strVideoDetail;
     private List<VideoDetailEntity.Video> videoList;//专辑详情
     private int playIndex = 0;//当前正在播放的专辑列表索引
-
+    private List<VideoSourceEntity.VideoSource> currentVideoSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +110,7 @@ public class VideoPlayerActivity extends BaseActivity {
         getVideoSourcePath();
     }
 
-    private void playfunction() {
+    private void play() {
         mediaController = new MyMediaController(VideoPlayerActivity.this, mVideoView, VideoPlayerActivity.this);
         mediaController.setVideoName(title);
         mediaController.show(5000);
@@ -125,7 +125,8 @@ public class VideoPlayerActivity extends BaseActivity {
 //            mVideoView.setHardwareDecoder(true);
             //设置缓冲大小
             mVideoView.setBufferSize(512 * 1024);
-            mVideoView.setVideoPath("http://pl-ali.youku.com/playlist/m3u8?ts=1491379421&keyframe=1&vid=51774769&type=hd2&sid=049137942172720424e20&token=5496&oip=1696944366&did=898d39a045c9ba106aadb7948a82db41&ctype=20&ev=1&ep=8dSpcv4XiMQqYrmnnzZUQtLwiiT4LnBKV%2ByLYxVL26AF5USSf8P4s7i4KEcpvH8L&website=[cloud.ckjiexi.com]--2");
+            //mVideoView.setVideoPath("http://pl-ali.youku.com/playlist/m3u8?ts=1491379421&keyframe=1&vid=51774769&type=hd2&sid=049137942172720424e20&token=5496&oip=1696944366&did=898d39a045c9ba106aadb7948a82db41&ctype=20&ev=1&ep=8dSpcv4XiMQqYrmnnzZUQtLwiiT4LnBKV%2ByLYxVL26AF5USSf8P4s7i4KEcpvH8L&website=[cloud.ckjiexi.com]--2");
+            mVideoView.setVideoPath(videoPath);
             //设置媒体控制器
             mVideoView.setMediaController(mediaController);
             mVideoView.requestFocus();
@@ -164,29 +165,29 @@ public class VideoPlayerActivity extends BaseActivity {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     number_segments++;
-                    LogUtil.e("" + number_segments + "-----" + listVideo.size() + "--------" + mList.size());
-                    if (number_segments > listVideo.size() - 1) { //当前段播放完成
-                        postion++;
-                        number_segments = 0;
-                        LogUtil.e("" + postion);
-                        if (postion > mList.size() - 1) {
-                            ToastUtil.showShort(VideoPlayerActivity.this, "已经是最后一集了");
-                        } else {
-                            nowPlay = mList.get(postion);//获取下一个播放对象;
-//                          listVideo = nowPlay.getVideoSource().get(0);
-                            String videoPathId=nowPlay.getId();
-                            HttpRequest.get(HttpAddress.getVideoPath(videoPathId), null, VideoPlayerActivity.this, "getPathResult", null,VideoPlayerActivity.this);
-                        }
-                    }
-                    //未播放完成，使用当前源播放下一个段
-                    VideoPathBean.MsgBean.VideoSourceBean videoBean = listVideo.get(number_segments);//获取播放段
-                    String videoUrl = videoBean.getUrl();
-                    //String videoUrl=mList.get(0);
-                    loading.setVisibility(View.VISIBLE);
-                    title_pro.setText(title);
-                    source_pro.setText("来源:" + source);
-                    mediaController.setVideoName(title);
-                    mVideoView.setVideoPath(videoUrl);
+//                    LogUtil.e("" + number_segments + "-----" + listVideo.size() + "--------" + mList.size());
+//                    if (number_segments > listVideo.size() - 1) { //当前段播放完成
+//                        postion++;
+//                        number_segments = 0;
+//                        LogUtil.e("" + postion);
+//                        if (postion > mList.size() - 1) {
+//                            ToastUtil.showShort(VideoPlayerActivity.this, "已经是最后一集了");
+//                        } else {
+//                            nowPlay = mList.get(postion);//获取下一个播放对象;
+////                          listVideo = nowPlay.getVideoSource().get(0);
+//                            String videoPathId=nowPlay.getId();
+//                            HttpRequest.get(HttpAddress.getVideoPath(videoPathId), null, VideoPlayerActivity.this, "getPathResult", null,VideoPlayerActivity.this);
+//                        }
+//                    }
+//                    //未播放完成，使用当前源播放下一个段
+//                    VideoPathBean.MsgBean.VideoSourceBean videoBean = listVideo.get(number_segments);//获取播放段
+//                    String videoUrl = videoBean.getUrl();
+//                    //String videoUrl=mList.get(0);
+//                    loading.setVisibility(View.VISIBLE);
+//                    title_pro.setText(title);
+//                    source_pro.setText("来源:" + source);
+//                    mediaController.setVideoName(title);
+//                    mVideoView.setVideoPath(videoUrl);
                 }
             });
 
@@ -222,14 +223,11 @@ public class VideoPlayerActivity extends BaseActivity {
     }
 
     private void initview() {
-//        此处的   mymediacontroller  为我们自定义控制器的布局文件名称
-//        View view_voice = View.inflate(VideoPlayerActivity.this, R.layout.mymediacontroller, null);
         mVideoView = (VideoView) findViewById(R.id.mVideoView);
         mVideo_error = (LinearLayout) findViewById(R.id.video_error);
         loading = (LinearLayout) findViewById(R.id.loading);
         title_pro = (TextView) findViewById(R.id.title_pro);
         source_pro = (TextView) findViewById(R.id.source_pro);
-//      mediacontroller_time_total = (TextView) view_voice.findViewById(mediacontroller_time_total);
         mVideoView = (VideoView) findViewById(R.id.mVideoView);
         mVideo_error = (LinearLayout) findViewById(R.id.video_error);
         loading = (LinearLayout) findViewById(R.id.loading);
@@ -259,33 +257,15 @@ public class VideoPlayerActivity extends BaseActivity {
         new Thread(mRunnable).start();
     }
 
-
-    public void getPathResult(String str) {
-        LogUtil.i(str);
-        if (!TextUtils.isEmpty(str)) {
-            Gson gson = new Gson();
-            VideoPathBean bean = gson.fromJson(str, VideoPathBean.class);
-            List<VideoPathBean.MsgBean> list = bean.getMsg();
-            VideoPathBean.MsgBean msgBean = list.get(0);
-            title = msgBean.getTitle();
-            source = msgBean.getSource();
-            //拿到Video集合
-            List<List<VideoPathBean.MsgBean.VideoSourceBean>> mDataList = msgBean.getVideoSource();
-            //拿到Video视频集合
-            listVideo = mDataList.get(0);
-//            ToastUtil.showShort(VideoPlayerActivity.this,listVideo.size()+"");
-            if(listVideo.size()<1){
-                mVideo_error.setVisibility(View.VISIBLE);
-                loading.setVisibility(View.GONE);
-            }
-            //拿到当前格式视频集合
-            VideoPathBean.MsgBean.VideoSourceBean dataBean = listVideo.get(0);
-            videoPath = dataBean.getUrl();
-            //播放视频
-            playfunction();
-        } else {
-            ToastUtil.showShort(VideoPlayerActivity.this, "数据返回错误");
+    /** 获取视频源接口返回 */
+    public void getPathResult(VideoSourceEntity entity ,String str) {
+        if(entity.status == false || entity.data == null || entity.data.videoSource == null) {
+            return;
         }
+        //播放视频
+        currentVideoSource = entity.data.videoSource;
+        videoPath = currentVideoSource.get(0).url;
+        play();
     }
 
     Runnable  mRunnable = new Runnable(){

@@ -81,26 +81,21 @@ public class HttpRequest {
 				Log.d("hjs",result);
 				Gson gson = new Gson();
 				BaseEntity entity = gson.fromJson(result,BaseEntity.class);
-				if(entity.status == true) {
-					T responseResult = gson.fromJson(result, clazz);
-					Class objClass = obj.getClass();
-					Method method = null;
-					try {
-						method = objClass.getDeclaredMethod(mothod, clazz,String.class);
-						method.invoke(obj, responseResult,result);
-					} catch (NoSuchMethodException e) {
-						e.printStackTrace();
-					} catch (IllegalAccessException e) {
-						e.printStackTrace();
-					} catch (IllegalArgumentException e) {
-						e.printStackTrace();
-					} catch (InvocationTargetException e) {
-						e.printStackTrace();
-					}
-				} else {
-					ToastUtil.showShort(MyApplication.getContext(), "接口调用失败");
+				T responseResult = gson.fromJson(result, clazz);
+				Class objClass = obj.getClass();
+				Method method = null;
+				try {
+					method = objClass.getDeclaredMethod(mothod, clazz,String.class);
+					method.invoke(obj, responseResult,result);
+				} catch (NoSuchMethodException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
 				}
-
 
 			}
 		});

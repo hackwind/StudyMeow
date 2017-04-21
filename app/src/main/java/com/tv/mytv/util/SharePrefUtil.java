@@ -19,6 +19,14 @@ public class SharePrefUtil {
 	private static String tag = SharePrefUtil.class.getSimpleName();
 	private final static String SP_NAME = "studytv_config";
 
+	public static String KEY_USER_ID = "userid";
+	public static String KEY_USER_NAME = "username";
+	public static String KEY_NICK_NAME = "nickname";
+	public static String KEY_AUTH = "auth";
+	public static String KEY_THUMB = "thumb";
+	public static String KEY_GROUP_ID = "group";
+	public static String KEY_REG_DATE = "regdate";
+
 	private final static String SERIALPORT_NAME = "android_serialport_api.sample_preferences";
 	private static SharedPreferences sp;
 	private static SharedPreferences serialport_sp;

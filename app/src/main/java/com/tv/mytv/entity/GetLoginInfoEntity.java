@@ -14,5 +14,6 @@ public class GetLoginInfoEntity extends BaseEntity {
         public String auth;
         public String thumb;
         public String groupid;
+        public String regdate;
     }
 }

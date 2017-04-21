@@ -5,10 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.tv.mytv.R;
@@ -79,12 +76,15 @@ public class LoginActivity extends BaseActivity {
     public void getLoginInfoBack(GetLoginInfoEntity entity,String totalResult) {
         if(entity != null && entity.status == true) {
             timer.cancel();
-            HttpAddress.token = entity.data.auth;//替换token
-            //TODO 保存其他用户信息
-            SharePrefUtil.saveString(this,"userid",entity.data.userid);
-            SharePrefUtil.saveString(this,"nickname",entity.data.nickname);
-            SharePrefUtil.saveString(this,"userid",entity.data.userid);
-            SharePrefUtil.saveString(this,"thumb",entity.data.thumb);
+            HttpAddress.auth = entity.data.auth;//替换token
+            //保存其他用户信息
+            SharePrefUtil.saveString(this,SharePrefUtil.KEY_USER_ID,entity.data.userid);
+            SharePrefUtil.saveString(this,SharePrefUtil.KEY_NICK_NAME,entity.data.nickname);
+            SharePrefUtil.saveString(this,SharePrefUtil.KEY_AUTH,entity.data.auth);
+            SharePrefUtil.saveString(this,SharePrefUtil.KEY_THUMB,entity.data.thumb);
+            SharePrefUtil.saveString(this,SharePrefUtil.KEY_USER_NAME,entity.data.username);
+            SharePrefUtil.saveString(this,SharePrefUtil.KEY_GROUP_ID,entity.data.groupid);
+            SharePrefUtil.saveString(this,SharePrefUtil.KEY_REG_DATE,entity.data.regdate);
             Intent intent = new Intent(this,MyActivity.class);
             startActivity(intent);
         } else {
