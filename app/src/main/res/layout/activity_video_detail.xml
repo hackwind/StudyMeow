@@ -82,10 +82,12 @@
                     android:focusableInTouchMode="true"
                     android:layout_marginRight="@dimen/w_20"
                     android:gravity="center"
+                    android:clickable="true"
                     android:adjustViewBounds="true"
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:background="@drawable/selector_video_detail_button"
-                    android:layout_alignParentLeft="true">
+                    android:layout_alignParentLeft="true"
+                    android:visibility="gone">
                     <ImageView
                         android:layout_width="@dimen/w_35"
                         android:layout_height="@dimen/h_35"
@@ -104,9 +106,11 @@
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:focusableInTouchMode="true"
                     android:adjustViewBounds="true"
+                    android:clickable="true"
                     android:layout_marginRight="@dimen/w_20"
                     android:layout_alignParentLeft="true"
-                    android:background="@drawable/selector_video_detail_button">
+                    android:background="@drawable/selector_video_detail_button"
+                    android:visibility="gone">
                     <ImageView
                         android:layout_width="@dimen/w_35"
                         android:layout_height="@dimen/h_35"
@@ -120,6 +124,7 @@
                     android:id="@+id/button_collect"
                     android:layout_width="@dimen/w_260"
                     android:layout_height="@dimen/h_70"
+                    android:clickable="true"
                     android:focusable="true"
                     android:gravity="center"
                     android:layout_gravity="center_horizontal|center_vertical"
@@ -128,8 +133,10 @@
                     android:drawablePadding="@dimen/w_20"
                     android:layout_alignParentLeft="true"
                     android:layout_marginLeft="@dimen/w_280"
-                    android:background="@drawable/selector_video_detail_button">
+                    android:background="@drawable/selector_video_detail_button"
+                    android:visibility="gone">
                     <ImageView
+                        android:id="@+id/collect_icon"
                         android:layout_width="@dimen/w_35"
                         android:layout_height="@dimen/h_35"
                         android:src="@drawable/collect_not"
@@ -158,7 +165,8 @@
         android:textSize="@dimen/w_36"
         android:layout_marginTop="@dimen/h_60"
         android:layout_marginBottom="@dimen/h_36"
-        android:layout_below="@id/top_container"/>
+        android:layout_below="@id/top_container"
+        android:visibility="gone"/>
     <com.open.androidtvwidget.leanback.recycle.RecyclerViewTV
         android:id="@+id/video_list"
         android:layout_width="match_parent"
@@ -171,28 +179,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/video_list"
-        android:layout_marginLeft="@dimen/w_42">
+        android:layout_marginTop="@dimen/h_60"
+        android:orientation="horizontal">
         <ImageView
             android:id="@+id/sub_icon"
             android:layout_width="@dimen/w_100"
-            android:layout_height="@dimen/h_156" />
+            android:layout_height="@dimen/h_156"
+            android:scaleType="centerCrop"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/w_42"
             android:orientation="vertical">
             <TextView
                 android:id="@+id/sub_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
                 android:textSize="@dimen/w_36"
-                android:textColor="@color/trans_white"
-                android:ellipsize="end"/>
+                android:ellipsize="end"
+                android:textColor="@color/trans_white"/>
             <TextView
                 android:id="@+id/sub_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/w_30"
+                android:layout_marginTop="@dimen/h_30"
                 android:lineSpacingExtra="@dimen/h_30"
                 android:textColor="@color/trans_white"
                 android:ellipsize="end"/>

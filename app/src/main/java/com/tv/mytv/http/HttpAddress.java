@@ -71,6 +71,15 @@ public class HttpAddress {
      }
 
     /**
+     * 详情接口
+     * @return
+     */
+    public static String addCollection(String courseid){
+        return  WEB_URL+"m=member&c=app2&a=collection_add&courseid=" + courseid + "&auth=" + token;
+//          return  WEB_URL+"index.php?m=member&c=app&a=get&catid=2&id=483";
+    }
+
+    /**
      * 提交视频播放
      * @param id
      * @return
@@ -85,7 +94,7 @@ public class HttpAddress {
      * @return
      */
      public static String getVideoPath(String id){
-        return  WEB_URL+"m=member&c=app2&a=getViewSource&id="+id;
+        return  WEB_URL+"m=member&c=app2&a=getViewSource&id=" + id + "&auth=" + token;
      }
 
     /**

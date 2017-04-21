@@ -20,6 +20,7 @@ public class VideoDetailEntity extends BaseEntity {
         public String author;
         public String type;//类型
         public String tags;//标签
+        public boolean isCollection;//true or false
         public int money;//金额 免费为0
         public int validity;//购买后有限期(天)
         public int status;//1可试看，2、需购买观看、99为可以观看。

@@ -1,6 +1,5 @@
 package com.tv.mytv.activity;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,11 +16,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.orhanobut.logger.Logger;
 import com.tv.mytv.R;
-import com.tv.mytv.bean.CourseDetailsBean;
-import com.tv.mytv.bean.VideoPathBean;
+import com.tv.mytv.entity.VideoDetailEntity;
+import com.tv.mytv.entity.VideoSourceEntity;
 import com.tv.mytv.http.HttpAddress;
 import com.tv.mytv.http.HttpRequest;
 import com.tv.mytv.util.LogUtil;
@@ -30,7 +28,7 @@ import com.tv.mytv.util.Util;
 import com.tv.mytv.view.MyMediaController;
 import com.umeng.analytics.MobclickAgent;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 import io.vov.vitamio.MediaPlayer;
@@ -39,10 +37,9 @@ import io.vov.vitamio.widget.VideoView;
 import static com.tv.mytv.util.Util.count;
 
 /**
- * Created by Administrator on 2016/11/14.
  * 播放器
  */
-public class VideoPlayerActivity extends Activity {
+public class VideoPlayerActivity extends BaseActivity {
     //视频路径
     private String videoPath;
 
@@ -65,24 +62,13 @@ public class VideoPlayerActivity extends Activity {
     private int postion;
     //段数
     private int number_segments = 0;
-    //视频总集数List
-    private List<CourseDetailsBean.MsgBean.VideoListBean> mList = new ArrayList<CourseDetailsBean.MsgBean.VideoListBean>();
 
     private boolean isPlay = true;
 
     private String str;
-
-//    private TextView mediacontroller_time_total;
-
-//    private  int Currnttime;
-    //当前集数播放对象
-    private  CourseDetailsBean.MsgBean.VideoListBean nowPlay;
-
-    private List<VideoPathBean.MsgBean.VideoSourceBean> listVideo;
-
-  //  private MediaPlayer mediaPlayer;
+    private String courseId;//专辑id
     //集数ID
-    private String id;
+    private String videoId;//当前正在播放的视频id
 
     private TextView  netWork_pro;
 
@@ -97,29 +83,23 @@ public class VideoPlayerActivity extends Activity {
     private TextView network_buffer;
 
     private Button error_back;
+    private String strVideoDetail;
+    private List<VideoDetailEntity.Video> videoList;//专辑详情
+    private int playIndex = 0;//当前正在播放的专辑列表索引
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_videoplayer);
-//        videoPath = getIntent().getStringExtra("videoPath");
-        title = getIntent().getStringExtra("title");
-        source = getIntent().getStringExtra("source");
-        postion = getIntent().getIntExtra("postion", 0);
 
-        id = getIntent().getStringExtra("id");
+        strVideoDetail = getIntent().getStringExtra("videodetail");
+        VideoDetailEntity entity = new Gson().fromJson(strVideoDetail,VideoDetailEntity.class);
 
-//        mList= (List<CourseDetailsBean.MsgBean.VideoListBean>) getIntent().getSerializableExtra("list");
-//        LogUtil.e(videoPath);
-        str = getIntent().getStringExtra("list");
-//        mediaPlayer = new MediaPlayer(VideoPlayerActivity.this, true);
-
-        //
-        Gson gson = new Gson();
-        mList = gson.fromJson(str, new TypeToken<List<CourseDetailsBean.MsgBean.VideoListBean>>() {
-        }.getType());
-        nowPlay = mList.get(postion); //当前播放对象
-//      listVideo = nowPlay.getVideoSource().get(0);//当前段集合
+        title = entity.data.title;
+        source = entity.data.source;
+        courseId = entity.data.id;
+        videoList = entity.data.videoList;
 
         //网络连接失败
         IntentFilter intentFilter=new IntentFilter();
@@ -127,7 +107,7 @@ public class VideoPlayerActivity extends Activity {
         registerReceiver(MyNetErrorReceiver,intentFilter);
 
         initview();
-
+        getVideoSourcePath();
     }
 
     private void playfunction() {
@@ -262,10 +242,6 @@ public class VideoPlayerActivity extends Activity {
         error_back= (Button) findViewById(R.id.back);
         title_pro.setText(title);
         source_pro.setText("来源:" + source);
-        //获取视频地址
-        HttpRequest.get(HttpAddress.getVideoPath(id), null, VideoPlayerActivity.this, "getPathResult", null,VideoPlayerActivity.this);
-        //定时刷新网速
-        new Thread(mRunnable).start();
 
         error_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -273,6 +249,43 @@ public class VideoPlayerActivity extends Activity {
                 VideoPlayerActivity.this.finish();
             }
         });
+    }
+
+    private void getVideoSourcePath() {
+        videoId = videoList.get(playIndex).id;
+        //获取视频地址
+        HttpRequest.get(HttpAddress.getVideoPath(videoId), null, VideoPlayerActivity.this, "getPathResult", loading,VideoPlayerActivity.this,VideoSourceEntity.class);
+        //定时刷新网速
+        new Thread(mRunnable).start();
+    }
+
+
+    public void getPathResult(String str) {
+        LogUtil.i(str);
+        if (!TextUtils.isEmpty(str)) {
+            Gson gson = new Gson();
+            VideoPathBean bean = gson.fromJson(str, VideoPathBean.class);
+            List<VideoPathBean.MsgBean> list = bean.getMsg();
+            VideoPathBean.MsgBean msgBean = list.get(0);
+            title = msgBean.getTitle();
+            source = msgBean.getSource();
+            //拿到Video集合
+            List<List<VideoPathBean.MsgBean.VideoSourceBean>> mDataList = msgBean.getVideoSource();
+            //拿到Video视频集合
+            listVideo = mDataList.get(0);
+//            ToastUtil.showShort(VideoPlayerActivity.this,listVideo.size()+"");
+            if(listVideo.size()<1){
+                mVideo_error.setVisibility(View.VISIBLE);
+                loading.setVisibility(View.GONE);
+            }
+            //拿到当前格式视频集合
+            VideoPathBean.MsgBean.VideoSourceBean dataBean = listVideo.get(0);
+            videoPath = dataBean.getUrl();
+            //播放视频
+            playfunction();
+        } else {
+            ToastUtil.showShort(VideoPlayerActivity.this, "数据返回错误");
+        }
     }
 
     Runnable  mRunnable = new Runnable(){
@@ -340,33 +353,6 @@ public class VideoPlayerActivity extends Activity {
         return super.onKeyDown(keyCode, event);
     }
 
-    public void getPathResult(String str) {
-        LogUtil.i(str);
-        if (!TextUtils.isEmpty(str)) {
-            Gson gson = new Gson();
-            VideoPathBean bean = gson.fromJson(str, VideoPathBean.class);
-            List<VideoPathBean.MsgBean> list = bean.getMsg();
-            VideoPathBean.MsgBean msgBean = list.get(0);
-            title = msgBean.getTitle();
-            source = msgBean.getSource();
-            //拿到Video集合
-            List<List<VideoPathBean.MsgBean.VideoSourceBean>> mDataList = msgBean.getVideoSource();
-            //拿到Video视频集合
-            listVideo = mDataList.get(0);
-//            ToastUtil.showShort(VideoPlayerActivity.this,listVideo.size()+"");
-            if(listVideo.size()<1){
-                mVideo_error.setVisibility(View.VISIBLE);
-                loading.setVisibility(View.GONE);
-            }
-            //拿到当前格式视频集合
-            VideoPathBean.MsgBean.VideoSourceBean dataBean = listVideo.get(0);
-            videoPath = dataBean.getUrl();
-            //播放视频
-            playfunction();
-        } else {
-            ToastUtil.showShort(VideoPlayerActivity.this, "数据返回错误");
-        }
-    }
 
     @Override
     protected void onDestroy() {
