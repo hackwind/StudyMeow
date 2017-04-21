@@ -2,9 +2,11 @@ package com.tv.mytv.activity;
 
 import android.animation.Animator;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,10 +20,8 @@ import com.open.androidtvwidget.view.MainUpView;
 import com.tv.mytv.R;
 import com.tv.mytv.http.HttpImageAsync;
 import com.tv.mytv.util.SharePrefUtil;
-import com.tv.mytv.widget.SpaceItemDecoration;
 
 import adapter.MyButtonPresenter;
-import adapter.RecommendPresenter;
 
 /**
  * Created by Administrator on 2017/4/19.
@@ -67,9 +67,10 @@ public class MyActivity extends BaseActivity {
     private void initRecycleView() {
         rvButtonList = (RecyclerViewTV)findViewById(R.id.my_button_list) ;
         GridLayoutManagerTV gridlayoutManager = new GridLayoutManagerTV(this, 6);
-        gridlayoutManager.setOrientation(GridLayoutManager.VERTICAL);
+        gridlayoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
         gridlayoutManager.setSmoothScrollbarEnabled(false);
         rvButtonList.setLayoutManager(gridlayoutManager);
+        rvButtonList.addItemDecoration(new SpaceItemDecoration((int)getResources().getDimension(R.dimen.w_20)));
         rvButtonList.setFocusable(false);
         rvButtonList.setSelectedItemAtCentered(true); // 设置item在中间移动.
         presenter = new MyButtonPresenter(buttonNames);
@@ -130,8 +131,8 @@ public class MyActivity extends BaseActivity {
     private void onViewItemClick(View itemView, int position) {
         switch (position) {
             case 0:
-                Intent intent = new Intent(MyActivity.this, WebActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(MyActivity.this, WebActivity.class);
+//                startActivity(intent);
                 break;
             case 1:
 
@@ -144,4 +145,21 @@ public class MyActivity extends BaseActivity {
         }
 
     }
+
+    public class SpaceItemDecoration extends RecyclerViewTV.ItemDecoration{
+
+        private int rightSpace;
+
+        public SpaceItemDecoration(int rightSpace) {
+            this.rightSpace = rightSpace;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            if(parent.getChildLayoutPosition(view) != 0) {
+                outRect.left = rightSpace;
+            }
+        }
+    }
+
 }
