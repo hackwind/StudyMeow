@@ -13,6 +13,7 @@
     <color name="black">#000000</color>
     <color name="selector">#3EAF05</color>
     <color name="trans_white">#66ffffff</color>
+    <color name="trans_black">#33000000</color>
 
     <color name="transparent">#00000000</color>
     <color name="mediacontroller_bg_pressed">#ff53c1bd</color>

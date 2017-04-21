@@ -66,8 +66,8 @@ public class MyActivity extends BaseActivity {
 
     private void initRecycleView() {
         rvButtonList = (RecyclerViewTV)findViewById(R.id.my_button_list) ;
-        GridLayoutManagerTV gridlayoutManager = new GridLayoutManagerTV(this, 3); // 解决快速长按焦点丢失问题.
-        gridlayoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
+        GridLayoutManagerTV gridlayoutManager = new GridLayoutManagerTV(this, 6);
+        gridlayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         gridlayoutManager.setSmoothScrollbarEnabled(false);
         rvButtonList.setLayoutManager(gridlayoutManager);
         rvButtonList.setFocusable(false);
@@ -80,7 +80,7 @@ public class MyActivity extends BaseActivity {
         mainUpView.setEffectBridge(new RecyclerViewBridge());
         // 注意这里，需要使用 RecyclerViewBridge 的移动边框 Bridge.
         bridge = (RecyclerViewBridge) mainUpView.getEffectBridge();
-        bridge.setUpRectResource(R.drawable.select_cover);
+        bridge.setUpRectResource(R.drawable.my_button);
         RectF receF = new RectF(getResources().getDimension(R.dimen.w_87) ,
                 getResources().getDimension(R.dimen.w_29) ,
                 getResources().getDimension(R.dimen.w_87)  ,

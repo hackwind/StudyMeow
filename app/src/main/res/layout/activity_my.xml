@@ -5,10 +5,11 @@
     android:layout_centerInParent="true"
     android:background="@mipmap/main_background">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
        <LinearLayout
            android:id="@+id/top_container"
            android:layout_width="match_parent"
@@ -53,17 +54,17 @@
        </LinearLayout>
 
         <com.open.androidtvwidget.leanback.recycle.RecyclerViewTV
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="@dimen/w_1210"
+            android:layout_height="@dimen/h_214"
             android:layout_below="@id/top_container"
-            android:id="@+id/my_button_list"
-            >
+            android:layout_centerHorizontal="true"
+            android:id="@+id/my_button_list">
         </com.open.androidtvwidget.leanback.recycle.RecyclerViewTV>
         <!-- 最顶层边框 -->
         <com.open.androidtvwidget.view.MainUpView
             android:id="@+id/mainUpView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

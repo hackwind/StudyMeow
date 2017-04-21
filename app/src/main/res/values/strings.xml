@@ -28,7 +28,7 @@
     <string name="collect">关注</string>
     <string name="free">免费</string>
     <string name="charge">收费</string>
-    <string name="regdate">·注册日期</string>
+    <string name="regdate">·&#160;&#160;注册日期</string>
 
     <!--Vitamio-->
     <string name="vitamio_library_app_name">VitamioLibrary</string>

@@ -11,9 +11,12 @@
 
     <TextView
         android:id="@+id/textView"
+        android:text="text"
+        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true">
+        android:layout_centerInParent="true"
+        android:textSize="@dimen/w_40">
     </TextView>
 
 </RelativeLayout>
