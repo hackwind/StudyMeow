@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/main_background"
+    android:orientation="vertical">
+
+    <com.open.androidtvwidget.leanback.recycle.RecyclerViewTV
+        android:id="@+id/lv_menu"
+        android:layout_width="@dimen/w_268"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/w_80"
+        android:layout_marginRight="@dimen/w_70"
+        android:paddingTop="@dimen/h_160"
+        android:layout_alignParentLeft="true"
+        android:divider="@null"
+        android:dividerHeight="@dimen/h_56"
+        android:listSelector="@android:color/transparent" />
+
+    <RelativeLayout
+        android:id="@+id/top_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/h_60"
+        android:layout_marginTop="@dimen/w_50"
+        android:layout_marginRight="@dimen/w_80"
+        android:gravity="bottom"
+        android:layout_toRightOf="@id/lv_menu">
+
+        <TextView
+            android:id="@+id/category_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/w_48"
+            android:textColor="#66FFFFFF"
+            android:text="名家专栏"
+            android:layout_marginRight="@dimen/w_60"/>
+
+        <com.open.androidtvwidget.leanback.recycle.RecyclerViewTV
+            android:id="@+id/free_menu"
+            android:layout_width="@dimen/h_300"
+            android:layout_height="@dimen/h_60"
+            android:layout_marginTop="@dimen/h_12"
+            android:divider="@null"
+            android:layout_toRightOf="@id/category_name"
+            android:layout_alignParentBottom="true"
+            android:listSelector="@android:color/transparent" />
+
+        <TextView
+            android:id="@+id/category_page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/w_30"
+            android:textColor="#66FFFFFF"
+            android:text="1/1"
+            android:layout_alignParentBottom="true"
+            android:gravity="bottom"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+    <com.open.androidtvwidget.leanback.recycle.RecyclerViewTV
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/top_container"
+        android:layout_toRightOf="@id/lv_menu"
+        android:layout_marginTop="@dimen/h_60"
+        android:layout_marginRight="@dimen/w_80"
+        android:id="@+id/recyclerview_content"
+        >
+    </com.open.androidtvwidget.leanback.recycle.RecyclerViewTV>
+    <!-- 最顶层边框 -->
+    <com.open.androidtvwidget.view.MainUpView
+        android:id="@+id/mainUpView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/progressbar_style"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/w_30"
+            android:textColor="@color/trans_white"
+            android:text="@string/loading"
+            android:layout_marginTop="@dimen/h_40"/>
+    </LinearLayout>
+</RelativeLayout>
