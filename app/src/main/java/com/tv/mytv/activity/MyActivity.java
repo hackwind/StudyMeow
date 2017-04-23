@@ -18,6 +18,7 @@ import com.open.androidtvwidget.leanback.recycle.GridLayoutManagerTV;
 import com.open.androidtvwidget.leanback.recycle.RecyclerViewTV;
 import com.open.androidtvwidget.view.MainUpView;
 import com.tv.mytv.R;
+import com.tv.mytv.http.HttpAddress;
 import com.tv.mytv.http.HttpImageAsync;
 import com.tv.mytv.util.SharePrefUtil;
 
@@ -57,7 +58,7 @@ public class MyActivity extends BaseActivity {
         String nickName = SharePrefUtil.getString(this,SharePrefUtil.KEY_NICK_NAME,"");
         String regDate = SharePrefUtil.getString(this,SharePrefUtil.KEY_REG_DATE,"");
 
-        HttpImageAsync.loadingImage(ivUserIcon,iconUrl);
+        HttpImageAsync.loadingRoundImage(ivUserIcon,iconUrl);
         tvUserNick.setText(nickName);
         tvRegDate.setText(regDate);
 
@@ -66,8 +67,8 @@ public class MyActivity extends BaseActivity {
 
     private void initRecycleView() {
         rvButtonList = (RecyclerViewTV)findViewById(R.id.my_button_list) ;
-        GridLayoutManagerTV gridlayoutManager = new GridLayoutManagerTV(this, 6);
-        gridlayoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
+        GridLayoutManagerTV gridlayoutManager = new GridLayoutManagerTV(this, 3);
+        gridlayoutManager.setOrientation(GridLayoutManagerTV.VERTICAL);
         gridlayoutManager.setSmoothScrollbarEnabled(false);
         rvButtonList.setLayoutManager(gridlayoutManager);
         rvButtonList.addItemDecoration(new SpaceItemDecoration((int)getResources().getDimension(R.dimen.w_20)));
@@ -82,10 +83,10 @@ public class MyActivity extends BaseActivity {
         // 注意这里，需要使用 RecyclerViewBridge 的移动边框 Bridge.
         bridge = (RecyclerViewBridge) mainUpView.getEffectBridge();
         bridge.setUpRectResource(R.drawable.my_button);
-        RectF receF = new RectF(getResources().getDimension(R.dimen.w_87) ,
-                getResources().getDimension(R.dimen.w_29) ,
-                getResources().getDimension(R.dimen.w_87)  ,
-                getResources().getDimension(R.dimen.h_89) );
+        RectF receF = new RectF(getResources().getDimension(R.dimen.w_13) ,
+                getResources().getDimension(R.dimen.w_14) ,
+                getResources().getDimension(R.dimen.w_13)  ,
+                getResources().getDimension(R.dimen.h_14) );
         bridge.setDrawUpRectPadding(receF);
         //防止切换焦点时，亮框移动幅度太大
         bridge.setOnAnimatorListener(new OpenEffectBridge.NewAnimatorListener() {
@@ -126,20 +127,32 @@ public class MyActivity extends BaseActivity {
                 onViewItemClick(itemView, position);
             }
         });
+        rvButtonList.setDefaultSelect(0);
     }
 
     private void onViewItemClick(View itemView, int position) {
         switch (position) {
             case 0:
-//                Intent intent = new Intent(MyActivity.this, WebActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(MyActivity.this, WebActivity.class);
+                intent.putExtra("url", HttpAddress.getAgreementUrl());
+                startActivity(intent);
                 break;
             case 1:
 
                 break;
             case 2:
+                //clear用户信息
+                SharePrefUtil.saveString(this,SharePrefUtil.KEY_USER_ID,"");
+                SharePrefUtil.saveString(this,SharePrefUtil.KEY_NICK_NAME,"");
+                SharePrefUtil.saveString(this,SharePrefUtil.KEY_AUTH,"");
+                SharePrefUtil.saveString(this,SharePrefUtil.KEY_THUMB,"");
+                SharePrefUtil.saveString(this,SharePrefUtil.KEY_USER_NAME,"");
+                SharePrefUtil.saveString(this,SharePrefUtil.KEY_GROUP_ID,"");
+                SharePrefUtil.saveString(this,SharePrefUtil.KEY_REG_DATE,"");
 
-
+                intent = new Intent(MyActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
                 break;
 
         }

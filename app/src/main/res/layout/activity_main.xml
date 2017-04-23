@@ -26,26 +26,52 @@
         <com.tv.mytv.widget.TimerView
             android:id="@+id/time"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/h_40"
+            android:layout_height="@dimen/h_60"
             android:textSize="@dimen/w_30"
             android:textColor="#66FFFFFF"
             android:text="22:00"
-            android:gravity="bottom"
-            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:layout_alignParentBottom="true"
             android:layout_marginRight="@dimen/w_60"/>
 
         <LinearLayout
+            android:id="@+id/login_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/w_12"
-            android:layout_toRightOf="@id/time">
-            <com.open.androidtvwidget.leanback.recycle.RecyclerViewTV
-            android:id="@+id/login"
-            android:layout_width="@dimen/h_150"
             android:layout_height="@dimen/h_60"
-            android:divider="@null"
-            android:listSelector="@android:color/transparent" />
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/w_20"
+            android:layout_toRightOf="@id/time"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="bottom"
+            android:paddingRight="@dimen/w_20"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/left_menu_bg_selector">
+            <ImageView
+                android:id="@+id/user_icon"
+                android:layout_width="@dimen/w_42"
+                android:layout_height="@dimen/w_40"
+                android:layout_marginRight="@dimen/w_12"
+                android:clickable="false"
+                android:focusable="false"
+                android:src="@mipmap/login"
+                android:layout_gravity="center"
+                android:focusableInTouchMode="false"/>
+            <TextView
+                android:id="@+id/user_nick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@drawable/left_menu_textcolor_selector"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textSize="@dimen/w_30"
+                android:clickable="false"
+                android:focusable="false"
+                android:text="@string/login"
+                android:singleLine="true"
+                android:maxLength="3"
+                android:ellipsize="marquee"
+                android:focusableInTouchMode="false"/>
         </LinearLayout>
 
 

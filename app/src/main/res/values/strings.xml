@@ -28,7 +28,11 @@
     <string name="collect">关注</string>
     <string name="free">免费</string>
     <string name="charge">收费</string>
-    <string name="regdate">·&#160;&#160;注册日期</string>
+    <string name="regdate">注册日期</string>
+    <string name="play_history">播放记录</string>
+    <string name="subject_collection">专题收藏</string>
+    <string name="no_collection">您还没有关注专题，快去收藏喜欢的专题吧！</string>
+    <string name="no_history">您还没有播放记录，快去播放喜欢的内容吧！</string>
 
     <!--Vitamio-->
     <string name="vitamio_library_app_name">VitamioLibrary</string>

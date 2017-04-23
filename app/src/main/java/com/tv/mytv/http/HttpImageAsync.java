@@ -1,6 +1,7 @@
 package com.tv.mytv.http;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.widget.ImageView;
 
@@ -24,16 +25,26 @@ public class HttpImageAsync {
 	 */
 	public static ImageOptions options = new ImageOptions.Builder()
 			// 设置加载过程中的图片
-//			.setLoadingDrawableId(R.mipmap.nopic)
+			.setLoadingDrawableId(R.drawable.shape_nopic)
 			// 设置加载失败后的图片
-			.setFailureDrawableId(R.mipmap.nopic)
+			.setFailureDrawableId(R.drawable.shape_nopic)
 			// 设置使用缓存
 			 .setUseMemCache(true)
 			// 设置显示圆形图片
 			// .setCircular(true)
 			// 设置支持gif
 			.setIgnoreGif(false).build();
-
+    public static ImageOptions roundOptions = new ImageOptions.Builder()
+            // 设置加载过程中的图片
+            .setLoadingDrawableId(R.drawable.shape_nopic)
+            // 设置加载失败后的图片
+            .setFailureDrawableId(R.drawable.shape_nopic)
+            // 设置使用缓存
+            .setUseMemCache(true)
+            // 设置显示圆形图片
+            .setCircular(true)
+            // 设置支持gif
+            .setIgnoreGif(false).build();
 	/**
 	 * 获取网络图片或者本地图片
 	 * @param imageview
@@ -41,9 +52,37 @@ public class HttpImageAsync {
 	 */
 	public static void loadingImage(ImageView imageview, String urlOrpath) {
 		LogUtil.i(urlOrpath);
-		x.image().bind(imageview, urlOrpath, options);
+//		x.image().bind(imageview, urlOrpath, options);
+		x.image().bind(imageview,urlOrpath,options,new Callback.CommonCallback<Drawable>() {
+
+            @Override
+            public void onSuccess(Drawable result) {
+
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                ex.printStackTrace();
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
 	}
-	
+
+	public static void loadingRoundImage(ImageView imageview, String urlOrpath) {
+		LogUtil.i(urlOrpath);
+
+		x.image().bind(imageview, urlOrpath, roundOptions);
+	}
+
 	/**
 	 * 加载本地缓存图片
 	 * @param url

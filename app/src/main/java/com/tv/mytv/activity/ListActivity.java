@@ -56,7 +56,7 @@ import adapter.VideoListRecyclerViewPresenter;
  * Created by Administrator on 2017/4/17.
  */
 
-public class ListActivity extends AppCompatActivity {
+public class ListActivity extends BaseActivity {
 
     private RecyclerViewTV leftMenu;
     private RecyclerViewTV freeMenu;
@@ -83,18 +83,11 @@ public class ListActivity extends AppCompatActivity {
     private static int ROW_SIZE = 5;
 
     private List<ListEntity.VideoRow> videoList;
-    private boolean loading = false;
     private LinearLayout mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // 隐藏标题栏
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        // 隐藏状态栏
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         setContentView(R.layout.activity_list);
         catId = getIntent().getStringExtra("catid");
         catName = getIntent().getStringExtra("catname");
@@ -112,7 +105,6 @@ public class ListActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             if(intent.getAction().equals(Util.ACTION_HTTP_ONERROR)){
                 Log.d("hjs","http error");
-                loading = false;
             }
         }
     };
@@ -225,12 +217,12 @@ public class ListActivity extends AppCompatActivity {
             }
         });
         leftMenu.clearFocus();
-        leftMenu.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                leftMenu.setDefaultSelect(defaultPos);
-            }
-        },200);
+//        leftMenu.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                leftMenu.setDefaultSelect(defaultPos);
+//            }
+//        },200);
     }
 
     private void initFreeMenu() {
@@ -295,6 +287,15 @@ public class ListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        freeMenu.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                TextView allButton = (TextView)(freeMenu.findViewHolderForAdapterPosition(0).itemView.findViewById(R.id.title_tv));
+                TextView freeButton = (TextView)(freeMenu.findViewHolderForAdapterPosition(1).itemView.findViewById(R.id.title_tv));
+                allButton.setTextColor(getResources().getColor(R.color.selector));
+                freeButton.setTextColor(getResources().getColor(R.color.trans_white));
+            }
+        },500);
     }
     private void initContentView() {
         if(videoList == null) {
@@ -305,10 +306,12 @@ public class ListActivity extends AppCompatActivity {
         GridLayoutManagerTV gridlayoutManager = new GridLayoutManagerTV(this, ROW_SIZE);
         gridlayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         gridlayoutManager.setSmoothScrollbarEnabled(false);
+        //TODO 通过下面的方法处理焦点乱飞的问题
+//        gridlayoutManager.onFocusSearchFailed()
         contentView.setLayoutManager(gridlayoutManager);
         contentView.addItemDecoration(new SpaceItemDecoration((int) getResources().getDimension(R.dimen.h_64),ROW_SIZE,total));
         contentView.setFocusable(false);
-        contentView.setSelectedItemAtCentered(true); // 设置item在中间移动.
+        contentView.setSelectedItemAtCentered(false); // 设置item在中间移动.
         mMyRecyclerViewPresenter = new VideoListRecyclerViewPresenter(videoList);
         mMyGeneralAdapter = new GeneralAdapter(mMyRecyclerViewPresenter);
         contentView.setAdapter(mMyGeneralAdapter);
@@ -317,9 +320,11 @@ public class ListActivity extends AppCompatActivity {
         // 注意这里，需要使用 RecyclerViewBridge 的移动边框 Bridge.
         mRecyclerViewBridge = (RecyclerViewBridge) mainUpView1.getEffectBridge();
         mRecyclerViewBridge.setUpRectResource(R.drawable.select_cover);
-        //87 是左边间距 23是绿色框的厚度
-        RectF receF = new RectF(getResources().getDimension(R.dimen.w_87) + getResources().getDimension(R.dimen.w_23), getResources().getDimension(R.dimen.h_29)+ getResources().getDimension(R.dimen.h_23) ,
-                getResources().getDimension(R.dimen.w_87)+ getResources().getDimension(R.dimen.w_23) , getResources().getDimension(R.dimen.h_89)+ getResources().getDimension(R.dimen.h_23) );
+        //
+        RectF receF = new RectF(getResources().getDimension(R.dimen.w_44) ,
+                getResources().getDimension(R.dimen.w_17) ,
+                getResources().getDimension(R.dimen.w_42)  ,
+                getResources().getDimension(R.dimen.h_42) );
         mRecyclerViewBridge.setDrawUpRectPadding(receF);
         //防止切换焦点时，亮框移动幅度太大
         mRecyclerViewBridge.setOnAnimatorListener(new OpenEffectBridge.NewAnimatorListener() {
@@ -352,11 +357,6 @@ public class ListActivity extends AppCompatActivity {
 
                 int row = position / ROW_SIZE + 1;
                 pageCountView.setText(row + "/" + rowCount);
-                if(videoList.size() - position <= 3 * ROW_SIZE && !loading && videoList.size() < total) {//进入倒首第三行就加载下一页
-                    Log.d("hjs","loading next page");
-                    page ++;
-                    getPageData();
-                }
 
                 TextView allButton = (TextView)(freeMenu.findViewHolderForAdapterPosition(0).itemView.findViewById(R.id.title_tv));
                 TextView freeButton = (TextView)(freeMenu.findViewHolderForAdapterPosition(1).itemView.findViewById(R.id.title_tv));
@@ -386,6 +386,13 @@ public class ListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        contentView.setPagingableListener(new RecyclerViewTV.PagingableListener() {
+            @Override
+            public void onLoadMoreItems() {
+                page ++;
+                getPageData();
+            }
+        });
     }
 
 
@@ -393,7 +400,6 @@ public class ListActivity extends AppCompatActivity {
         return getResources().getDimension(id);
     }
     private void getPageData() {
-        loading = true;
         Map<String,Object> map = new HashMap<>();
         if(forFree) {
             map.put("isFree", forFree ? 1 : 0);
@@ -408,7 +414,6 @@ public class ListActivity extends AppCompatActivity {
      */
     public void getListBack(ListEntity entity,String result) {
         Log.d("hjs","getListBack");
-        loading = false;
         if(entity == null || entity.data == null ||  entity.data.rows == null) {
             return;
         }
@@ -424,6 +429,9 @@ public class ListActivity extends AppCompatActivity {
         }else {
             videoList.addAll(entity.data.rows);
             contentView.getAdapter().notifyDataSetChanged();
+        }
+        if(videoList != null && videoList.size() >= total) {
+            contentView.setOnLoadMoreComplete();
         }
     }
 

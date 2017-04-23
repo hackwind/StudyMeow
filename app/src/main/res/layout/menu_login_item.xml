@@ -17,6 +17,7 @@
         android:id="@+id/icon"
         android:layout_width="@dimen/w_42"
         android:layout_height="@dimen/w_40"
+        android:src="@mipmap/login"
         android:layout_marginRight="@dimen/w_12"/>
     <TextView
         android:id="@+id/title_tv"
@@ -25,6 +26,7 @@
         android:textColor="@drawable/left_menu_textcolor_selector"
         android:layout_gravity="bottom"
         android:gravity="bottom"
+        android:text="@string/login"
         android:textSize="@dimen/w_30" />
 
 </com.open.androidtvwidget.menu.OpenMenuItemView>

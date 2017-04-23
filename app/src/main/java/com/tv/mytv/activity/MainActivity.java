@@ -15,6 +15,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,8 +34,10 @@ import com.tv.mytv.entity.CategoryEntity;
 import com.tv.mytv.entity.RecommendEntity;
 import com.tv.mytv.entity.TokenEntity;
 import com.tv.mytv.http.HttpAddress;
+import com.tv.mytv.http.HttpImageAsync;
 import com.tv.mytv.http.HttpRequest;
 import com.tv.mytv.util.SharePrefUtil;
+import com.tv.mytv.util.ToastUtil;
 import com.tv.mytv.widget.MyOpenMenuImpl;
 import com.tv.mytv.widget.SpaceItemDecoration;
 import com.umeng.analytics.MobclickAgent;
@@ -50,7 +54,7 @@ import adapter.TreeMenuPresenter;
 public class MainActivity extends AppCompatActivity implements RecyclerViewTV.OnItemListener{
 
     private RecyclerViewTV menuListView;
-    private RecyclerViewTV loginView;
+    private LinearLayout loginView;
     private int keyBackClickCount = 0;
     private MainUpView mainUpView1;
     private View oldView;
@@ -65,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
     private ScrollView scrollView;
     private TextView txtMy;
     private TextView txtCategory;
+    private ImageView userIcon;
+    private TextView userNick;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +91,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
             HttpRequest.get(HttpAddress.getToken(Settings.System.getString(getContentResolver(), Settings.System.ANDROID_ID)), null, MainActivity.this, "getTokenBack", null, this, TokenEntity.class);
         } else {
             HttpAddress.auth = SharePrefUtil.getString(this,SharePrefUtil.KEY_AUTH,"");
+            getRecommend();
+            getCategory();
         }
     }
 
@@ -106,11 +114,19 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
     }
     /** 获取分类回调 */
     public void getCategoryBack(CategoryEntity entity,String totalResult) {
+        if(entity.status == false) {
+            ToastUtil.showShort(this,entity.msg);
+            return;
+        }
         initCategoryRecyclerViewGridLayout(entity);
         SharePrefUtil.saveString(this,"category",totalResult);
     }
     /** 获取推荐数据回调 */
     public void getRecommendBack(RecommendEntity entity,String totalResult) {
+        if(entity.status == false) {
+            ToastUtil.showShort(this,entity.msg);
+            return;
+        }
         initMyRecyclerViewGridLayout(entity);
     }
 
@@ -126,54 +142,35 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
         return getResources().getDimension(id);
     }
     private void initLoginView() {
-        MyOpenMenuImpl openMenu = new MyOpenMenuImpl();
+
+        loginView = (LinearLayout) findViewById(R.id.login_button);
+        userIcon = (ImageView)loginView.findViewById(R.id.user_icon);
+        userNick = (TextView)loginView.findViewById(R.id.user_nick);
         if(TextUtils.isEmpty(SharePrefUtil.getString(this,SharePrefUtil.KEY_USER_ID,""))) {//未登录
-            openMenu.add("登陆").setIconRes(R.mipmap.login);
+            userIcon.setImageResource(R.mipmap.login);
+            userNick.setText(R.string.login);
         } else {
             String nickName = SharePrefUtil.getString(this,SharePrefUtil.KEY_NICK_NAME,"");
             String url = SharePrefUtil.getString(this,SharePrefUtil.KEY_THUMB,"");
-            openMenu.add(nickName,url);
+            userNick.setText(nickName);
+            HttpImageAsync.loadingRoundImage(userIcon,url);
         }
-//        OpenMenuImpl openMenu = new OpenMenuImpl();
-//        openMenu.add("登陆").setIconRes(R.mipmap.login);
-
-        final MainUpView mainUpView = new MainUpView(this);
-        mainUpView.setEffectBridge(new OpenEffectBridge());
-        mainUpView.setUpRectResource(R.drawable.left_menu_bg_selector);
-        loginView = (RecyclerViewTV) findViewById(R.id.login);
-
-        LinearLayoutManagerTV managerMenu = new LinearLayoutManagerTV(this);
-        managerMenu.setOrientation(LinearLayoutManager.HORIZONTAL);
-        managerMenu.setSmoothScrollbarEnabled(false);
-        loginView.setLayoutManager(managerMenu);
-        final GeneralAdapter menuAdapter = new GeneralAdapter(new LoginMenuPresenter(loginView, openMenu));
-        loginView.setAdapter(menuAdapter);
-        loginView.setItemAnimator(new DefaultItemAnimator());
-        loginView.setOnItemListener(new RecyclerViewTV.OnItemListener() {
+        loginView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onItemPreSelected(RecyclerViewTV parent, View itemView, int position) {
-
-            }
-
-            @Override
-            public void onItemSelected(RecyclerViewTV parent, View itemView, int position) {
-                int count = menuListView.getChildCount();
-                for(int i = 0; i < count;i ++) {
-                    menuListView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) {
+                    loginView.setBackgroundResource(R.drawable.left_menu_checkde);
+                    if(mainUpView1 != null) {
+                        mainUpView1.setVisibility(View.GONE);
+                    }
+                } else {
+                    loginView.setBackgroundResource(R.drawable.left_menu_nocheckde);
                 }
-                if(mainUpView1 != null) {
-                    mainUpView1.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onReviseFocusFollow(RecyclerViewTV parent, View itemView, int position) {
-
             }
         });
-        loginView.setOnItemClickListener(new RecyclerViewTV.OnItemClickListener() {
+        loginView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(RecyclerViewTV parent, View itemView, int position) {
+            public void onClick(View itemView) {
                 if(TextUtils.isEmpty(SharePrefUtil.getString(MainActivity.this,SharePrefUtil.KEY_USER_ID,""))) {//未登录
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(intent);
@@ -282,10 +279,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
         // 注意这里，需要使用 RecyclerViewBridge 的移动边框 Bridge.
         mRecyclerViewBridge = (RecyclerViewBridge) mainUpView1.getEffectBridge();
         mRecyclerViewBridge.setUpRectResource(R.drawable.select_cover);
-        RectF receF = new RectF(getResources().getDimension(R.dimen.w_87) ,
-                getResources().getDimension(R.dimen.w_29) ,
-                getResources().getDimension(R.dimen.w_87)  ,
-                getResources().getDimension(R.dimen.h_89) );
+        RectF receF = new RectF(getResources().getDimension(R.dimen.w_44) ,
+                getResources().getDimension(R.dimen.w_17) ,
+                getResources().getDimension(R.dimen.w_42)  ,
+                getResources().getDimension(R.dimen.h_42) );
         mRecyclerViewBridge.setDrawUpRectPadding(receF);
         //防止切换焦点时，亮框移动幅度太大
         mRecyclerViewBridge.setOnAnimatorListener(new OpenEffectBridge.NewAnimatorListener() {
@@ -323,8 +320,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
                     Intent intent = new Intent(MainActivity.this,HistoryActivity.class);
                     startActivity(intent);
                 } else if("category".equals(poster.linkType)) {//打开分类，进入列表
-                    Intent intent = new Intent(MainActivity.this,ListActivity.class);
-                    startActivity(intent);
+//                    Intent intent = new Intent(MainActivity.this,ListActivity.class);
+//                    startActivity(intent);
                 } else if("detail".equals(poster.linkType)) {//进入专辑详情页
                     Intent intent = new Intent(MainActivity.this,AlbumActivity.class);
                     intent.putExtra("id",poster.linkData);
@@ -399,6 +396,15 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
     protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
+        if(TextUtils.isEmpty(SharePrefUtil.getString(this,SharePrefUtil.KEY_USER_ID,""))) {//未登录
+            userIcon.setImageResource(R.mipmap.login);
+            userNick.setText(R.string.login);
+        } else {
+            String nickName = SharePrefUtil.getString(this,SharePrefUtil.KEY_NICK_NAME,"");
+            String url = SharePrefUtil.getString(this,SharePrefUtil.KEY_THUMB,"");
+            userNick.setText(nickName);
+            HttpImageAsync.loadingRoundImage(userIcon,url);
+        }
     }
 
     @Override

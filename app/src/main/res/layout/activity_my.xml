@@ -54,8 +54,8 @@
        </LinearLayout>
 
         <com.open.androidtvwidget.leanback.recycle.RecyclerViewTV
-            android:layout_width="@dimen/w_1210"
-            android:layout_height="@dimen/h_214"
+            android:layout_width="@dimen/w_1300"
+            android:layout_height="@dimen/h_240"
             android:layout_below="@id/top_container"
             android:layout_centerHorizontal="true"
             android:id="@+id/my_button_list">

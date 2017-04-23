@@ -53,7 +53,6 @@ public class LoginActivity extends BaseActivity {
         }
     };
 
-
     private void getQRCode() {
         HttpRequest.get(HttpAddress.getQRCode(),null,LoginActivity.this,"getQRCodeBack",null,this, GetQRCodeEntity.class);
     }
@@ -87,6 +86,7 @@ public class LoginActivity extends BaseActivity {
             SharePrefUtil.saveString(this,SharePrefUtil.KEY_REG_DATE,entity.data.regdate);
             Intent intent = new Intent(this,MyActivity.class);
             startActivity(intent);
+            finish();
         } else {
             startTimer();
         }

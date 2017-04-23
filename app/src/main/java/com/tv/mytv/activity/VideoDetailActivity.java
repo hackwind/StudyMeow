@@ -64,6 +64,7 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
 
     private MyHandler handler = new MyHandler(this);
     private String strVideoDetail;
+    private boolean isCollect = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,7 +174,7 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
         author.setText(entity.data.author);
         updateTime.setText(entity.data.inputtime);
         sourceFrom.setText(entity.data.source);
-        if(entity.data.isCollection) {
+        if(isCollect = entity.data.isCollection) {
             iconCollect.setImageResource(R.drawable.collect_yet);
         } else {
             iconCollect.setImageResource(R.drawable.collect_not);
@@ -211,10 +212,11 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
                 startActivity(intent);
                 break;
             case R.id.button_collect:
-                if(list == null || list.size() == 0 || list.size() < selectedVideoIndex + 1) {
-                    return;
+                if(isCollect) {
+                    delCollection();
+                } else {
+                    addCollection();
                 }
-                addCollection();
                 break;
             case R.id.button_play:
                 if(list == null || list.size() == 0 || list.size() < selectedVideoIndex + 1) {
@@ -238,6 +240,19 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
         if(entity != null && entity.status) {
             ToastUtil.showLong(this,"添加关注成功");
             iconCollect.setImageResource(R.drawable.collect_yet);
+            isCollect = true;
+        }
+    }
+
+    private void delCollection() {
+        HttpRequest.get(HttpAddress.delCollection(id),null,VideoDetailActivity.this,"delCollectionBack",null,this, BaseEntity.class);
+    }
+
+    public void delCollectionBack(BaseEntity entity,String totalEesult) {
+        if(entity != null && entity.status) {
+            ToastUtil.showLong(this,"取消关注成功");
+            iconCollect.setImageResource(R.drawable.collect_not);
+            isCollect = false;
         }
     }
 

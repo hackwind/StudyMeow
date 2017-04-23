@@ -19,4 +19,5 @@
     <color name="mediacontroller_bg_pressed">#ff53c1bd</color>
     <color name="mediacontroller_bg">#99000000</color>
     <color name="menu_selector">#3EAF05</color>
+    <color name="no_pic_bg">#21FFFFFF</color>
 </resources>

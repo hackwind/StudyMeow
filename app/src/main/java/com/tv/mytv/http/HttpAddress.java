@@ -69,12 +69,44 @@ public class HttpAddress {
      }
 
     /**
-     * 详情接口
+     * 加入收藏
      * @return
      */
     public static String addCollection(String courseid){
         return  WEB_URL+"m=member&c=app2&a=collection_add&courseid=" + courseid + "&auth=" + auth;
 //          return  WEB_URL+"index.php?m=member&c=app&a=get&catid=2&id=483";
+    }
+
+    /**
+     * 取消收藏
+     * @return
+     */
+    public static String delCollection(String courseid){
+        return  WEB_URL+"m=member&c=app2&a=collection_add&courseid=" + courseid + "&auth=" + auth + "&type=cancle";
+    }
+
+    /**
+     * 获取用户协议地址
+     * @return
+     */
+    public static String getAgreementUrl(){
+        return  WEB_URL+"m=content&c=index&a=list&catid=29";
+    }
+
+    /**
+     * 获取历史纪录
+     * @return
+     */
+    public static String getHistoryUrl(int page,int pageSize){
+        return  WEB_URL+"m=member&c=app2&a=history_list&auth=" + auth + "&page=" + page + "&pageSize=" + pageSize;
+    }
+
+    /**
+     * 获取收藏记录
+     * @return
+     */
+    public static String getSubjectCollection(int page,int pageSize){
+        return  WEB_URL+"m=member&c=app2&a=collection_list&auth=" + auth + "&page=" + page + "&pageSize=" + pageSize;
     }
 
     /**
