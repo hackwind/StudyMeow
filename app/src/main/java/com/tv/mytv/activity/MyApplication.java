@@ -2,9 +2,18 @@ package com.tv.mytv.activity;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Build;
 
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.cache.memory.MemoryCache;
+import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
+import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
+import com.tv.mytv.http.HttpImageAsync;
 import com.umeng.analytics.MobclickAgent;
 
 import org.xutils.x;
@@ -30,6 +39,7 @@ public class MyApplication  extends Application {
         context=getApplicationContext();
         Vitamio.isInitialized(context);
         x.Ext.init(this);
+        initImageLoader(this);
         Logger.init(LOGTAG).logLevel(LogLevel.FULL);
 //        CrashHandler.getInstance().init(MyApplication.this);
         //设置umeng统计盒子场景类型
@@ -45,4 +55,37 @@ public class MyApplication  extends Application {
         return  context;
     }
 
+    public static void initImageLoader(Context context) {
+        int memoryCacheSize;
+
+        MemoryCache memoryCache;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            memoryCacheSize = (int) (Runtime.getRuntime().maxMemory() / 4);
+            memoryCache = new LruMemoryCache(memoryCacheSize);
+        } else {
+            memoryCache = new WeakMemoryCache();
+        }
+
+        // memoryCache = new WeakMemoryCache();
+
+        // This configuration tuning is custom. You can tune every option, you
+        // may tune some of them,
+        // or you can create default configuration by
+        // ImageLoaderConfiguration.createDefault(this);
+        // method.
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
+                .threadPriority(Thread.NORM_PRIORITY - 2).memoryCache(memoryCache)
+                .denyCacheImageMultipleSizesInMemory().diskCacheFileNameGenerator(new Md5FileNameGenerator())
+                .tasksProcessingOrder(QueueProcessingType.LIFO) // LIFO
+                // .enableLogging() // enable log
+                .build();
+        // Initialize ImageLoader with configuration.
+        ImageLoader.getInstance().init(config);
+    }
+
+    @Override
+    public void onLowMemory() {
+        HttpImageAsync.imageLoader.clearMemoryCache();
+        super.onLowMemory();
+    }
 }

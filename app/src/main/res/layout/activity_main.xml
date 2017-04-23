@@ -82,7 +82,7 @@
         android:layout_width="@dimen/w_268"
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/w_80"
-        android:layout_marginRight="@dimen/w_70"
+        android:layout_marginRight="@dimen/w_50"
         android:layout_marginTop="@dimen/h_274"
         android:divider="@null"
         android:dividerHeight="@dimen/h_46"
@@ -122,7 +122,7 @@
                 android:id="@+id/text_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/h_80"
+                android:layout_marginTop="@dimen/h_92"
                 android:layout_marginBottom="@dimen/h_40"
                 android:layout_marginLeft="@dimen/w_12"
                 android:textSize="@dimen/w_50"
@@ -131,7 +131,7 @@
             <com.open.androidtvwidget.leanback.recycle.RecyclerViewTV
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/h_20"
+                android:paddingBottom="@dimen/h_20"
                 android:id="@+id/recyclerview_category">
 
             </com.open.androidtvwidget.leanback.recycle.RecyclerViewTV>

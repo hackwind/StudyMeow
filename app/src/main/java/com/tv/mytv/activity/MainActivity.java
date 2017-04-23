@@ -3,6 +3,7 @@ package com.tv.mytv.activity;
 import android.animation.Animator;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -10,7 +11,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -51,8 +54,8 @@ import adapter.LoginMenuPresenter;
 import adapter.RecommendPresenter;
 import adapter.TreeMenuPresenter;
 
-public class MainActivity extends AppCompatActivity implements RecyclerViewTV.OnItemListener{
-
+public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemListener{
+    private final static int ROW_SIZE = 6;
     private RecyclerViewTV menuListView;
     private LinearLayout loginView;
     private int keyBackClickCount = 0;
@@ -75,12 +78,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // 隐藏标题栏
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        // 隐藏状态栏
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         setContentView(R.layout.activity_main);
 
         initViews();
@@ -267,9 +264,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
         gridlayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         gridlayoutManager.setSmoothScrollbarEnabled(false);
         rvMy.setLayoutManager(gridlayoutManager);
-        rvMy.addItemDecoration(new SpaceItemDecoration((int)getDimension(R.dimen.h_94),6,posters.size()));
+        rvMy.addItemDecoration(new SpaceItemDecoration((int)getDimension(R.dimen.h_94),ROW_SIZE,posters.size()));
         rvMy.setFocusable(false);
-        rvMy.setSelectedItemAtCentered(true); // 设置item在中间移动.
+//        rvMy.setSelectedItemAtCentered(true); // 设置item在中间移动.
         mMyRecyclerViewPresenter = new RecommendPresenter(posters);
         mMyGeneralAdapter = new GeneralAdapter(mMyRecyclerViewPresenter);
         rvMy.setAdapter(mMyGeneralAdapter);
@@ -281,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
         mRecyclerViewBridge.setUpRectResource(R.drawable.select_cover);
         RectF receF = new RectF(getResources().getDimension(R.dimen.w_44) ,
                 getResources().getDimension(R.dimen.w_17) ,
-                getResources().getDimension(R.dimen.w_42)  ,
+                getResources().getDimension(R.dimen.w_44)  ,
                 getResources().getDimension(R.dimen.h_42) );
         mRecyclerViewBridge.setDrawUpRectPadding(receF);
         //防止切换焦点时，亮框移动幅度太大
@@ -337,12 +334,16 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
 
 
     private void initCategoryRecyclerViewGridLayout(final CategoryEntity categoryEntity) {
+        if(categoryEntity == null || categoryEntity.status == false || categoryEntity.data == null || categoryEntity.data.category == null) {
+            return;
+        }
         GridLayoutManagerTV gridlayoutManager = new GridLayoutManagerTV(this, 6); // 解决快速长按焦点丢失问题.
         gridlayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         gridlayoutManager.setSmoothScrollbarEnabled(false);
         rvCategory.setLayoutManager(gridlayoutManager);
         rvCategory.setFocusable(false);
-        rvCategory.setSelectedItemAtCentered(true); // 设置item在中间移动.
+//        rvCategory.setSelectedItemAtCentered(true); // 设置item在中间移动.
+        rvCategory.addItemDecoration(new BottomSpaceItemDecoration((int)getDimension(R.dimen.h_94),ROW_SIZE,categoryEntity.data.category.size()));
         mCategoryRecyclerViewPresenter = new CategoryRecyclerViewPresenter(categoryEntity.data.category);
         mCategoryGeneralAdapter = new GeneralAdapter(mCategoryRecyclerViewPresenter);
         rvCategory.setAdapter(mCategoryGeneralAdapter);
@@ -454,5 +455,30 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewTV.On
         oldView = itemView;
     }
 
+    public class BottomSpaceItemDecoration extends RecyclerViewTV.ItemDecoration{
+
+        private int bottomSpace;
+        private int count;
+        private int rowSize;
+        private int rowCount;
+
+        public BottomSpaceItemDecoration(int bottomSpace,int rowSize,int count) {
+            this.bottomSpace = bottomSpace;
+            this.count = count;
+            this.rowSize = rowSize;
+            rowCount = count % rowSize == 0 ? count/rowSize : count/rowSize + 1;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            //只有一行的情况，补齐高度，达到2行的高度
+            if(count <= rowSize) {
+                Log.i("hjs","only one row ,add space:" + view.getHeight());
+                outRect.bottom = bottomSpace + (int)getDimension(R.dimen.h_322);
+            } else {
+                outRect.bottom = bottomSpace;
+            }
+        }
+    }
 
 }

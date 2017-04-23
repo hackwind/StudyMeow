@@ -4,16 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/main_background"
-    android:paddingLeft="@dimen/w_120"
     android:paddingTop="@dimen/h_60"
     android:paddingBottom="@dimen/h_50"
-    android:paddingRight="@dimen/w_100"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/top_container"
         android:layout_width="match_parent"
         android:layout_height="@dimen/h_76"
+        android:paddingLeft="@dimen/w_120"
+        android:paddingRight="@dimen/w_100"
         android:gravity="bottom">
 
         <TextView
@@ -48,13 +48,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/top_container"
-        android:layout_marginTop="@dimen/h_10"
-        android:paddingTop="@dimen/h_40"
-        android:layout_marginBottom="@dimen/h_44">
+        android:layout_marginTop="@dimen/h_10">
         <com.open.androidtvwidget.leanback.recycle.RecyclerViewTV
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/recyclerview_history"
+            android:paddingLeft="@dimen/w_120"
+            android:paddingRight="@dimen/w_100"
+            android:paddingTop="@dimen/h_40"
+            android:paddingBottom="@dimen/h_44"
             >
         </com.open.androidtvwidget.leanback.recycle.RecyclerViewTV>
 
@@ -62,6 +64,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/recyclerview_collection"
+            android:paddingLeft="@dimen/w_120"
+            android:paddingRight="@dimen/w_100"
+            android:paddingTop="@dimen/h_40"
+            android:paddingBottom="@dimen/h_44"
             >
         </com.open.androidtvwidget.leanback.recycle.RecyclerViewTV>
         <TextView
@@ -79,6 +85,8 @@
         android:id="@+id/pageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/w_120"
+        android:paddingRight="@dimen/w_100"
         android:textSize="@dimen/w_24"
         android:textColor="@color/trans_white"
         android:text="1/1"

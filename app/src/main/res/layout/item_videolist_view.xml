@@ -12,7 +12,7 @@
         android:id="@+id/image"
         android:layout_width="@dimen/w_234"
         android:layout_height="@dimen/h_328"
-        android:scaleType="fitXY" >
+        android:scaleType="centerCrop" >
     </ImageView>
 
     <TextView
