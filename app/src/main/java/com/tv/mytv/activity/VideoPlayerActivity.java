@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -22,7 +23,7 @@ import com.tv.mytv.entity.VideoDetailEntity;
 import com.tv.mytv.entity.VideoSourceEntity;
 import com.tv.mytv.http.HttpAddress;
 import com.tv.mytv.http.HttpRequest;
-import com.tv.mytv.util.LogUtil;
+import com.tv.mytv.util.SharePrefUtil;
 import com.tv.mytv.util.ToastUtil;
 import com.tv.mytv.util.Util;
 import com.tv.mytv.view.MyMediaController;
@@ -66,7 +67,7 @@ public class VideoPlayerActivity extends BaseActivity {
     private boolean isPlay = true;
 
     private String str;
-    private String courseId;//专辑id
+    private String catId;//专辑id
     //集数ID
     private String videoId;//当前正在播放的视频id
 
@@ -98,13 +99,16 @@ public class VideoPlayerActivity extends BaseActivity {
 
         title = entity.data.title;
         source = entity.data.source;
-        courseId = entity.data.id;
-        videoList = entity.data.videoList;
+        catId = entity.data.id;
+        videoList = entity.data.videoList;//专辑列表
 
         //网络连接失败
         IntentFilter intentFilter=new IntentFilter();
         intentFilter.addAction(Util.ACTION_HTTP_ONERROR);
-        registerReceiver(MyNetErrorReceiver,intentFilter);
+//        registerReceiver(MyNetErrorReceiver,intentFilter);
+
+        //播放页是在一个独立的进程，需要再次赋值给auth
+        HttpAddress.auth = SharePrefUtil.getString(this,SharePrefUtil.KEY_AUTH,"");
 
         initview();
         getVideoSourcePath();
@@ -250,16 +254,25 @@ public class VideoPlayerActivity extends BaseActivity {
     }
 
     private void getVideoSourcePath() {
+
         videoId = videoList.get(playIndex).id;
+        String url = HttpAddress.getVideoPath(catId,videoId);
+        Log.d("hjs","begin getVideoSource Path：" + url);
         //获取视频地址
-        HttpRequest.get(HttpAddress.getVideoPath(videoId), null, VideoPlayerActivity.this, "getPathResult", loading,VideoPlayerActivity.this,VideoSourceEntity.class);
+        HttpRequest.get(url, null, VideoPlayerActivity.this, "getPathResult", loading,VideoPlayerActivity.this,VideoSourceEntity.class);
         //定时刷新网速
         new Thread(mRunnable).start();
     }
 
     /** 获取视频源接口返回 */
     public void getPathResult(VideoSourceEntity entity ,String str) {
+        if(entity == null) {
+            return;
+        }
         if(entity.status == false || entity.data == null || entity.data.videoSource == null) {
+            if(!TextUtils.isEmpty(entity.msg)) {
+                ToastUtil.showShort(this,entity.msg);
+            }
             return;
         }
         //播放视频

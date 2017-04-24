@@ -33,6 +33,7 @@
     <string name="subject_collection">专题收藏</string>
     <string name="no_collection">您还没有关注专题，快去收藏喜欢的专题吧！</string>
     <string name="no_history">您还没有播放记录，快去播放喜欢的内容吧！</string>
+    <string name="cosume_records">消费记录</string>
 
     <!--Vitamio-->
     <string name="vitamio_library_app_name">VitamioLibrary</string>

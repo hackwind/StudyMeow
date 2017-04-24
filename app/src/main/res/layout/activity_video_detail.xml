@@ -176,7 +176,6 @@
         android:divider="@null"
         android:listSelector="@android:color/transparent" />
     <LinearLayout
-        android:id="@+id/bottom_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/video_list"
@@ -192,13 +191,16 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/w_42"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/sub_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/w_36"
                 android:ellipsize="end"
-                android:textColor="@color/trans_white"/>
+                android:singleLine="true"
+                android:textColor="@color/trans_white"
+                android:textSize="@dimen/w_36"
+                android:visibility="visible" />
             <TextView
                 android:id="@+id/sub_desc"
                 android:layout_width="match_parent"
@@ -210,23 +212,13 @@
                 android:ellipsize="end"/>
         </LinearLayout>
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/progressBar"
+
+    <ProgressBar
+        android:id="@id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center"
-        android:orientation="vertical">
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/progressbar_style"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/w_30"
-            android:textColor="@color/trans_white"
-            android:text="@string/loading"
-            android:layout_marginTop="@dimen/h_40"/>
-    </LinearLayout>
+        style="@style/progressbar_style"/>
+
 </RelativeLayout>

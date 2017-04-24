@@ -66,6 +66,9 @@
             android:name=".activity.ContactUsActivity"
             android:screenOrientation="landscape" />
         <activity
+            android:name=".activity.ConsumeRecordsActivity"
+            android:screenOrientation="landscape" />
+        <activity
             android:name=".activity.VideoDetailActivity"
             android:screenOrientation="landscape" />
 

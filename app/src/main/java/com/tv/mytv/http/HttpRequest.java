@@ -60,6 +60,8 @@ public class HttpRequest {
 				if (view != null) {
 					view.setVisibility(View.GONE);
 				}
+				Log.d("hjs","http onError" + arg0.getMessage());
+				arg0.printStackTrace();
 				ToastUtil.showShort(MyApplication.getContext(), "网络连接异常,请检查网络设置");
 				LogUtil.e(arg0.getMessage());
 				Intent intent =new Intent(Util.ACTION_HTTP_ONERROR);
@@ -78,7 +80,7 @@ public class HttpRequest {
 				if (view != null) {
 					view.setVisibility(View.GONE);
 				}
-				Log.d("hjs",result);
+				Log.d("hjs","onSuccess:" + result);
 				Gson gson = new Gson();
 				BaseEntity entity = gson.fromJson(result,BaseEntity.class);
 				T responseResult = gson.fromJson(result, clazz);

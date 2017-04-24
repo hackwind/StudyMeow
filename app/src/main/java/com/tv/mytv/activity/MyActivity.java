@@ -138,7 +138,8 @@ public class MyActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case 1:
-
+                intent = new Intent(MyActivity.this, ConsumeRecordsActivity.class);
+                startActivity(intent);
                 break;
             case 2:
                 //clear用户信息

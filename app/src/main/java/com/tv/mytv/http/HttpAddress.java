@@ -110,6 +110,14 @@ public class HttpAddress {
     }
 
     /**
+     * 获得消费记录
+     * @return
+     */
+    public static String getCosumenerList(){
+        return  WEB_URL+"m=member&c=app2&a=subscribe_list&auth=" + auth;
+    }
+
+    /**
      * 提交视频播放
      * @param id
      * @return
@@ -123,8 +131,8 @@ public class HttpAddress {
      * @param id
      * @return
      */
-     public static String getVideoPath(String id){
-        return  WEB_URL+"m=member&c=app2&a=getViewSource&id=" + id + "&auth=" + auth;
+     public static String getVideoPath(String catId,String id){
+        return  WEB_URL+"m=member&c=app2&a=getViewSource&catid=" + catId + "&id=" + id + "&auth=" + auth;
      }
 
     /**

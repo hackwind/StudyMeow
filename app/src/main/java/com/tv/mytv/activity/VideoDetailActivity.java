@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.open.androidtvwidget.leanback.adapter.GeneralAdapter;
@@ -47,7 +49,7 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
     private LinearLayout buttonBuy;
     private LinearLayout buttonCollect;
     private RecyclerViewTV videoList;
-    private LinearLayout progressBar;
+    private ProgressBar progressBar;
     private VideoListPresenter presenter;
     private GeneralAdapter generalAdapter;
 
@@ -62,7 +64,6 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
     private int selectedVideoIndex = 0;
     private List<VideoDetailEntity.Video> list;
 
-    private MyHandler handler = new MyHandler(this);
     private String strVideoDetail;
     private boolean isCollect = false;
 
@@ -91,11 +92,11 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
         buttonBuy = (LinearLayout)findViewById(R.id.button_buy);
         buttonCollect = (LinearLayout)findViewById(R.id.button_collect);
         videoList = (RecyclerViewTV)findViewById(R.id.video_list);
-        progressBar = (LinearLayout)findViewById(R.id.progressBar);
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
         iconCollect = (ImageView) findViewById(R.id.collect_icon);
 
         subTitle = (TextView)findViewById(R.id.sub_title);
-        subDesc = (TextView)findViewById(R.id.sub_title);
+        subDesc = (TextView)findViewById(R.id.sub_desc);
         subIcon = (ImageView)findViewById(R.id.sub_icon);
 
         buttonPlay.setOnFocusChangeListener(this);
@@ -127,14 +128,9 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
             public void onItemSelected(RecyclerViewTV parent, View itemView, int position) {
                 selectedVideoIndex = position;
                 VideoDetailEntity.Video video = list.get(position);
-
-                Message msg = new Message();
-                Bundle data = new Bundle();
-                data.putString("title",video.title);
-                data.putString("desc",video.describe);
-                data.putString("thumb",video.thumb);
-                msg.setData(data);
-                handler.sendMessage(msg);
+                HttpImageAsync.loadingImage(subIcon,video.thumb);
+                subTitle.setText(video.title);
+                subDesc.setText(video.describe);
 
             }
 
@@ -143,7 +139,16 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
 
             }
         });
-        videoList.setDefaultSelect(0);
+        videoList.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                buttonBuy.clearFocus();
+                buttonCollect.clearFocus();
+                buttonPlay.clearFocus();
+                videoList.setDefaultSelect(0);
+            }
+        },200);
+
     }
 
     private void getVideoDetail() {
@@ -151,6 +156,7 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
     }
 
     public void getDetailBack(VideoDetailEntity entity,String totalResult) {
+        progressBar.setVisibility(View.GONE);
         if(entity.status == false || entity.data == null) {
             return;
         }
@@ -189,17 +195,29 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
     public void onFocusChange(View view, boolean b) {
         switch (view.getId()) {
             case R.id.button_buy:
-                buttonBuy.setSelected(true);
-                buttonCollect.setSelected(false);
+                if(b) {
+                    buttonBuy.setSelected(true);
+                    buttonCollect.setSelected(false);
+                } else {
+                    buttonPlay.setSelected(false);
+                }
                 break;
             case R.id.button_collect:
-                buttonCollect.setSelected(true);
-                buttonBuy.setSelected(false);
-                buttonPlay.setSelected(false);
+                if(b) {
+                    buttonCollect.setSelected(true);
+                    buttonBuy.setSelected(false);
+                    buttonPlay.setSelected(false);
+                } else {
+                        buttonCollect.setSelected(false);
+                 }
                 break;
             case R.id.button_play:
-                buttonPlay.setSelected(true);
-                buttonCollect.setSelected(false);
+                if(b) {
+                    buttonPlay.setSelected(true);
+                    buttonCollect.setSelected(false);
+                } else {
+                    buttonPlay.setSelected(false);
+                }
                 break;
         }
     }
@@ -233,7 +251,7 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
     }
 
     private void addCollection() {
-        HttpRequest.get(HttpAddress.addCollection(id),null,VideoDetailActivity.this,"addCollectionBack",null,this, BaseEntity.class);
+        HttpRequest.get(HttpAddress.addCollection(id),null,VideoDetailActivity.this,"addCollectionBack",progressBar,this, BaseEntity.class);
     }
 
     public void addCollectionBack(BaseEntity entity,String totalEesult) {
@@ -245,7 +263,7 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
     }
 
     private void delCollection() {
-        HttpRequest.get(HttpAddress.delCollection(id),null,VideoDetailActivity.this,"delCollectionBack",null,this, BaseEntity.class);
+        HttpRequest.get(HttpAddress.delCollection(id),null,VideoDetailActivity.this,"delCollectionBack",progressBar,this, BaseEntity.class);
     }
 
     public void delCollectionBack(BaseEntity entity,String totalEesult) {
@@ -253,28 +271,6 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
             ToastUtil.showLong(this,"取消关注成功");
             iconCollect.setImageResource(R.drawable.collect_not);
             isCollect = false;
-        }
-    }
-
-    class MyHandler extends Handler {
-        private WeakReference<VideoDetailActivity> ref;
-        public MyHandler(VideoDetailActivity activity) {
-            ref = new WeakReference<>(activity);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            Bundle data = msg.getData();
-            if(data == null) {
-                return;
-            }
-            Log.d("hjs","title:" + data.getString("title"));
-            HttpImageAsync.loadingImage(subIcon,data.getString("thumb"));
-            subTitle.setText(data.getString("title"));
-            subTitle.invalidate();
-            subDesc.setText(data.getString("desc"));
-            subDesc.invalidate();
         }
     }
 
