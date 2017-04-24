@@ -114,6 +114,17 @@ public class ListActivity extends BaseActivity {
         unregisterReceiver(MyNetErrorReceiver);
     }
 
+    @Override
+    public void onAttachedToWindow (){
+        super.onAttachedToWindow();
+        if(leftMenu != null) {
+            leftMenu.clearFocus();
+        }
+        if(freeMenu != null) {
+            freeMenu.setDefaultSelect(0);
+        }
+    }
+
     private void initViews(){
         categoryName = (TextView)findViewById(R.id.category_name) ;
         pageCountView = (TextView)findViewById(R.id.category_page) ;
@@ -249,10 +260,14 @@ public class ListActivity extends BaseActivity {
 
             @Override
             public void onItemSelected(RecyclerViewTV parent, View itemView, int position) {
+                boolean oldFree = forFree;
                 if(position == 0) {
                     forFree = false;
                 } else {
                     forFree = true;
+                }
+                if(oldFree == forFree) {//没有发生改变
+                    return;
                 }
                 page = 1;
                 total = 0;
