@@ -1,11 +1,11 @@
 package com.tv.mytv.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,14 +21,17 @@ import com.open.androidtvwidget.leanback.adapter.GeneralAdapter;
 import com.open.androidtvwidget.leanback.recycle.RecyclerViewTV;
 import com.tv.mytv.R;
 import com.tv.mytv.entity.BaseEntity;
+import com.tv.mytv.entity.GetSubScribeQRCodeEntity;
 import com.tv.mytv.entity.VideoDetailEntity;
 import com.tv.mytv.http.HttpAddress;
 import com.tv.mytv.http.HttpImageAsync;
 import com.tv.mytv.http.HttpRequest;
 import com.tv.mytv.util.ToastUtil;
+import com.tv.mytv.util.Util;
 
-import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import adapter.VideoListPresenter;
 
@@ -56,7 +59,10 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
     private TextView subTitle;
     private TextView subDesc;
     private ImageView subIcon;
-
+    private TextView buyCourceName;
+    private TextView buyPrice;
+    private LinearLayout buyContainer;
+    private ImageView buyQRCode;
 
     private String id;
     private String catid;
@@ -66,6 +72,11 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
 
     private String strVideoDetail;
     private boolean isCollect = false;
+
+    private final static int REPEAT_INTERVAL = 2000;
+    private String orderNo;
+    private Timer timer;
+    private boolean checkingSubscribe = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +88,43 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
 
         initView();
 
+        //网络连接失败
+        IntentFilter intentFilter=new IntentFilter();
+        intentFilter.addAction(Util.ACTION_HTTP_ONERROR);
+        registerReceiver(MyNetErrorReceiver,intentFilter);
+
         getVideoDetail();
     }
+
+    @Override
+    public void onBackPressed() {
+        if(buyContainer != null && buyContainer.getVisibility() == View.VISIBLE) {
+            buyContainer.setVisibility(View.GONE);
+            checkingSubscribe = false;
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(MyNetErrorReceiver);
+        if(timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+    }
+    private BroadcastReceiver MyNetErrorReceiver =new BroadcastReceiver(){
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction().equals(Util.ACTION_HTTP_ONERROR)){
+                if(checkingSubscribe) {
+                    startTimer();
+                }
+            }
+        }
+    };
 
     private void initView() {
         thumbImage = (ImageView)findViewById(R.id.thumb_image);
@@ -98,6 +144,10 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
         subTitle = (TextView)findViewById(R.id.sub_title);
         subDesc = (TextView)findViewById(R.id.sub_desc);
         subIcon = (ImageView)findViewById(R.id.sub_icon);
+        buyCourceName = (TextView)findViewById(R.id.buy_course_name);
+        buyPrice = (TextView)findViewById(R.id.buy_price);
+        buyContainer = (LinearLayout)findViewById(R.id.buy_container);
+        buyQRCode = (ImageView)findViewById(R.id.buy_qrcode);
 
         buttonPlay.setOnFocusChangeListener(this);
         buttonBuy.setOnFocusChangeListener(this);
@@ -163,7 +213,7 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
         strVideoDetail = totalResult;
         HttpImageAsync.loadingImage(thumbImage,entity.data.thumb);
         thumbName.setText(entity.data.title);
-        if(entity.data.money == 0 || entity.data.validity > 0) {
+        if(entity.data.money == 0 || entity.data.validityDay > 0) {
             buttonBuy.setVisibility(View.GONE);
             buttonPlay.setVisibility(View.VISIBLE);
             if(entity.data.money > 0) {
@@ -173,6 +223,8 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
             buttonPlay.setVisibility(View.GONE);
             buttonBuy.setVisibility(View.VISIBLE);
             bugYet.setVisibility(View.GONE);
+            buyPrice.setText(entity.data.money + "元/" + entity.data.validity + "天");
+            buyCourceName.setText(String.format(buyCourceName.getText().toString(),entity.data.title));
         }
         findViewById(R.id.thumb_list_text).setVisibility(View.VISIBLE);
         buttonCollect.setVisibility(View.VISIBLE);
@@ -226,8 +278,9 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.button_buy:
-                Intent intent = new Intent(this,VideoPlayerActivity.class);
-                startActivity(intent);
+                checkingSubscribe = true;
+                buyContainer.setVisibility(View.VISIBLE);
+                getBuyQRCode();
                 break;
             case R.id.button_collect:
                 if(isCollect) {
@@ -243,11 +296,28 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
                 if(TextUtils.isEmpty(strVideoDetail)){
                     return;
                 }
-                intent = new Intent(this,VideoPlayerActivity.class);
+                Intent intent = new Intent(this,VideoPlayerActivity.class);
                 intent.putExtra("videodetail",strVideoDetail);
                 startActivity(intent);
                 break;
         }
+    }
+
+    private void getBuyQRCode() {
+        HttpRequest.get(HttpAddress.getSubScribeQRCode(id),null,VideoDetailActivity.this,"getBuyQRCodeBack",progressBar,this, GetSubScribeQRCodeEntity.class);
+    }
+
+    public void getBuyQRCodeBack(GetSubScribeQRCodeEntity entity,String result) {
+        if(entity == null) {
+            return;
+        }
+        if(entity.status == false) {
+            ToastUtil.showShort(this,entity.msg);
+            return;
+        }
+        HttpImageAsync.loadingImage(buyQRCode,entity.data.erweima);
+        orderNo = entity.data.orderno;
+        startTimer();
     }
 
     private void addCollection() {
@@ -271,6 +341,37 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
             ToastUtil.showLong(this,"取消关注成功");
             iconCollect.setImageResource(R.drawable.collect_not);
             isCollect = false;
+        }
+    }
+
+    private void startTimer() {
+        if (timer == null) {
+            timer = new Timer();
+        }
+
+        timer.schedule(new TimerTask() {//一次只定时请求一次，等失败再次请求下次，不做定期无限循环请求，当网络不好情况，容易堵塞
+            @Override
+            public void run() {
+                checkSubScribe();
+            }
+        }, REPEAT_INTERVAL);
+    }
+
+    private void checkSubScribe() {
+        HttpRequest.get(HttpAddress.checkSubscribe(orderNo),null,VideoDetailActivity.this,"checkSubScribeBack",null,this, BaseEntity.class);
+    }
+
+    public void checkSubScribeBack(BaseEntity entity,String result) {
+        if(entity != null && entity.status) {//支付成功
+            checkingSubscribe = false;
+            buttonBuy.setVisibility(View.GONE);
+            buttonPlay.setVisibility(View.VISIBLE);
+            bugYet.setVisibility(View.VISIBLE);
+            buyContainer.setVisibility(View.GONE);
+        } else {
+            if(buyContainer.getVisibility() == View.VISIBLE) {
+                startTimer();
+            }
         }
     }
 

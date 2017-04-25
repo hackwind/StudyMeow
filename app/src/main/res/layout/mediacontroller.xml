@@ -22,7 +22,8 @@
 
         <TextView
             android:id="@+id/mediacontroller_time_current"
-            style="@style/MediaController_Text"
+            android:textColor="@color/selector"
+            android:textSize="@dimen/w_36"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -31,7 +32,8 @@
 
         <TextView
             android:id="@+id/mediacontroller_time_total"
-            style="@style/MediaController_Text"
+            android:textColor="@color/white"
+            android:textSize="@dimen/w_36"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -52,7 +54,8 @@
 
     <TextView
         android:id="@+id/mediacontroller_file_name"
-        style="@style/MediaController_Text"
+        android:textColor="@color/trans_white"
+        android:textSize="@dimen/w_36"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"

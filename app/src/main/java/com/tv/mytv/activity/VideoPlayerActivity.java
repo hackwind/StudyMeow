@@ -96,7 +96,9 @@ public class VideoPlayerActivity extends BaseActivity {
 
         strVideoDetail = getIntent().getStringExtra("videodetail");
         VideoDetailEntity entity = new Gson().fromJson(strVideoDetail,VideoDetailEntity.class);
-
+        if(entity == null) {
+            finish();
+        }
         title = entity.data.title;
         source = entity.data.source;
         catId = entity.data.id;
@@ -105,7 +107,7 @@ public class VideoPlayerActivity extends BaseActivity {
         //网络连接失败
         IntentFilter intentFilter=new IntentFilter();
         intentFilter.addAction(Util.ACTION_HTTP_ONERROR);
-//        registerReceiver(MyNetErrorReceiver,intentFilter);
+        registerReceiver(MyNetErrorReceiver,intentFilter);
 
         //播放页是在一个独立的进程，需要再次赋值给auth
         HttpAddress.auth = SharePrefUtil.getString(this,SharePrefUtil.KEY_AUTH,"");
@@ -119,11 +121,9 @@ public class VideoPlayerActivity extends BaseActivity {
         mediaController.setVideoName(title);
         mediaController.show(5000);
         if ("".equals(videoPath) || videoPath == null || videoPath == "") {
-            ToastUtil.showShort(VideoPlayerActivity.this, "播放失败");
+            ToastUtil.showShort(VideoPlayerActivity.this, "没有获取到播放源");
             return;
         } else {
-
-            Logger.e("AAAAAA",videoPath);
 
             //设置硬件解码
 //            mVideoView.setHardwareDecoder(true);

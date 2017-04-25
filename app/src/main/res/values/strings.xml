@@ -34,6 +34,11 @@
     <string name="no_collection">您还没有关注专题，快去收藏喜欢的专题吧！</string>
     <string name="no_history">您还没有播放记录，快去播放喜欢的内容吧！</string>
     <string name="cosume_records">消费记录</string>
+    <string name="qrcode_scan">微信扫一扫</string>
+    <string name="subscribe">订阅成为%s专栏会员</string>
+    <string name="feed_back">问题反馈</string>
+    <string name="contact_us">联系我们</string>
+    <string name="submit_by_scan">微信扫一扫提交</string>>
 
     <!--Vitamio-->
     <string name="vitamio_library_app_name">VitamioLibrary</string>
