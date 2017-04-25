@@ -25,4 +25,5 @@
         android:layout_centerHorizontal="true">
 
     </com.open.androidtvwidget.leanback.recycle.RecyclerViewTV>
+
 </RelativeLayout>

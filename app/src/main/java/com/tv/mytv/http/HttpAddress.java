@@ -118,6 +118,24 @@ public class HttpAddress {
     }
 
     /**
+     * 支付订阅接口
+     * @param courseId
+     * @return
+     */
+    public static String getSubScribeQRCode(String courseId) {
+        return  WEB_URL+"m=member&c=app2&a=subscribe&courseid=" + courseId + "&auth=" + auth;
+    }
+
+    /**
+     * 检查是否已经支付
+     * @param orderNo
+     * @return
+     */
+    public static String checkSubscribe(String orderNo) {
+        return  WEB_URL+"m=member&c=app2&a=subscribe&type=checkSubscribe&orderno=" + orderNo + "&auth=" + auth;
+    }
+
+    /**
      * 提交视频播放
      * @param id
      * @return

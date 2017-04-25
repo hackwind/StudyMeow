@@ -88,18 +88,24 @@ public class SettingActivity extends BaseActivity {
     private void onViewItemClick(View itemView, int position) {
         switch (position) {
             case 0:
-
+                Intent intent = new Intent(SettingActivity.this, ContactUsActivity.class);
+                intent.putExtra("type",1);
+                startActivity(intent);
                 break;
             case 1:
-
+                checkUpdate();
                 break;
             case 2:
-                Intent intent = new Intent(SettingActivity.this, ContactUsActivity.class);
+                intent = new Intent(SettingActivity.this, ContactUsActivity.class);
+                intent.putExtra("type",2);
                 startActivity(intent);
-
                 break;
 
         }
+
+    }
+
+    private void checkUpdate() {
 
     }
 

@@ -264,7 +264,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
         gridlayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         gridlayoutManager.setSmoothScrollbarEnabled(false);
         rvMy.setLayoutManager(gridlayoutManager);
-        rvMy.addItemDecoration(new SpaceItemDecoration((int)getDimension(R.dimen.h_94),ROW_SIZE,posters.size()));
+        rvMy.addItemDecoration(new BottomSpaceItemDecoration((int)getDimension(R.dimen.h_94),ROW_SIZE,posters.size()));
         rvMy.setFocusable(false);
 //        rvMy.setSelectedItemAtCentered(true); // 设置item在中间移动.
         mMyRecyclerViewPresenter = new RecommendPresenter(posters);
@@ -317,11 +317,16 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
                     Intent intent = new Intent(MainActivity.this,HistoryActivity.class);
                     startActivity(intent);
                 } else if("category".equals(poster.linkType)) {//打开分类，进入列表
-//                    Intent intent = new Intent(MainActivity.this,ListActivity.class);
-//                    startActivity(intent);
-                } else if("detail".equals(poster.linkType)) {//进入专辑详情页
-                    Intent intent = new Intent(MainActivity.this,AlbumActivity.class);
-                    intent.putExtra("id",poster.linkData);
+                    Intent intent = new Intent(MainActivity.this,ListActivity.class);
+                    intent.putExtra("catid",poster.linkData);
+                    startActivity(intent);
+                } else if("detail".equals(poster.linkType)) {//进入专辑详情页，{“linkData”: “20,3930”}格式:catid,id
+                    Intent intent = new Intent(MainActivity.this,VideoDetailActivity.class);
+                    try {
+                        String[] ids = poster.linkData.split(",");
+                        intent.putExtra("catid", ids[0]);
+                        intent.putExtra("id", ids[1]);
+                    } catch (Exception e){}
                     startActivity(intent);
                 } else if("url".equals(poster.linkType)) {//打开webview
                     Intent intent = new Intent(MainActivity.this,WebActivity.class);
@@ -356,7 +361,6 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
             public void onItemClick(RecyclerViewTV parent, View itemView, int position) {
                 Intent intent = new Intent(MainActivity.this,ListActivity.class);
                 intent.putExtra("catid",categoryEntity.data.category.get(position).catid);
-                intent.putExtra("catname",categoryEntity.data.category.get(position).catname);
                 startActivity(intent);
             }
         });

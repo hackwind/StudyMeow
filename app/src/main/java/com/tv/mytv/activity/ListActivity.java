@@ -78,20 +78,18 @@ public class ListActivity extends BaseActivity {
     private int total = 0;
     private static int pageSize = 50;
     private int leftMenuSelectedIndex = 0;
-    private int defaultPos = 0;
     private static boolean forFree = false;
     private static int ROW_SIZE = 5;
 
     private List<ListEntity.VideoRow> videoList;
     private LinearLayout mProgressBar;
+    private boolean first = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         catId = getIntent().getStringExtra("catid");
-        catName = getIntent().getStringExtra("catname");
-
         //网络连接失败
         IntentFilter intentFilter=new IntentFilter();
         intentFilter.addAction(Util.ACTION_HTTP_ONERROR);
@@ -104,7 +102,7 @@ public class ListActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if(intent.getAction().equals(Util.ACTION_HTTP_ONERROR)){
-                Log.d("hjs","http error");
+                first = false;
             }
         }
     };
@@ -128,7 +126,6 @@ public class ListActivity extends BaseActivity {
     private void initViews(){
         categoryName = (TextView)findViewById(R.id.category_name) ;
         pageCountView = (TextView)findViewById(R.id.category_page) ;
-        categoryName.setText(catName);
         mProgressBar = (LinearLayout) findViewById(R.id.progressBar);
         initLeftMenu();
         initFreeMenu();
@@ -151,8 +148,9 @@ public class ListActivity extends BaseActivity {
         for(CategoryEntity.Category cat : categoryEntity.data.category){
             openMenu.add(cat.catname,cat.icon);
             if(catId.equals(cat.catid)) {
-                Log.d("hjs","id equal:" + i);
-                defaultPos = i;
+                catName = cat.catname;
+                categoryName.setText(catName);
+                leftMenuSelectedIndex = i;
             }
             i ++;
         }
@@ -209,31 +207,17 @@ public class ListActivity extends BaseActivity {
              */
             @Override
             public void onReviseFocusFollow(RecyclerViewTV parent, View itemView, int position) {
-//                if(mainUpView != null) {
-//                    mainUpView.setFocusView(itemView, 1.0f);
-//                }
                 oldView = itemView;
             }
         });
         leftMenu.setOnItemClickListener(new RecyclerViewTV.OnItemClickListener() {
             @Override
             public void onItemClick(RecyclerViewTV parent, View itemView, int position) {
-                // 测试.点击效果，实际电视没有点击
-//                if(mainUpView != null) {
-//                    mainUpView.setFocusView(itemView, oldView, 1.0f);
-//                }
                 oldView = itemView;
-                //
-//                onViewItemClick(itemView, position,true);
             }
         });
         leftMenu.clearFocus();
-//        leftMenu.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                leftMenu.setDefaultSelect(defaultPos);
-//            }
-//        },200);
+
     }
 
     private void initFreeMenu() {
@@ -324,7 +308,7 @@ public class ListActivity extends BaseActivity {
         //TODO 通过下面的方法处理焦点乱飞的问题
 //        gridlayoutManager.onFocusSearchFailed()
         contentView.setLayoutManager(gridlayoutManager);
-        contentView.addItemDecoration(new SpaceItemDecoration((int) getResources().getDimension(R.dimen.h_64),ROW_SIZE,total));
+        contentView.addItemDecoration(new SpaceItemDecoration((int) getResources().getDimension(R.dimen.h_94)));
         contentView.setFocusable(false);
         contentView.setSelectedItemAtCentered(false); // 设置item在中间移动.
         mMyRecyclerViewPresenter = new VideoListRecyclerViewPresenter(videoList);
@@ -382,6 +366,7 @@ public class ListActivity extends BaseActivity {
                     allButton.setTextColor(getResources().getColor(R.color.selector));
                     freeButton.setTextColor(getResources().getColor(R.color.trans_white));
                 }
+                leftMenu.getChildAt(leftMenuSelectedIndex).setBackgroundResource(R.drawable.left_menu_selected_unfocus);
             }
 
             @Override
@@ -408,6 +393,12 @@ public class ListActivity extends BaseActivity {
                 getPageData();
             }
         });
+        contentView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                contentView.setDefaultSelect(0);
+            }
+        },200);
     }
 
 
@@ -448,6 +439,11 @@ public class ListActivity extends BaseActivity {
         if(videoList != null && videoList.size() >= total) {
             contentView.setOnLoadMoreComplete();
         }
+        if(first) {
+            first = false;
+            leftMenu.getChildAt(leftMenuSelectedIndex).setBackgroundResource(R.drawable.left_menu_selected_unfocus);
+        }
+
     }
 
 

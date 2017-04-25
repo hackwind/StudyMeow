@@ -57,9 +57,6 @@
             android:name=".activity.WebActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.AlbumActivity"
-            android:screenOrientation="landscape" />
-        <activity
             android:name=".activity.LoginActivity"
             android:screenOrientation="landscape" />
         <activity

@@ -8,13 +8,14 @@
     android:layout_gravity="center"
     android:gravity="center">
     <TextView
-        android:text="联系我们"
+        android:text="@string/contact_us"
+        android:id="@+id/set_type"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:textSize="@dimen/w_106"
         android:textColor="@color/trans_white"/>
     <TextView
-        android:text="微信扫一扫提交"
+        android:text="@string/submit_by_scan"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:textSize="@dimen/w_60"
