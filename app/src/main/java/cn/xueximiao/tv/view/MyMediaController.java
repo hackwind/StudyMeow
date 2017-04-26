@@ -34,7 +34,7 @@ public class MyMediaController extends MediaController{
     private static final int HIDEFRAM = 0;//控制提示窗口的显示
 
     private GestureDetector mGestureDetector;
-    private ImageButton img_back;//返回按钮
+//    private ImageButton img_back;//返回按钮
     private TextView mFileName;//文件名
     private VideoView videoView;
     private Activity activity;
@@ -69,15 +69,6 @@ public class MyMediaController extends MediaController{
 //
 //    private TextView network_buffer;
 
-    //返回监听
-    private View.OnClickListener backListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            if (activity != null) {
-                activity.finish();
-            }
-        }
-    };
-
     private Handler myHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -105,14 +96,10 @@ public class MyMediaController extends MediaController{
 
     @Override
     protected View makeControllerView() {
-        Log.i("makeControllerView执行了");
         //此处的   mymediacontroller  为我们自定义控制器的布局文件名称
         View v = ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate
                 (getResources().getIdentifier("mymediacontroller", "layout", getContext().getPackageName()), this);
         v.setMinimumHeight(controllerWidth);
-        //获取控件
-        img_back = (ImageButton) v.findViewById(getResources().getIdentifier("mediacontroller_top_back", "id",
-                context.getPackageName()));
         mFileName = (TextView) v.findViewById(getResources().getIdentifier("mediacontroller_filename", "id",
         context.getPackageName()));
         mPauseButton = (ImageButton) v.findViewById(getResources().getIdentifier("mediacontroller_play_pause", "id", context.getPackageName()));
@@ -134,7 +121,7 @@ public class MyMediaController extends MediaController{
                 .getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 
         //注册事件监听
-        img_back.setOnClickListener(backListener);
+//        img_back.setOnClickListener(backListener);
         mTime.setText(getTime());
 
 //        //视频缓冲处理

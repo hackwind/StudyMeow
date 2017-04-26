@@ -4,9 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -18,14 +22,19 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import cn.xueximiao.tv.R;
+import cn.xueximiao.tv.adapter.VideoListPresenter;
 import cn.xueximiao.tv.entity.VideoDetailEntity;
 import cn.xueximiao.tv.entity.VideoSourceEntity;
 import cn.xueximiao.tv.http.HttpAddress;
+import cn.xueximiao.tv.http.HttpImageAsync;
 import cn.xueximiao.tv.http.HttpRequest;
 import cn.xueximiao.tv.util.SharePrefUtil;
 import cn.xueximiao.tv.util.ToastUtil;
 import cn.xueximiao.tv.util.Util;
 import cn.xueximiao.tv.view.MyMediaController;
+
+import com.open.androidtvwidget.leanback.adapter.GeneralAdapter;
+import com.open.androidtvwidget.leanback.recycle.RecyclerViewTV;
 import com.umeng.analytics.MobclickAgent;
 
 
@@ -48,6 +57,8 @@ public class VideoPlayerActivity extends BaseActivity {
     private LinearLayout mVideo_error;
 
     private LinearLayout loading;
+
+    private LinearLayout bottomSelection;
 
     private String title;
 
@@ -88,6 +99,11 @@ public class VideoPlayerActivity extends BaseActivity {
     private int playIndex = 0;//当前正在播放的专辑列表索引
     private List<VideoSourceEntity.VideoSource> currentVideoSource;
 
+    private RecyclerViewTV selectionList;
+    private RecyclerViewTV selectionPages;
+    private VideoListPresenter presenter;
+    private GeneralAdapter generalAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +129,15 @@ public class VideoPlayerActivity extends BaseActivity {
 
         initview();
         getVideoSourcePath();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(bottomSelection.getVisibility() == View.VISIBLE) {
+            bottomSelection.setVisibility(View.GONE);
+            return;
+        }
+        super.onBackPressed();
     }
 
     private void play() {
@@ -244,19 +269,44 @@ public class VideoPlayerActivity extends BaseActivity {
         title_pro.setText(title);
         source_pro.setText("来源:" + source);
 
+        bottomSelection = (LinearLayout) findViewById(R.id.bottom_selection);
+        selectionList = (RecyclerViewTV)findViewById(R.id.video_list) ;
+        selectionPages = (RecyclerViewTV)findViewById(R.id.video_pages) ;
+
         error_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 VideoPlayerActivity.this.finish();
             }
         });
+        initVideoList();
+    }
+    //选集列表
+    private void initVideoList() {
+        LinearLayoutManager linearlayoutManager = new LinearLayoutManager(this); // 解决快速长按焦点丢失问题.
+        linearlayoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
+        linearlayoutManager.setSmoothScrollbarEnabled(false);
+        selectionList.setLayoutManager(linearlayoutManager);
+        selectionList.setFocusable(false);
+        selectionList.addItemDecoration(new SpaceItemDecoration((int)getResources().getDimension(R.dimen.w_20)));
+        presenter = new VideoListPresenter(videoList);
+        generalAdapter = new GeneralAdapter(presenter);
+        selectionList.setAdapter(generalAdapter);
+
+        selectionList.setOnItemClickListener(new RecyclerViewTV.OnItemClickListener() {
+            @Override
+            public void onItemClick(RecyclerViewTV parent, View itemView, int position) {
+                playIndex = position;
+                getVideoSourcePath();
+            }
+        });
+
     }
 
     private void getVideoSourcePath() {
 
         videoId = videoList.get(playIndex).id;
         String url = HttpAddress.getVideoPath(catId,videoId);
-        Log.d("hjs","begin getVideoSource Path：" + url);
         //获取视频地址
         HttpRequest.get(url, null, VideoPlayerActivity.this, "getPathResult", loading,VideoPlayerActivity.this,VideoSourceEntity.class);
         //定时刷新网速
@@ -339,8 +389,12 @@ public class VideoPlayerActivity extends BaseActivity {
                 }
                 break;
             case KeyEvent.KEYCODE_MENU:
-                super.openOptionsMenu(); //调用这个就可以弹出菜单
+//                super.openOptionsMenu(); //调用这个就可以弹出菜单
+                bottomSelection.setVisibility(View.VISIBLE);
+                selectionList.setDefaultSelect(playIndex);
+                mediaController.hide();
                 break;
+
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -402,5 +456,18 @@ public class VideoPlayerActivity extends BaseActivity {
             }
         }
     };
+
+    class SpaceItemDecoration extends RecyclerViewTV.ItemDecoration{
+        private int space;
+
+        public SpaceItemDecoration(int space) {
+            this.space = space;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            outRect.right = space;
+        }
+    }
 
 }

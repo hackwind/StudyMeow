@@ -460,9 +460,9 @@ public class MediaController extends FrameLayout {
       return;
 
     if (mPlayer.isPlaying())
-      mPauseButton.setImageResource(getResources().getIdentifier("mediacontroller_pause", "drawable", mContext.getPackageName()));
+      mPauseButton.setImageResource(getResources().getIdentifier("ic_player_pause", "drawable", mContext.getPackageName()));
     else
-      mPauseButton.setImageResource(getResources().getIdentifier("mediacontroller_play", "drawable", mContext.getPackageName()));
+      mPauseButton.setImageResource(getResources().getIdentifier("ic_player_play", "drawable", mContext.getPackageName()));
   }
 
   private void doPauseResume() {

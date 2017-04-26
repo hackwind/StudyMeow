@@ -16,9 +16,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
-            android:background="@drawable/mediacontroller_button"
             android:contentDescription="@string/mediacontroller_play_pause"
-            android:src="@drawable/mediacontroller_pause" />
+            android:src="@drawable/ic_player_pause" />
 
         <TextView
             android:id="@+id/mediacontroller_time_current"
@@ -27,8 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/mediacontroller_play_pause" />
+            android:layout_toStartOf="@+id/mediacontroller_seekbar" />
 
         <TextView
             android:id="@+id/mediacontroller_time_total"
@@ -38,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="5dp" />
+            android:layout_toEndOf="@+id/mediacontroller_seekbar" />
 
         <SeekBar
             android:id="@+id/mediacontroller_seekbar"
@@ -46,8 +44,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/mediacontroller_time_total"
-            android:layout_toRightOf="@id/mediacontroller_time_current"
+            android:layout_marginRight="@dimen/w_60"
+            android:layout_toRightOf="@id/mediacontroller_play_pause"
             android:focusable="true"
             android:max="1000" />
     </RelativeLayout>

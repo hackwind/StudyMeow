@@ -105,33 +105,33 @@
                 android:id="@+id/text_my"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/h_40"
                 android:textSize="@dimen/w_50"
                 android:textColor="@color/trans_white"
                 android:layout_marginLeft="@dimen/w_12"
                 android:text="我的电视"/>
-
+            <View android:layout_width="match_parent"
+                android:layout_height="@dimen/h_40"/>
             <com.open.androidtvwidget.leanback.recycle.RecyclerViewTV
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/recyclerview_my">
 
             </com.open.androidtvwidget.leanback.recycle.RecyclerViewTV>
-
+            <View android:layout_width="match_parent"
+                android:layout_height="@dimen/h_92"/>
             <TextView
                 android:id="@+id/text_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/h_92"
-                android:layout_marginBottom="@dimen/h_40"
                 android:layout_marginLeft="@dimen/w_12"
                 android:textSize="@dimen/w_50"
                 android:textColor="@color/trans_white"
                 android:text="热门分类"/>
+            <View android:layout_width="match_parent"
+                android:layout_height="@dimen/h_40"/>
             <com.open.androidtvwidget.leanback.recycle.RecyclerViewTV
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/h_20"
                 android:id="@+id/recyclerview_category">
 
             </com.open.androidtvwidget.leanback.recycle.RecyclerViewTV>

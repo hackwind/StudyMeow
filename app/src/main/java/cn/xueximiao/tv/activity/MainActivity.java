@@ -227,10 +227,10 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
     private void onViewItemClick(View itemView, int position,boolean isRealClick) {
         switch (position) {
             case 0:
-                scrollView.scrollTo(0,(int)txtMy.getY());
+                scrollView.smoothScrollTo(0,0);
                 break;
             case 1:
-                scrollView.scrollTo(0,(int)txtCategory.getY());
+                scrollView.smoothScrollTo(0,100000);
                 break;
             case 2:
                 if(isRealClick) {
@@ -341,7 +341,6 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
         gridlayoutManager.setSmoothScrollbarEnabled(false);
         rvCategory.setLayoutManager(gridlayoutManager);
         rvCategory.setFocusable(false);
-//        rvCategory.setSelectedItemAtCentered(true); // 设置item在中间移动.
         rvCategory.addItemDecoration(new BottomSpaceItemDecoration((int)getDimension(R.dimen.h_94),ROW_SIZE,categoryEntity.data.category.size()));
         mCategoryRecyclerViewPresenter = new CategoryRecyclerViewPresenter(categoryEntity.data.category);
         mCategoryGeneralAdapter = new GeneralAdapter(mCategoryRecyclerViewPresenter);
@@ -431,12 +430,12 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
         oldView = itemView;
 
         if(parent == rvCategory) {
-            scrollView.scrollTo(0,(int)txtCategory.getY() );
+            scrollView.smoothScrollTo(0,100000);
             menuListView.getChildAt(1).setBackgroundResource(R.drawable.left_menu_selected_unfocus);
             menuListView.getChildAt(0).setBackgroundColor(Color.TRANSPARENT);
             menuListView.getChildAt(2).setBackgroundColor(Color.TRANSPARENT);
         } else {
-            scrollView.scrollTo(0,(int)txtMy.getY());
+            scrollView.smoothScrollTo(0,0);
             menuListView.getChildAt(0).setBackgroundResource(R.drawable.left_menu_selected_unfocus);
             menuListView.getChildAt(1).setBackgroundColor(Color.TRANSPARENT);
             menuListView.getChildAt(2).setBackgroundColor(Color.TRANSPARENT);
