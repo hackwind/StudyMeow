@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.tv.mytv.R;
+import cn.xueximiao.tv.R;
 
 
 

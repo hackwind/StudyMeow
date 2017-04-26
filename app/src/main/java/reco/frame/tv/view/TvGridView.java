@@ -20,7 +20,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Scroller;
 
-import com.tv.mytv.R;
+import cn.xueximiao.tv.R;
 
 import reco.frame.tv.view.component.RecycleBin;
 import reco.frame.tv.view.component.TvBaseAdapter;

@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tv.mytv.R;
+import cn.xueximiao.tv.R;
 
 
 /**

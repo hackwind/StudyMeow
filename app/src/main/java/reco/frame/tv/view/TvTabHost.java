@@ -20,8 +20,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tv.mytv.R;
-import com.tv.mytv.util.Util;
+import cn.xueximiao.tv.R;
+import cn.xueximiao.tv.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;

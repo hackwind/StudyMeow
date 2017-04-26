@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tv.mytv">
+    package="cn.xueximiao.tv">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -9,14 +9,14 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
-        android:name=".activity.MyApplication"
+        android:name="cn.xueximiao.tv.activity.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/my_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.SplashActivity"
+            android:name="cn.xueximiao.tv.activity.SplashActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateAlwaysHidden">
@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.VideoPlayerActivity"
+            android:name="cn.xueximiao.tv.activity.VideoPlayerActivity"
             android:configChanges="orientation|screenSize"
             android:process=":vitamio"
             android:screenOrientation="landscape"
@@ -39,34 +39,34 @@
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".activity.MainActivity"
+            android:name="cn.xueximiao.tv.activity.MainActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.ListActivity"
+            android:name="cn.xueximiao.tv.activity.ListActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.SettingActivity"
+            android:name="cn.xueximiao.tv.activity.SettingActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.HistoryActivity"
+            android:name="cn.xueximiao.tv.activity.HistoryActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.MyActivity"
+            android:name="cn.xueximiao.tv.activity.MyActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.WebActivity"
+            android:name="cn.xueximiao.tv.activity.WebActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.LoginActivity"
+            android:name="cn.xueximiao.tv.activity.LoginActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.ContactUsActivity"
+            android:name="cn.xueximiao.tv.activity.ContactUsActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.ConsumeRecordsActivity"
+            android:name="cn.xueximiao.tv.activity.ConsumeRecordsActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.VideoDetailActivity"
+            android:name="cn.xueximiao.tv.activity.VideoDetailActivity"
             android:screenOrientation="landscape" />
 
         <meta-data
