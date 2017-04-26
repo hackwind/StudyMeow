@@ -4,9 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.open.androidtvwidget.leanback.adapter.GeneralAdapter;
 import com.open.androidtvwidget.leanback.mode.OpenPresenter;
@@ -14,21 +11,18 @@ import com.open.androidtvwidget.leanback.recycle.RecyclerViewTV;
 import com.open.androidtvwidget.menu.OpenMenu;
 import com.open.androidtvwidget.menu.OpenMenuItem;
 import com.open.androidtvwidget.menu.OpenMenuItemView;
-import com.tv.mytv.R;
-import com.tv.mytv.http.HttpImageAsync;
-import com.tv.mytv.widget.MyOpenMenuImpl;
-import com.tv.mytv.widget.MyOpenMenuItemImpl;
+import cn.tv.tv.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class ListMenuPresenter extends OpenPresenter {
+public class LoginMenuPresenter extends OpenPresenter {
 
     private RecyclerViewTV mRecyclerViewTV;
-    private MyOpenMenuImpl mOpenMenu;
+    private OpenMenu mOpenMenu;
 
-    public ListMenuPresenter(RecyclerViewTV recyclerViewTV, MyOpenMenuImpl openMenu) {
+    public LoginMenuPresenter(RecyclerViewTV recyclerViewTV, OpenMenu openMenu) {
         this.mRecyclerViewTV = recyclerViewTV;
         this.mOpenMenu = openMenu;
     }
@@ -72,7 +66,7 @@ public class ListMenuPresenter extends OpenPresenter {
 
     @Override
     public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
-        View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_list_item_linear, parent, false);
+        View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_login_item, parent, false);
         //
         ViewHolder result = new ContainerViewHolder(rootView);
         return result;
@@ -81,40 +75,16 @@ public class ListMenuPresenter extends OpenPresenter {
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         ArrayList<OpenMenuItem> items = mOpenMenu.getMenuDatas();
-        MyOpenMenuItemImpl menuItem = (MyOpenMenuItemImpl)items.get(position);
+        OpenMenuItem menuItem = items.get(position);
         ContainerViewHolder holder = (ContainerViewHolder) viewHolder;
-        LinearLayout openMenuItemView = (LinearLayout) holder.view;
-//        openMenuItemView.initialize(menuItem);
-        ImageView icon = (ImageView) openMenuItemView.findViewById(R.id.icon);
-        TextView title = (TextView)openMenuItemView.findViewById(R.id.title_tv);
-        title.setText(menuItem.getTitle());
-        HttpImageAsync.loadingImage(icon,menuItem.getIconUrl());
+        OpenMenuItemView openMenuItemView = (OpenMenuItemView) holder.view;
+        openMenuItemView.initialize(menuItem);
         // 子控件.
         if (menuItem.getMenu().getParentMenu() != null) {
             RecyclerView.LayoutParams lp = (RecyclerView.LayoutParams) openMenuItemView.getLayoutParams();
             lp.leftMargin = menuItem.getMenu().getTreeDepth() * 45;
         }
-        // item 单击处理.
-        mRecyclerViewTV.setOnItemClickListener(new RecyclerViewTV.OnItemClickListener() {
-            @Override
-            public void onItemClick(RecyclerViewTV parent, View itemView, int position) {
-                GeneralAdapter menuAdapter = getAdapter();
-                OpenMenuItem menuItem = getItemPosition(position);
-                // 判断是否存在子菜单.
-                if (menuItem.hasSubMenu()) {
-                    if (!menuItem.isShowSubMenu()) {
-                        // 显示菜单.
-                        addAll(menuItem.getSubMenu().getMenuDatas(), position + 1);
-                        mRecyclerViewTV.scrollToPosition(position + 1);
-                    } else {
-                        // 隐藏菜单.
-                        removeAll(menuItem.getSubMenu().getMenuDatas(), position + 1);
-                        mRecyclerViewTV.scrollToPosition(position + 1);
-                    }
-                    menuItem.setShowSubMenu(!menuItem.isShowSubMenu());
-                }
-            }
-        });
+
     }
 
     @Override

@@ -1,30 +1,28 @@
 package adapter;
 
-import android.content.pm.PackageInfo;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.open.androidtvwidget.leanback.adapter.GeneralAdapter;
-import com.open.androidtvwidget.leanback.mode.OpenPresenter;
 import com.open.androidtvwidget.leanback.recycle.RecyclerViewTV;
+import com.open.androidtvwidget.leanback.mode.OpenPresenter;
 import com.open.androidtvwidget.menu.OpenMenu;
 import com.open.androidtvwidget.menu.OpenMenuItem;
-import com.tv.mytv.R;
+import com.open.androidtvwidget.menu.OpenMenuItemView;
+import cn.tv.tv.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class SettingPresenter extends OpenPresenter {
+public class TreeMenuPresenter extends OpenPresenter {
 
     private RecyclerViewTV mRecyclerViewTV;
     private OpenMenu mOpenMenu;
 
-    public SettingPresenter(RecyclerViewTV recyclerViewTV, OpenMenu openMenu) {
+    public TreeMenuPresenter(RecyclerViewTV recyclerViewTV, OpenMenu openMenu) {
         this.mRecyclerViewTV = recyclerViewTV;
         this.mOpenMenu = openMenu;
     }
@@ -68,9 +66,9 @@ public class SettingPresenter extends OpenPresenter {
 
     @Override
     public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
-        View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.setting_item, parent, false);
+        View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_list_item, parent, false);
         //
-        ViewHolder result = new ContainerViewHolder(rootView);
+        OpenPresenter.ViewHolder result = new ContainerViewHolder(rootView);
         return result;
     }
 
@@ -79,21 +77,12 @@ public class SettingPresenter extends OpenPresenter {
         ArrayList<OpenMenuItem> items = mOpenMenu.getMenuDatas();
         OpenMenuItem menuItem = items.get(position);
         ContainerViewHolder holder = (ContainerViewHolder) viewHolder;
-        RelativeLayout openMenuItemView = (RelativeLayout)holder.view;
-        ImageView icon = (ImageView)openMenuItemView.findViewById(R.id.icon);
-        TextView title = (TextView)openMenuItemView.findViewById(R.id.title_tv);
-        ImageView arrow = (ImageView)openMenuItemView.findViewById(R.id.arrow);
-        TextView version = (TextView)openMenuItemView.findViewById(R.id.version);
-        icon.setImageResource(menuItem.getIconRes());
-        title.setText(menuItem.getTitle());
-        if(position == getItemCount() - 1) {
-            arrow.setVisibility(View.GONE);
-            try {
-                PackageInfo pkg = mRecyclerViewTV.getContext().getPackageManager().getPackageInfo(mRecyclerViewTV.getContext().getApplicationContext().getPackageName(), 0);
-                String versionName = pkg.versionName;
-                version.setText("V" + versionName);
-                version.setVisibility(View.VISIBLE);
-            } catch(Exception e) {}
+        OpenMenuItemView openMenuItemView = (OpenMenuItemView) holder.view;
+        openMenuItemView.initialize(menuItem);
+        // 子控件.
+        if (menuItem.getMenu().getParentMenu() != null) {
+            RecyclerView.LayoutParams lp = (RecyclerView.LayoutParams) openMenuItemView.getLayoutParams();
+            lp.leftMargin = menuItem.getMenu().getTreeDepth() * 45;
         }
     }
 
@@ -113,7 +102,7 @@ public class SettingPresenter extends OpenPresenter {
         return (GeneralAdapter) mRecyclerViewTV.getAdapter();
     }
 
-    static class ContainerViewHolder extends ViewHolder {
+    static class ContainerViewHolder extends OpenPresenter.ViewHolder {
         public ContainerViewHolder(View view) {
             super(view);
         }

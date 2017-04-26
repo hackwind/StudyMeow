@@ -7,8 +7,8 @@ import android.widget.TextView;
 
 import com.open.androidtvwidget.leanback.adapter.GeneralAdapter;
 import com.open.androidtvwidget.leanback.mode.OpenPresenter;
-import com.tv.mytv.R;
-import com.tv.mytv.entity.ConsumeRecordsEntity;
+import cn.tv.tv.R;
+import cn.xueximiao.tv.entity.ConsumeRecordsEntity;
 
 import java.util.List;
 

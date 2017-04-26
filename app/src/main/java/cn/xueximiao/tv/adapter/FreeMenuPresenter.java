@@ -1,6 +1,5 @@
 package adapter;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,7 @@ import com.open.androidtvwidget.leanback.recycle.RecyclerViewTV;
 import com.open.androidtvwidget.menu.OpenMenu;
 import com.open.androidtvwidget.menu.OpenMenuItem;
 import com.open.androidtvwidget.menu.OpenMenuItemView;
-import com.tv.mytv.R;
+import cn.tv.tv.R;
 
 import java.util.ArrayList;
 import java.util.List;

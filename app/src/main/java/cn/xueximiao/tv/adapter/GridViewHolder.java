@@ -5,17 +5,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.open.androidtvwidget.leanback.mode.OpenPresenter;
-import com.tv.mytv.R;
+import cn.tv.tv.R;
 
-public class MenuHolder extends OpenPresenter.ViewHolder {
-
+public class GridViewHolder extends OpenPresenter.ViewHolder {
+	
 	public ImageView iv;
 	public TextView tv;
-
-	public MenuHolder(View itemView) {
+	
+	public GridViewHolder(View itemView) {
 		super(itemView);
 		iv = (ImageView)itemView.findViewById(R.id.icon);
-		tv = (TextView)itemView.findViewById(R.id.title_tv);
+		tv = (TextView)itemView.findViewById(R.id.textView);
 	}
 
 }

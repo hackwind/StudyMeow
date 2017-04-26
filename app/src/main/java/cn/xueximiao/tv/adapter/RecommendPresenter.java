@@ -4,24 +4,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.open.androidtvwidget.leanback.adapter.GeneralAdapter;
 import com.open.androidtvwidget.leanback.mode.OpenPresenter;
-import com.tv.mytv.R;
-import com.tv.mytv.entity.RecommendEntity;
-import com.tv.mytv.http.HttpImageAsync;
+import cn.tv.tv.R;
+import cn.xueximiao.tv.entity.RecommendEntity;
+import cn.xueximiao.tv.http.HttpImageAsync;
 
 import java.util.List;
 
 
-public class MyButtonPresenter extends OpenPresenter {
+public class RecommendPresenter extends OpenPresenter {
 
-    private String[] buttonNames;
+    private List<RecommendEntity.Poster> posters;
     private GeneralAdapter mAdapter;
 
-    public MyButtonPresenter(String[] buttonNames) {
-        this.buttonNames = buttonNames;
+    public RecommendPresenter(List<RecommendEntity.Poster> posters) {
+        this.posters = posters;
     }
 
     @Override
@@ -32,7 +31,7 @@ public class MyButtonPresenter extends OpenPresenter {
 
     @Override
     public int getItemCount() {
-        return buttonNames == null ? 0 : buttonNames.length;
+        return posters == null ? 0 : posters.size();
     }
 
     @Override
@@ -42,25 +41,15 @@ public class MyButtonPresenter extends OpenPresenter {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_my_button, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recommend_view, parent, false);
         return new GridViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         GridViewHolder gridViewHolder = (GridViewHolder) viewHolder;
-        gridViewHolder.tv.setText(buttonNames[position]);
+        ImageView icon = gridViewHolder.iv;
+        HttpImageAsync.loadingImage(icon,posters.get(position).image);
     }
 
-    public class GridViewHolder extends OpenPresenter.ViewHolder {
-
-        public TextView tv;
-
-        public GridViewHolder(View itemView) {
-            super(itemView);
-            tv = (TextView) itemView.findViewById(R.id.textView);
-        }
-
-
-    }
 }

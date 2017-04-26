@@ -3,26 +3,23 @@ package adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.open.androidtvwidget.leanback.adapter.GeneralAdapter;
 import com.open.androidtvwidget.leanback.mode.OpenPresenter;
-import com.tv.mytv.R;
-import com.tv.mytv.entity.ListEntity;
-import com.tv.mytv.http.HttpImageAsync;
+import cn.tv.tv.R;
+import cn.xueximiao.tv.entity.VideoDetailEntity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
-public class VideoListRecyclerViewPresenter extends OpenPresenter {
+public class VideoListPresenter extends OpenPresenter {
 
-    private final List<ListEntity.VideoRow> rows;
+    private List<VideoDetailEntity.Video> list;
     private GeneralAdapter mAdapter;
 
-    public VideoListRecyclerViewPresenter(List<ListEntity.VideoRow> rows) {
-        this.rows = rows;
+    public VideoListPresenter(List<VideoDetailEntity.Video> list) {
+        this.list = list;
     }
 
     @Override
@@ -33,7 +30,7 @@ public class VideoListRecyclerViewPresenter extends OpenPresenter {
 
     @Override
     public int getItemCount() {
-        return rows == null ? 0 : rows.size();
+        return list == null ? 0 : list.size();
     }
 
     @Override
@@ -43,28 +40,30 @@ public class VideoListRecyclerViewPresenter extends OpenPresenter {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_videolist_view, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_video_list, parent, false);
         return new GridViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         GridViewHolder gridViewHolder = (GridViewHolder) viewHolder;
-        TextView textView =  gridViewHolder.tv;
-        ListEntity.VideoRow row = rows.get(position);
-        textView.setText(row.title);
-        HttpImageAsync.loadingImage(gridViewHolder.iv,row.thumb);
+        gridViewHolder.title.setText(list.get(position).title);
+        if("99".equals(list.get(position).status)) {//可以观看
+            gridViewHolder.free.setText(R.string.free);
+        } else {
+            gridViewHolder.free.setText(R.string.charge);
+        }
     }
 
     public class GridViewHolder extends OpenPresenter.ViewHolder {
 
-        public ImageView iv;
-        public TextView tv;
+        public TextView title;
+        public TextView free;
 
         public GridViewHolder(View itemView) {
             super(itemView);
-		    iv = (ImageView)itemView.findViewById(R.id.image);
-            tv = (TextView)itemView.findViewById(R.id.textView);
+            title = (TextView)itemView.findViewById(R.id.title);
+            free = (TextView)itemView.findViewById(R.id.free);
         }
 
     }

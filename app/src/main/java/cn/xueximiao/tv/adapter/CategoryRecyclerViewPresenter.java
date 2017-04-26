@@ -9,11 +9,10 @@ import android.widget.TextView;
 
 import com.open.androidtvwidget.leanback.adapter.GeneralAdapter;
 import com.open.androidtvwidget.leanback.mode.OpenPresenter;
-import com.tv.mytv.R;
-import com.tv.mytv.entity.CategoryEntity;
-import com.tv.mytv.http.HttpImageAsync;
+import cn.tv.tv.R;
+import cn.xueximiao.tv.entity.CategoryEntity;
+import cn.xueximiao.tv.http.HttpImageAsync;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
