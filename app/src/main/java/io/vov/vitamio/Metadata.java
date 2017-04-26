@@ -19,7 +19,7 @@ package io.vov.vitamio;
 
 import android.util.SparseArray;
 
-import com.tv.mytv.BuildConfig;
+import cn.xueximiao.tv.BuildConfig;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;

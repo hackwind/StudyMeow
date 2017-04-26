@@ -1,4 +1,4 @@
-package com.tv.mytv.view;
+package cn.xueximiao.tv.view;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tv.mytv.R;
+import cn.xueximiao.tv.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

@@ -1,4 +1,4 @@
-package com.tv.mytv.view;
+package cn.xueximiao.tv.view;
 
 import android.content.Context;
 import android.graphics.Rect;

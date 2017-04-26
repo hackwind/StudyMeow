@@ -1,4 +1,4 @@
-package com.tv.mytv.http;
+package cn.xueximiao.tv.http;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -16,7 +16,7 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
-import com.tv.mytv.R;
+import cn.xueximiao.tv.R;
 
 public class HttpImageAsync {
 	// private static String TAG = "ImageLoaderHelper";

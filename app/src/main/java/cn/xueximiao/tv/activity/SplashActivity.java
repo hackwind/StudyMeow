@@ -1,4 +1,4 @@
-package com.tv.mytv.activity;
+package cn.xueximiao.tv.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,7 +11,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
-import com.tv.mytv.R;
+import cn.xueximiao.tv.R;
 import com.umeng.analytics.MobclickAgent;
 
 import java.io.InputStream;

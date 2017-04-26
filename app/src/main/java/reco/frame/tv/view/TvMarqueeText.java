@@ -15,7 +15,7 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import com.tv.mytv.R;
+import cn.xueximiao.tv.R;
 
 /**
  * 跑马灯,专用于电视应用 无需焦点也能跑动

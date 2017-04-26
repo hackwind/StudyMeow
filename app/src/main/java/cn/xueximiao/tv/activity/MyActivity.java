@@ -1,11 +1,10 @@
-package com.tv.mytv.activity;
+package cn.xueximiao.tv.activity;
 
 import android.animation.Animator;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,12 +16,12 @@ import com.open.androidtvwidget.leanback.adapter.GeneralAdapter;
 import com.open.androidtvwidget.leanback.recycle.GridLayoutManagerTV;
 import com.open.androidtvwidget.leanback.recycle.RecyclerViewTV;
 import com.open.androidtvwidget.view.MainUpView;
-import com.tv.mytv.R;
-import com.tv.mytv.http.HttpAddress;
-import com.tv.mytv.http.HttpImageAsync;
-import com.tv.mytv.util.SharePrefUtil;
+import cn.xueximiao.tv.R;
+import cn.xueximiao.tv.http.HttpAddress;
+import cn.xueximiao.tv.http.HttpImageAsync;
+import cn.xueximiao.tv.util.SharePrefUtil;
 
-import adapter.MyButtonPresenter;
+import cn.xueximiao.tv.adapter.MyButtonPresenter;
 
 /**
  * Created by Administrator on 2017/4/19.

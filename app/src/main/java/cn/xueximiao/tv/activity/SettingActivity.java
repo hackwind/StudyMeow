@@ -1,7 +1,6 @@
-package com.tv.mytv.activity;
+package cn.xueximiao.tv.activity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -15,10 +14,9 @@ import com.open.androidtvwidget.leanback.recycle.LinearLayoutManagerTV;
 import com.open.androidtvwidget.leanback.recycle.RecyclerViewTV;
 import com.open.androidtvwidget.menu.OpenMenuImpl;
 import com.open.androidtvwidget.view.MainUpView;
-import com.tv.mytv.R;
+import cn.xueximiao.tv.R;
 
-import adapter.SettingPresenter;
-import adapter.TreeMenuPresenter;
+import cn.xueximiao.tv.adapter.SettingPresenter;
 
 /**
  * Created by Administrator on 2017/4/17.

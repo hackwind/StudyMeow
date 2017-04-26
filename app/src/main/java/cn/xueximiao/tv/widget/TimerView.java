@@ -1,4 +1,4 @@
-package com.tv.mytv.widget;
+package cn.xueximiao.tv.widget;
 
 import android.content.Context;
 import android.os.Handler;
@@ -9,7 +9,6 @@ import android.util.AttributeSet;
 import java.lang.ref.WeakReference;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 /**

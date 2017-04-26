@@ -1,4 +1,4 @@
-package com.tv.mytv.activity;
+package cn.xueximiao.tv.activity;
 
 import android.animation.Animator;
 import android.graphics.Rect;
@@ -15,15 +15,15 @@ import com.open.androidtvwidget.leanback.adapter.GeneralAdapter;
 import com.open.androidtvwidget.leanback.recycle.GridLayoutManagerTV;
 import com.open.androidtvwidget.leanback.recycle.RecyclerViewTV;
 import com.open.androidtvwidget.view.MainUpView;
-import com.tv.mytv.R;
-import com.tv.mytv.entity.ConsumeRecordsEntity;
-import com.tv.mytv.http.HttpAddress;
-import com.tv.mytv.http.HttpRequest;
-import com.tv.mytv.util.ToastUtil;
+import cn.xueximiao.tv.R;
+import cn.xueximiao.tv.entity.ConsumeRecordsEntity;
+import cn.xueximiao.tv.http.HttpAddress;
+import cn.xueximiao.tv.http.HttpRequest;
+import cn.xueximiao.tv.util.ToastUtil;
 
 import java.util.List;
 
-import adapter.ConsumeRecordsPresenter;
+import cn.xueximiao.tv.adapter.ConsumeRecordsPresenter;
 
 /**
  * Created by Administrator on 2017/4/19.

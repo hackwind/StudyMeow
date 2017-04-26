@@ -1,4 +1,4 @@
-package com.tv.mytv.http;
+package cn.xueximiao.tv.http;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,11 +7,11 @@ import android.util.Log;
 import android.view.View;
 
 import com.google.gson.Gson;
-import com.tv.mytv.activity.MyApplication;
-import com.tv.mytv.entity.BaseEntity;
-import com.tv.mytv.util.LogUtil;
-import com.tv.mytv.util.ToastUtil;
-import com.tv.mytv.util.Util;
+import cn.xueximiao.tv.activity.MyApplication;
+import cn.xueximiao.tv.entity.BaseEntity;
+import cn.xueximiao.tv.util.LogUtil;
+import cn.xueximiao.tv.util.ToastUtil;
+import cn.xueximiao.tv.util.Util;
 
 import org.xutils.common.Callback;
 import org.xutils.common.Callback.CommonCallback;
@@ -32,7 +32,7 @@ public class HttpRequest {
 	/**
 	 * 发送get请求
 	 */
-	public static <T extends BaseEntity> void get(String url, Map<String, Object> map, final Object obj, final String mothod, final View view, final  Context context,final Class<T> clazz) {
+	public static <T extends BaseEntity> void get(String url, Map<String, Object> map, final Object obj, final String mothod, final View view, final  Context context, final Class<T> clazz) {
 		if (view != null) {
 			view.setVisibility(View.VISIBLE);
 		}

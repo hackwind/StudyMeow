@@ -1,4 +1,4 @@
-package com.tv.mytv.activity;
+package cn.xueximiao.tv.activity;
 
 import android.app.Activity;
 import android.graphics.RectF;
@@ -13,7 +13,7 @@ import com.open.androidtvwidget.keyboard.SkbContainer;
 import com.open.androidtvwidget.keyboard.SoftKey;
 import com.open.androidtvwidget.keyboard.SoftKeyBoardListener;
 import com.orhanobut.logger.Logger;
-import com.tv.mytv.R;
+import cn.xueximiao.tv.R;
 
 /**
  * Created by Administrator on 2017/1/12.

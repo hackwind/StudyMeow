@@ -1,4 +1,4 @@
-package com.tv.mytv.util;
+package cn.xueximiao.tv.util;
 
 import com.orhanobut.logger.Logger;
 

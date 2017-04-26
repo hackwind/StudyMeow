@@ -12,7 +12,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tv.mytv.R;
+import cn.xueximiao.tv.R;
 
 /**
  * 待完善 斟酌使用 *加载图宽与高须为奇数 即以圆心完全对称

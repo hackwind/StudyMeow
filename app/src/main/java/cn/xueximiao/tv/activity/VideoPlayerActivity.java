@@ -1,4 +1,4 @@
-package com.tv.mytv.activity;
+package cn.xueximiao.tv.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -17,16 +17,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.orhanobut.logger.Logger;
-import com.tv.mytv.R;
-import com.tv.mytv.entity.VideoDetailEntity;
-import com.tv.mytv.entity.VideoSourceEntity;
-import com.tv.mytv.http.HttpAddress;
-import com.tv.mytv.http.HttpRequest;
-import com.tv.mytv.util.SharePrefUtil;
-import com.tv.mytv.util.ToastUtil;
-import com.tv.mytv.util.Util;
-import com.tv.mytv.view.MyMediaController;
+import cn.xueximiao.tv.R;
+import cn.xueximiao.tv.entity.VideoDetailEntity;
+import cn.xueximiao.tv.entity.VideoSourceEntity;
+import cn.xueximiao.tv.http.HttpAddress;
+import cn.xueximiao.tv.http.HttpRequest;
+import cn.xueximiao.tv.util.SharePrefUtil;
+import cn.xueximiao.tv.util.ToastUtil;
+import cn.xueximiao.tv.util.Util;
+import cn.xueximiao.tv.view.MyMediaController;
 import com.umeng.analytics.MobclickAgent;
 
 
@@ -35,7 +34,7 @@ import java.util.List;
 import io.vov.vitamio.MediaPlayer;
 import io.vov.vitamio.widget.VideoView;
 
-import static com.tv.mytv.util.Util.count;
+import static cn.xueximiao.tv.util.Util.count;
 
 /**
  * 播放器

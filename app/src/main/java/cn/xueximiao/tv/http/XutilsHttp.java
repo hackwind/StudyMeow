@@ -1,4 +1,4 @@
-package com.tv.mytv.http;
+package cn.xueximiao.tv.http;
 
 import org.xutils.common.Callback.Cancelable;
 import org.xutils.common.Callback.CommonCallback;

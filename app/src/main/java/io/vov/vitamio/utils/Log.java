@@ -16,7 +16,7 @@
 package io.vov.vitamio.utils;
 
 
-import com.tv.mytv.BuildConfig;
+import cn.xueximiao.tv.BuildConfig;
 
 import java.util.MissingFormatArgumentException;
 

@@ -1,4 +1,4 @@
-package com.tv.mytv.activity;
+package cn.xueximiao.tv.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

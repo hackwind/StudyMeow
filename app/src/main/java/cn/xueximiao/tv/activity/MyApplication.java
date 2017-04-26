@@ -1,4 +1,4 @@
-package com.tv.mytv.activity;
+package cn.xueximiao.tv.activity;
 
 import android.app.Application;
 import android.content.Context;
@@ -13,7 +13,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
-import com.tv.mytv.http.HttpImageAsync;
+import cn.xueximiao.tv.http.HttpImageAsync;
 import com.umeng.analytics.MobclickAgent;
 
 import org.xutils.x;

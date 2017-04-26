@@ -1,4 +1,4 @@
-package com.tv.mytv;
+package com.xueximiao.tv;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

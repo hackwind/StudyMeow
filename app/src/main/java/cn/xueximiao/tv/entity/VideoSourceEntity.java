@@ -1,4 +1,4 @@
-package com.tv.mytv.entity;
+package cn.xueximiao.tv.entity;
 
 import java.util.List;
 

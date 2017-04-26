@@ -1,11 +1,11 @@
-package com.tv.mytv.util;
+package cn.xueximiao.tv.util;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Looper;
 
 import com.orhanobut.logger.Logger;
-import com.tv.mytv.activity.MyApplication;
+import cn.xueximiao.tv.activity.MyApplication;
 import com.umeng.analytics.MobclickAgent;
 
 import java.text.DateFormat;

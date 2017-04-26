@@ -23,7 +23,7 @@
         android:layout_marginTop="@dimen/w_40"
         android:layout_marginRight="@dimen/w_80">
 
-        <com.tv.mytv.widget.TimerView
+        <cn.xueximiao.tv.widget.TimerView
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/h_60"

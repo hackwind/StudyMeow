@@ -1,4 +1,4 @@
-package adapter;
+package cn.xueximiao.tv.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +10,7 @@ import com.open.androidtvwidget.leanback.recycle.RecyclerViewTV;
 import com.open.androidtvwidget.menu.OpenMenu;
 import com.open.androidtvwidget.menu.OpenMenuItem;
 import com.open.androidtvwidget.menu.OpenMenuItemView;
-import cn.tv.tv.R;
+import cn.xueximiao.tv.R;
 
 import java.util.ArrayList;
 import java.util.List;

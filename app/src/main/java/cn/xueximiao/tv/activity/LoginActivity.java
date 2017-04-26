@@ -1,4 +1,4 @@
-package com.tv.mytv.activity;
+package cn.xueximiao.tv.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,14 +8,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.tv.mytv.R;
-import com.tv.mytv.entity.GetLoginInfoEntity;
-import com.tv.mytv.entity.GetQRCodeEntity;
-import com.tv.mytv.http.HttpAddress;
-import com.tv.mytv.http.HttpImageAsync;
-import com.tv.mytv.http.HttpRequest;
-import com.tv.mytv.util.SharePrefUtil;
-import com.tv.mytv.util.Util;
+import cn.xueximiao.tv.R;
+import cn.xueximiao.tv.entity.GetLoginInfoEntity;
+import cn.xueximiao.tv.entity.GetQRCodeEntity;
+import cn.xueximiao.tv.http.HttpAddress;
+import cn.xueximiao.tv.http.HttpImageAsync;
+import cn.xueximiao.tv.http.HttpRequest;
+import cn.xueximiao.tv.util.SharePrefUtil;
+import cn.xueximiao.tv.util.Util;
 
 import java.util.Timer;
 import java.util.TimerTask;

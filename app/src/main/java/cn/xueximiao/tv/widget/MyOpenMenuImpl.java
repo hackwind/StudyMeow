@@ -16,13 +16,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-package com.tv.mytv.widget;
+package cn.xueximiao.tv.widget;
 
 import com.open.androidtvwidget.menu.MenuDataObservable;
 import com.open.androidtvwidget.menu.MenuSetObserver;
 import com.open.androidtvwidget.menu.OpenMenu;
 import com.open.androidtvwidget.menu.OpenMenuItem;
-import com.open.androidtvwidget.menu.OpenMenuItemImpl;
 import com.open.androidtvwidget.utils.OPENLOG;
 
 import java.util.ArrayList;

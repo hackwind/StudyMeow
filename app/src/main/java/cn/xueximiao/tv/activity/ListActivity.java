@@ -1,27 +1,20 @@
-package com.tv.mytv.activity;
+package cn.xueximiao.tv.activity;
 
 import android.animation.Animator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.RectF;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -33,24 +26,24 @@ import com.open.androidtvwidget.leanback.recycle.LinearLayoutManagerTV;
 import com.open.androidtvwidget.leanback.recycle.RecyclerViewTV;
 import com.open.androidtvwidget.menu.OpenMenuImpl;
 import com.open.androidtvwidget.view.MainUpView;
-import com.tv.mytv.R;
-import com.tv.mytv.entity.CategoryEntity;
-import com.tv.mytv.entity.ListEntity;
-import com.tv.mytv.http.HttpAddress;
-import com.tv.mytv.http.HttpRequest;
-import com.tv.mytv.util.SharePrefUtil;
-import com.tv.mytv.util.ToastUtil;
-import com.tv.mytv.util.Util;
-import com.tv.mytv.widget.MyOpenMenuImpl;
-import com.tv.mytv.widget.SpaceItemDecoration;
+import cn.xueximiao.tv.R;
+import cn.xueximiao.tv.entity.CategoryEntity;
+import cn.xueximiao.tv.entity.ListEntity;
+import cn.xueximiao.tv.http.HttpAddress;
+import cn.xueximiao.tv.http.HttpRequest;
+import cn.xueximiao.tv.util.SharePrefUtil;
+import cn.xueximiao.tv.util.ToastUtil;
+import cn.xueximiao.tv.util.Util;
+import cn.xueximiao.tv.widget.MyOpenMenuImpl;
+import cn.xueximiao.tv.widget.SpaceItemDecoration;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import adapter.FreeMenuPresenter;
-import adapter.ListMenuPresenter;
-import adapter.VideoListRecyclerViewPresenter;
+import cn.xueximiao.tv.adapter.FreeMenuPresenter;
+import cn.xueximiao.tv.adapter.ListMenuPresenter;
+import cn.xueximiao.tv.adapter.VideoListRecyclerViewPresenter;
 
 /**
  * Created by Administrator on 2017/4/17.

@@ -1,14 +1,14 @@
-package com.tv.mytv.http;
+package cn.xueximiao.tv.http;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.widget.ImageView;
 
-import com.tv.mytv.activity.MyApplication;
-import com.tv.mytv.R;
-import com.tv.mytv.util.LogUtil;
-import com.tv.mytv.util.ToastUtil;
+import cn.xueximiao.tv.activity.MyApplication;
+import cn.xueximiao.tv.R;
+import cn.xueximiao.tv.util.LogUtil;
+import cn.xueximiao.tv.util.ToastUtil;
 
 import org.xutils.common.Callback;
 import org.xutils.image.ImageOptions;

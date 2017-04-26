@@ -1,4 +1,4 @@
-package com.tv.mytv;
+package com.xueximiao.tv;
 
 import org.junit.Test;
 

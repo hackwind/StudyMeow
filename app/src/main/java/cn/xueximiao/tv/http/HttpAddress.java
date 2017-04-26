@@ -1,4 +1,4 @@
-package com.tv.mytv.http;
+package cn.xueximiao.tv.http;
 
 /**
  * Created by Administrator on 2016/11/14.

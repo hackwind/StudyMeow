@@ -1,4 +1,4 @@
-package com.tv.mytv.activity;
+package cn.xueximiao.tv.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,7 +10,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,21 +18,21 @@ import android.widget.TextView;
 
 import com.open.androidtvwidget.leanback.adapter.GeneralAdapter;
 import com.open.androidtvwidget.leanback.recycle.RecyclerViewTV;
-import com.tv.mytv.R;
-import com.tv.mytv.entity.BaseEntity;
-import com.tv.mytv.entity.GetSubScribeQRCodeEntity;
-import com.tv.mytv.entity.VideoDetailEntity;
-import com.tv.mytv.http.HttpAddress;
-import com.tv.mytv.http.HttpImageAsync;
-import com.tv.mytv.http.HttpRequest;
-import com.tv.mytv.util.ToastUtil;
-import com.tv.mytv.util.Util;
+import cn.xueximiao.tv.R;
+import cn.xueximiao.tv.entity.BaseEntity;
+import cn.xueximiao.tv.entity.GetSubScribeQRCodeEntity;
+import cn.xueximiao.tv.entity.VideoDetailEntity;
+import cn.xueximiao.tv.http.HttpAddress;
+import cn.xueximiao.tv.http.HttpImageAsync;
+import cn.xueximiao.tv.http.HttpRequest;
+import cn.xueximiao.tv.util.ToastUtil;
+import cn.xueximiao.tv.util.Util;
 
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import adapter.VideoListPresenter;
+import cn.xueximiao.tv.adapter.VideoListPresenter;
 
 /**
  * Created by Administrator on 2017/4/19.

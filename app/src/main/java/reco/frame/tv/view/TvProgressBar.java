@@ -14,7 +14,7 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.tv.mytv.R;
+import cn.xueximiao.tv.R;
 
 /**
  * 专用于电视，有扇形 环形 两种风格

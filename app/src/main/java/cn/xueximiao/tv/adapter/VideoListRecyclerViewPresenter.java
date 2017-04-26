@@ -1,4 +1,4 @@
-package adapter;
+package cn.xueximiao.tv.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.open.androidtvwidget.leanback.adapter.GeneralAdapter;
 import com.open.androidtvwidget.leanback.mode.OpenPresenter;
-import cn.tv.tv.R;
+import cn.xueximiao.tv.R;
 import cn.xueximiao.tv.entity.ListEntity;
 import cn.xueximiao.tv.http.HttpImageAsync;
 

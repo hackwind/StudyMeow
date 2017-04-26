@@ -1,4 +1,4 @@
-package com.tv.mytv.widget;
+package cn.xueximiao.tv.widget;
 
 import com.open.androidtvwidget.menu.OpenMenu;
 import com.open.androidtvwidget.menu.OpenMenuItem;

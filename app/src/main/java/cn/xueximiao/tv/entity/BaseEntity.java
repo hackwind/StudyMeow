@@ -1,4 +1,4 @@
-package com.tv.mytv.entity;
+package cn.xueximiao.tv.entity;
 
 /**
  * Created by Administrator on 2017/4/17.

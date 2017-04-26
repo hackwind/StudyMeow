@@ -1,4 +1,4 @@
-package com.tv.mytv.util;
+package cn.xueximiao.tv.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -1,11 +1,11 @@
-package adapter;
+package cn.xueximiao.tv.adapter;
 
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.open.androidtvwidget.leanback.mode.OpenPresenter;
-import cn.tv.tv.R;
+import cn.xueximiao.tv.R;
 
 public class MenuHolder extends OpenPresenter.ViewHolder {
 

@@ -1,8 +1,5 @@
-package com.tv.mytv.activity;
+package cn.xueximiao.tv.activity;
 
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -14,7 +11,7 @@ import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.tv.mytv.R;
+import cn.xueximiao.tv.R;
 
 /**
  * Created by Administrator on 2017/4/19.

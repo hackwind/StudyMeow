@@ -1,4 +1,4 @@
-package adapter;
+package cn.xueximiao.tv.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,7 +12,7 @@ import com.open.androidtvwidget.leanback.adapter.GeneralAdapter;
 import com.open.androidtvwidget.leanback.mode.OpenPresenter;
 import com.open.androidtvwidget.leanback.recycle.RecyclerViewTV;
 import com.open.androidtvwidget.menu.OpenMenuItem;
-import cn.tv.tv.R;
+import cn.xueximiao.tv.R;
 import cn.xueximiao.tv.http.HttpImageAsync;
 import cn.xueximiao.tv.widget.MyOpenMenuImpl;
 import cn.xueximiao.tv.widget.MyOpenMenuItemImpl;
