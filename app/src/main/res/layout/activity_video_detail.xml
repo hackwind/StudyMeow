@@ -92,9 +92,10 @@
                         android:layout_width="@dimen/w_35"
                         android:layout_height="@dimen/h_35"
                         android:src="@drawable/video_detail_buy"
-                        android:layout_marginRight="@dimen/w_20"/>
+                        android:layout_marginRight="@dimen/w_30"/>
                     <TextView android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="@dimen/w_30"
                         android:text="@string/buy"/>
                 </LinearLayout>>
                 <LinearLayout
@@ -114,10 +115,12 @@
                     <ImageView
                         android:layout_width="@dimen/w_35"
                         android:layout_height="@dimen/h_35"
+                        android:textSize="@dimen/w_30"
                         android:src="@drawable/video_detail_play"
-                        android:layout_marginRight="@dimen/w_20"/>
+                        android:layout_marginRight="@dimen/w_30"/>
                     <TextView android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="@dimen/w_30"
                         android:text="@string/play"/>
                 </LinearLayout>
                 <LinearLayout
@@ -140,9 +143,10 @@
                         android:layout_width="@dimen/w_35"
                         android:layout_height="@dimen/h_35"
                         android:src="@drawable/collect_not"
-                        android:layout_marginRight="@dimen/w_20"/>
+                        android:layout_marginRight="@dimen/w_30"/>
                     <TextView android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="@dimen/w_30"
                         android:text="@string/collect"/>
                 </LinearLayout>
                 <TextView

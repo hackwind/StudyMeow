@@ -188,16 +188,13 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
 
             }
         });
-        videoList.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                buttonBuy.clearFocus();
-                buttonCollect.clearFocus();
-                buttonPlay.clearFocus();
-                videoList.setDefaultSelect(0);
-            }
-        },200);
-
+//        videoList.po
+        if(list != null && list.size() > 0) {
+            VideoDetailEntity.Video video = list.get(0);
+            HttpImageAsync.loadingImage(subIcon, video.thumb);
+            subTitle.setText(video.title);
+            subDesc.setText(video.describe);
+        }
     }
 
     private void getVideoDetail() {

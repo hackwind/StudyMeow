@@ -136,16 +136,15 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
 
                 int row = position / ROW_SIZE + 1;
                 pageView.setText(row + "/" + rowCount);
-                if(historyList.size() - position <= 3 * ROW_SIZE && !loading && historyList.size() < totalCollection) {//进入倒首第三行就加载下一页
-                    Log.d("hjs","loading next page");
-                    pageHistory ++;
-                    getHistoryData();
-                }
 
                 buttonSubjectCollection.setTextColor(getResources().getColor(R.color.trans_white));
                 buttonSubjectCollection.setBackgroundColor(Color.TRANSPARENT);
                 buttonPlayHistory.setTextColor(getResources().getColor(R.color.trans_white));
                 buttonPlayHistory.setBackgroundResource(R.drawable.shape_rectange_round_unselected_bg2);
+
+                if(position < ROW_SIZE) {//first row
+                    itemView.setNextFocusUpId(buttonPlayHistory.getId());
+                }
             }
 
             @Override
@@ -163,6 +162,14 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
                 intent.putExtra("id",row.id);
                 intent.putExtra("catid",row.catid);
                 startActivity(intent);
+            }
+        });
+        rvHistory.setPagingableListener(new RecyclerViewTV.PagingableListener() {
+            @Override
+            public void onLoadMoreItems() {
+                Log.d("hjs","loading next page");
+                pageHistory ++;
+                getHistoryData();
             }
         });
     }
@@ -220,17 +227,15 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
 
                 int row = position / ROW_SIZE + 1;
                 pageView.setText(row + "/" + rowCount);
-                if(collectionList.size() - position <= 3 * ROW_SIZE && !loading && collectionList.size() < totalCollection) {//进入倒首第三行就加载下一页
-                    Log.d("hjs","loading next page");
-                    pageCollection ++;
-                    getCollectionData();
-                }
 
                 buttonPlayHistory.setTextColor(getResources().getColor(R.color.trans_white));
                 buttonPlayHistory.setBackgroundColor(Color.TRANSPARENT);
                 buttonSubjectCollection.setTextColor(getResources().getColor(R.color.trans_white));
                 buttonSubjectCollection.setBackgroundResource(R.drawable.shape_rectange_round_unselected_bg2);
 
+                if(position < ROW_SIZE) {//first row
+                    itemView.setNextFocusUpId(buttonSubjectCollection.getId());
+                }
             }
 
             @Override
@@ -243,11 +248,19 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
         rvCollection.setOnItemClickListener(new RecyclerViewTV.OnItemClickListener() {
             @Override
             public void onItemClick(RecyclerViewTV parent, View itemView, int position) {
-                ListEntity.VideoRow row = historyList.get(position);
+                ListEntity.VideoRow row = collectionList.get(position);
                 Intent intent = new Intent(HistoryActivity.this,VideoDetailActivity.class);
                 intent.putExtra("id",row.id);
                 intent.putExtra("catid",row.catid);
                 startActivity(intent);
+            }
+        });
+        rvCollection.setPagingableListener(new RecyclerViewTV.PagingableListener() {
+            @Override
+            public void onLoadMoreItems() {
+                Log.d("hjs","loading next page");
+                pageCollection ++;
+                getCollectionData();
             }
         });
     }
@@ -272,6 +285,9 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
         if(historyList == null) {
             historyList = entity.data.rows;
             initHistoryView();
+            if(historyList != null && historyList.size() > 0) {
+                buttonPlayHistory.setNextFocusDownId(rvHistory.getChildAt(0).getId());
+            }
         }else {
             historyList.addAll(entity.data.rows);
             rvHistory.getAdapter().notifyDataSetChanged();
@@ -284,7 +300,10 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
         } else {
             layerNoCollection.setVisibility(View.GONE);
         }
-
+        Log.d("hjs","histList size and total:" + historyList.size() + "," + entity.data.total);
+        if(historyList != null && historyList.size() == entity.data.total ) {
+            rvHistory.setOnLoadMoreComplete();
+        }
     }
 
     private void getCollectionData() {
@@ -307,6 +326,9 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
         if(collectionList == null) {
             collectionList = entity.data.rows;
             initCollection();
+            if(collectionList != null && collectionList.size() > 0) {
+                buttonSubjectCollection.setNextFocusDownId(rvCollection.getChildAt(0).getId());
+            }
         }else {
             collectionList.addAll(entity.data.rows);
             rvCollection.getAdapter().notifyDataSetChanged();
@@ -319,6 +341,9 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
             rvHistory.setVisibility(View.GONE);
         } else {
             layerNoCollection.setVisibility(View.GONE);
+        }
+        if(collectionList != null && collectionList.size() == entity.data.total) {
+            rvCollection.setOnLoadMoreComplete();
         }
     }
 

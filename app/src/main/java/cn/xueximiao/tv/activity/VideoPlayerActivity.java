@@ -150,7 +150,7 @@ public class VideoPlayerActivity extends BaseActivity {
         } else {
 
             //设置硬件解码
-//            mVideoView.setHardwareDecoder(true);
+            mVideoView.setHardwareDecoder(true);
             //设置缓冲大小
             mVideoView.setBufferSize(512 * 1024);
             //mVideoView.setVideoPath("http://pl-ali.youku.com/playlist/m3u8?ts=1491379421&keyframe=1&vid=51774769&type=hd2&sid=049137942172720424e20&token=5496&oip=1696944366&did=898d39a045c9ba106aadb7948a82db41&ctype=20&ev=1&ep=8dSpcv4XiMQqYrmnnzZUQtLwiiT4LnBKV%2ByLYxVL26AF5USSf8P4s7i4KEcpvH8L&website=[cloud.ckjiexi.com]--2");
@@ -159,7 +159,6 @@ public class VideoPlayerActivity extends BaseActivity {
             mVideoView.setMediaController(mediaController);
             mVideoView.requestFocus();
             mVideoView.setVideoQuality(MediaPlayer.VIDEOQUALITY_HIGH);//高品质
-
             //视频预处理完成之后调用
             mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override

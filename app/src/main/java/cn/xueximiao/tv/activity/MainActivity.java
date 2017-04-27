@@ -197,7 +197,9 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
 
             @Override
             public void onItemSelected(RecyclerViewTV parent, View itemView, int position) {
-
+                if(mainUpView1 != null) {
+                    mainUpView1.setVisibility(View.GONE);
+                }
                 onViewItemClick(itemView, position,false);
 
                 for(int i = 0 ;i < menuListView.getChildCount(); i ++) {
@@ -260,7 +262,6 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
         rvMy.setLayoutManager(gridlayoutManager);
         rvMy.addItemDecoration(new BottomSpaceItemDecoration((int)getDimension(R.dimen.h_94),ROW_SIZE,posters.size()));
         rvMy.setFocusable(false);
-//        rvMy.setSelectedItemAtCentered(true); // 设置item在中间移动.
         mMyRecyclerViewPresenter = new RecommendPresenter(posters);
         mMyGeneralAdapter = new GeneralAdapter(mMyRecyclerViewPresenter);
         rvMy.setAdapter(mMyGeneralAdapter);
@@ -413,20 +414,15 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
 
     @Override
     public void onItemPreSelected(RecyclerViewTV parent, View itemView, int position) {
-        if(parent == menuListView) {
-//            mMenuRecyclerViewBridge.setUnFocusView(oldView);
-        } else {
-            mRecyclerViewBridge.setUnFocusView(oldView);
-        }
+        Log.d("hjs","lost focus position:" + position);
+         mRecyclerViewBridge.setUnFocusView(oldView);
+
     }
 
     @Override
     public void onItemSelected(RecyclerViewTV parent, View itemView, int position) {
-        if(parent == menuListView) {
-//            mMenuRecyclerViewBridge.setFocusView(itemView, 1.0f);
-        } else {
-            mRecyclerViewBridge.setFocusView(itemView, 1.1f);
-        }
+        Log.d("hjs","get focus position:" + position);
+        mRecyclerViewBridge.setFocusView(itemView, 1.1f);
         oldView = itemView;
 
         if(parent == rvCategory) {
@@ -434,11 +430,17 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
             menuListView.getChildAt(1).setBackgroundResource(R.drawable.left_menu_selected_unfocus);
             menuListView.getChildAt(0).setBackgroundColor(Color.TRANSPARENT);
             menuListView.getChildAt(2).setBackgroundColor(Color.TRANSPARENT);
+            if(position % ROW_SIZE == 0) {
+                itemView.setNextFocusLeftId(menuListView.getChildAt(1).getId());
+            }
         } else {
             scrollView.smoothScrollTo(0,0);
             menuListView.getChildAt(0).setBackgroundResource(R.drawable.left_menu_selected_unfocus);
             menuListView.getChildAt(1).setBackgroundColor(Color.TRANSPARENT);
             menuListView.getChildAt(2).setBackgroundColor(Color.TRANSPARENT);
+            if(position % ROW_SIZE == 0) {
+                itemView.setNextFocusLeftId(menuListView.getChildAt(0).getId());
+            }
         }
     }
 
@@ -451,6 +453,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
         }
         oldView = itemView;
     }
+
 
     public class BottomSpaceItemDecoration extends RecyclerViewTV.ItemDecoration{
 
