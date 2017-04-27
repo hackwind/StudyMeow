@@ -76,7 +76,7 @@
             <ImageButton
                 android:id="@+id/mediacontroller_play_pause"
                 android:layout_width="@dimen/w_106"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/w_106"
                 android:src="@drawable/paly_selector"
                 android:background="@null"
                 android:layout_centerVertical="true"

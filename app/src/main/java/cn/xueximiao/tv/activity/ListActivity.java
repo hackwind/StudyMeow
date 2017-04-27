@@ -77,6 +77,7 @@ public class ListActivity extends BaseActivity {
     private List<ListEntity.VideoRow> videoList;
     private LinearLayout mProgressBar;
     private boolean first = true;
+    private int selectedIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -379,13 +380,7 @@ public class ListActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-        contentView.setPagingableListener(new RecyclerViewTV.PagingableListener() {
-            @Override
-            public void onLoadMoreItems() {
-                page ++;
-                getPageData();
-            }
-        });
+
         contentView.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -426,11 +421,23 @@ public class ListActivity extends BaseActivity {
             videoList = entity.data.rows;
             initContentView();
         }else {
+            selectedIndex = contentView.getSelectPostion();
             videoList.addAll(entity.data.rows);
             contentView.getAdapter().notifyDataSetChanged();
+            contentView.setDefaultSelect(selectedIndex);//防止光标飞到左侧菜单
         }
         if(videoList != null && videoList.size() >= total) {
             contentView.setOnLoadMoreComplete();
+            contentView.setPagingableListener(null);
+        } else if(videoList.size() < total){
+            contentView.setPagingableListener(new RecyclerViewTV.PagingableListener() {
+                @Override
+                public void onLoadMoreItems() {
+                    Log.d("hjs","getNextPage:" + (page + 1));
+                    page ++;
+                    getPageData();
+                }
+            });
         }
         if(first) {
             first = false;

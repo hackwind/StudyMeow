@@ -301,6 +301,9 @@ public class VideoPlayerActivity extends BaseActivity {
         selectionList.setOnItemClickListener(new RecyclerViewTV.OnItemClickListener() {
             @Override
             public void onItemClick(RecyclerViewTV parent, View itemView, int position) {
+                if(isPlay) {
+                    mVideoView.pause();
+                }
                 playIndex = position;
                 getVideoSourcePath();
             }

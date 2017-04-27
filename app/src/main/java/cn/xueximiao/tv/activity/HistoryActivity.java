@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -38,10 +39,12 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
     private TextView buttonPlayHistory;
     private TextView buttonSubjectCollection;
     private TextView layerNoCollection;
+    private TextView layerNoHistory;
     private RecyclerViewTV rvHistory;
     private RecyclerViewTV rvCollection;
     private ProgressBar progressBar;
-    private TextView pageView;
+    private TextView pageView1;
+    private TextView pageView2;
     private View oldView;
 
     private MainUpView mainUpView;
@@ -56,9 +59,10 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
     private int pageHistory = 1;
     private int pageCollection = 1;
     private int rowCount = 1;
-    private boolean loading;
     private List<ListEntity.VideoRow> historyList;
     private List<ListEntity.VideoRow> collectionList;
+    private FrameLayout historyFrame;
+    private FrameLayout collectionFrame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +76,14 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
         buttonPlayHistory = (TextView)findViewById(R.id.play_history);
         buttonSubjectCollection = (TextView)findViewById(R.id.collection);
         layerNoCollection = (TextView)findViewById(R.id.no_collection);
-        pageView = (TextView)findViewById(R.id.pageView);
+        layerNoHistory = (TextView)findViewById(R.id.no_history);
+        pageView1 = (TextView)findViewById(R.id.pageView1);
+        pageView2 = (TextView)findViewById(R.id.pageView2);
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
         rvHistory = (RecyclerViewTV)findViewById(R.id.recyclerview_history);
         rvCollection = (RecyclerViewTV)findViewById(R.id.recyclerview_collection);
+        collectionFrame = (FrameLayout)findViewById(R.id.frame_collection);
+        historyFrame = (FrameLayout)findViewById(R.id.frame_history);
 
         mainUpView = (MainUpView)findViewById(R.id.mainUpView);
 
@@ -135,7 +143,7 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
                 oldView = itemView;
 
                 int row = position / ROW_SIZE + 1;
-                pageView.setText(row + "/" + rowCount);
+                pageView1.setText(row + "/" + rowCount);
 
                 buttonSubjectCollection.setTextColor(getResources().getColor(R.color.trans_white));
                 buttonSubjectCollection.setBackgroundColor(Color.TRANSPARENT);
@@ -226,7 +234,7 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
                 oldView = itemView;
 
                 int row = position / ROW_SIZE + 1;
-                pageView.setText(row + "/" + rowCount);
+                pageView2.setText(row + "/" + rowCount);
 
                 buttonPlayHistory.setTextColor(getResources().getColor(R.color.trans_white));
                 buttonPlayHistory.setBackgroundColor(Color.TRANSPARENT);
@@ -280,29 +288,27 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
         totalHistory = entity.data.total;
         if(historyList == null || historyList.size() == 0) {
             rowCount = entity.data.total / ROW_SIZE + 1;
-            pageView.setText("1/" + rowCount);
+            pageView1.setText("1/" + rowCount);
         }
-        if(historyList == null) {
+        if(historyList == null) { //第一页
             historyList = entity.data.rows;
             initHistoryView();
-            if(historyList != null && historyList.size() > 0) {
-                buttonPlayHistory.setNextFocusDownId(rvHistory.getChildAt(0).getId());
-            }
-        }else {
+        }else {//翻页
             historyList.addAll(entity.data.rows);
             rvHistory.getAdapter().notifyDataSetChanged();
         }
-        if(historyList.size() == 0) {
-            layerNoCollection.setVisibility(View.VISIBLE);
-            layerNoCollection.setText(R.string.no_history);
-            rvCollection.setVisibility(View.GONE);
+        if(historyList == null || historyList.size() == 0) {
+            layerNoHistory.setVisibility(View.VISIBLE);
+            layerNoHistory.setText(R.string.no_history);
             rvHistory.setVisibility(View.GONE);
+            pageView1.setVisibility(View.GONE);
         } else {
-            layerNoCollection.setVisibility(View.GONE);
+            layerNoHistory.setVisibility(View.GONE);
         }
-        Log.d("hjs","histList size and total:" + historyList.size() + "," + entity.data.total);
-        if(historyList != null && historyList.size() == entity.data.total ) {
+        Log.d("hjs","histList size and total:" + historyList.size() + "," + totalHistory);
+        if(historyList != null && historyList.size() == totalHistory ) {
             rvHistory.setOnLoadMoreComplete();
+            rvHistory.setPagingableListener(null);
         }
     }
 
@@ -321,14 +327,11 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
         totalCollection = entity.data.total;
         if(collectionList == null || collectionList.size() == 0) {
             rowCount = entity.data.total / ROW_SIZE + 1;
-            pageView.setText("1/" + rowCount);
+            pageView2.setText("1/" + rowCount);
         }
         if(collectionList == null) {
             collectionList = entity.data.rows;
             initCollection();
-            if(collectionList != null && collectionList.size() > 0) {
-                buttonSubjectCollection.setNextFocusDownId(rvCollection.getChildAt(0).getId());
-            }
         }else {
             collectionList.addAll(entity.data.rows);
             rvCollection.getAdapter().notifyDataSetChanged();
@@ -338,12 +341,13 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
             layerNoCollection.setVisibility(View.VISIBLE);
             layerNoCollection.setText(R.string.no_collection);
             rvCollection.setVisibility(View.GONE);
-            rvHistory.setVisibility(View.GONE);
+            pageView2.setVisibility(View.GONE);
         } else {
             layerNoCollection.setVisibility(View.GONE);
         }
         if(collectionList != null && collectionList.size() == entity.data.total) {
             rvCollection.setOnLoadMoreComplete();
+            rvCollection.setPagingableListener(null);
         }
     }
 
@@ -361,8 +365,8 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
                     if (historyList == null) {
                         getHistoryData();
                     }
-                    rvCollection.setVisibility(View.GONE);
-                    rvHistory.setVisibility(View.VISIBLE);
+                    collectionFrame.setVisibility(View.GONE);
+                    historyFrame.setVisibility(View.VISIBLE);
                 }
                 break;
             case R.id.collection:
@@ -372,8 +376,8 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
                     if (collectionList == null) {
                         getCollectionData();
                     }
-                    rvCollection.setVisibility(View.VISIBLE);
-                    rvHistory.setVisibility(View.GONE);
+                    collectionFrame.setVisibility(View.VISIBLE);
+                    historyFrame.setVisibility(View.GONE);
                 }
                 break;
         }
