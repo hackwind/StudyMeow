@@ -23,7 +23,7 @@ import io.vov.vitamio.Vitamio;
 /**
  * Created by Administrator on 2016/11/14.
  */
-public class MyApplication  extends Application {
+public class MeowApplication extends Application {
 
     private  static Context context;
 

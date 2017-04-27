@@ -5,7 +5,7 @@ import android.content.Context;
 import android.os.Looper;
 
 import com.orhanobut.logger.Logger;
-import cn.xueximiao.tv.activity.MyApplication;
+import cn.xueximiao.tv.activity.MeowApplication;
 import com.umeng.analytics.MobclickAgent;
 
 import java.text.DateFormat;
@@ -112,7 +112,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 //		map.put("test", "");
 //		HttpRequest.getInstance(mContext).post(HttpAddress.postCrashLog(), map, CrashHandler.this, "postCrashLog",
 //				null);
-		MobclickAgent.reportError(MyApplication.getContext(),ex);
+		MobclickAgent.reportError(MeowApplication.getContext(),ex);
 		return true;
 	}
 
