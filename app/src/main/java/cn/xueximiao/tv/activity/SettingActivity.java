@@ -17,6 +17,7 @@ import com.open.androidtvwidget.view.MainUpView;
 import cn.xueximiao.tv.R;
 
 import cn.xueximiao.tv.adapter.SettingPresenter;
+import cn.xueximiao.tv.util.VersionCheckUtils;
 
 /**
  * Created by Administrator on 2017/4/17.
@@ -24,6 +25,7 @@ import cn.xueximiao.tv.adapter.SettingPresenter;
 
 public class SettingActivity extends BaseActivity {
     private RecyclerViewTV settingListView;
+    private VersionCheckUtils updateUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +106,10 @@ public class SettingActivity extends BaseActivity {
     }
 
     private void checkUpdate() {
-
+        if(updateUtil == null) {
+            updateUtil = new VersionCheckUtils(this);
+        }
+        updateUtil.checkFromServer();
     }
 
     public class SpaceItemDecoration extends RecyclerViewTV.ItemDecoration{

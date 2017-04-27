@@ -23,10 +23,10 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import cn.xueximiao.tv.R;
 import cn.xueximiao.tv.adapter.VideoListPresenter;
+import cn.xueximiao.tv.adapter.VideoPagerPresenter;
 import cn.xueximiao.tv.entity.VideoDetailEntity;
 import cn.xueximiao.tv.entity.VideoSourceEntity;
 import cn.xueximiao.tv.http.HttpAddress;
-import cn.xueximiao.tv.http.HttpImageAsync;
 import cn.xueximiao.tv.http.HttpRequest;
 import cn.xueximiao.tv.util.SharePrefUtil;
 import cn.xueximiao.tv.util.ToastUtil;
@@ -41,6 +41,7 @@ import com.umeng.analytics.MobclickAgent;
 import java.util.List;
 
 import io.vov.vitamio.MediaPlayer;
+import io.vov.vitamio.widget.MediaController;
 import io.vov.vitamio.widget.VideoView;
 
 import static cn.xueximiao.tv.util.Util.count;
@@ -49,6 +50,7 @@ import static cn.xueximiao.tv.util.Util.count;
  * 播放器
  */
 public class VideoPlayerActivity extends BaseActivity {
+    private final static int PAGE_SIZE = 10;
     //视频路径
     private String videoPath;
 
@@ -69,10 +71,6 @@ public class VideoPlayerActivity extends BaseActivity {
     private TextView source_pro;
 
     private MyMediaController mediaController;
-    //集数
-    private int postion;
-    //段数
-    private int number_segments = 0;
 
     private boolean isPlay = true;
 
@@ -96,13 +94,17 @@ public class VideoPlayerActivity extends BaseActivity {
     private Button error_back;
     private String strVideoDetail;
     private List<VideoDetailEntity.Video> videoList;//专辑详情
+    private List<VideoDetailEntity.Video> subVideoList;//专辑详情
     private int playIndex = 0;//当前正在播放的专辑列表索引
+    private int segIndex = 0;//同一个视频的片段
     private List<VideoSourceEntity.VideoSource> currentVideoSource;
 
     private RecyclerViewTV selectionList;
     private RecyclerViewTV selectionPages;
-    private VideoListPresenter presenter;
-    private GeneralAdapter generalAdapter;
+    private VideoListPresenter listPresenter;
+    private GeneralAdapter listAdapter;
+    private VideoPagerPresenter pagerPresenter;
+    private GeneralAdapter pagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +122,7 @@ public class VideoPlayerActivity extends BaseActivity {
         videoList = entity.data.videoList;//专辑列表
 
         //网络连接失败
-        IntentFilter intentFilter=new IntentFilter();
+        IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Util.ACTION_HTTP_ONERROR);
         registerReceiver(MyNetErrorReceiver,intentFilter);
 
@@ -144,6 +146,12 @@ public class VideoPlayerActivity extends BaseActivity {
         mediaController = new MyMediaController(VideoPlayerActivity.this, mVideoView, VideoPlayerActivity.this);
         mediaController.setVideoName(title);
         mediaController.show(5000);
+        mediaController.setOnShownListener(new MediaController.OnShownListener() {
+            @Override
+            public void onShown() {
+                bottomSelection.setVisibility(View.GONE);
+            }
+        });
         if ("".equals(videoPath) || videoPath == null || videoPath == "") {
             ToastUtil.showShort(VideoPlayerActivity.this, "没有获取到播放源");
             return;
@@ -191,30 +199,14 @@ public class VideoPlayerActivity extends BaseActivity {
             mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
-                    number_segments++;
-//                    LogUtil.e("" + number_segments + "-----" + listVideo.size() + "--------" + mList.size());
-//                    if (number_segments > listVideo.size() - 1) { //当前段播放完成
-//                        postion++;
-//                        number_segments = 0;
-//                        LogUtil.e("" + postion);
-//                        if (postion > mList.size() - 1) {
-//                            ToastUtil.showShort(VideoPlayerActivity.this, "已经是最后一集了");
-//                        } else {
-//                            nowPlay = mList.get(postion);//获取下一个播放对象;
-////                          listVideo = nowPlay.getVideoSource().get(0);
-//                            String videoPathId=nowPlay.getId();
-//                            HttpRequest.get(HttpAddress.getVideoPath(videoPathId), null, VideoPlayerActivity.this, "getPathResult", null,VideoPlayerActivity.this);
-//                        }
-//                    }
-//                    //未播放完成，使用当前源播放下一个段
-//                    VideoPathBean.MsgBean.VideoSourceBean videoBean = listVideo.get(number_segments);//获取播放段
-//                    String videoUrl = videoBean.getUrl();
-//                    //String videoUrl=mList.get(0);
-//                    loading.setVisibility(View.VISIBLE);
-//                    title_pro.setText(title);
-//                    source_pro.setText("来源:" + source);
-//                    mediaController.setVideoName(title);
-//                    mVideoView.setVideoPath(videoUrl);
+                    if(segIndex < currentVideoSource.size() - 1) { //同一个视频有多个片段
+                        segIndex ++;
+                        videoPath = currentVideoSource.get(segIndex).url;
+                        play();
+                    } else  if(playIndex < videoList.size() - 1) {//多集
+                        playIndex++;
+                        getVideoSourcePath();
+                    }
                 }
             });
 
@@ -279,6 +271,7 @@ public class VideoPlayerActivity extends BaseActivity {
             }
         });
         initVideoList();
+        initPageList();
     }
     //选集列表
     private void initVideoList() {
@@ -286,12 +279,25 @@ public class VideoPlayerActivity extends BaseActivity {
         linearlayoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
         linearlayoutManager.setSmoothScrollbarEnabled(false);
         selectionList.setLayoutManager(linearlayoutManager);
-        selectionList.setFocusable(false);
-        selectionList.addItemDecoration(new SpaceItemDecoration((int)getResources().getDimension(R.dimen.w_20)));
-        presenter = new VideoListPresenter(videoList);
-        generalAdapter = new GeneralAdapter(presenter);
-        selectionList.setAdapter(generalAdapter);
+        selectionList.setFocusable(true);
+        selectionList.addItemDecoration(new SpaceItemDecoration((int)getResources().getDimension(R.dimen.w_16)));
+        subVideoList = videoList.subList(0,PAGE_SIZE  > videoList.size() ? videoList.size() : PAGE_SIZE );
+        listPresenter = new VideoListPresenter(subVideoList,R.drawable.selector_video_play_list);
+        listAdapter = new GeneralAdapter(listPresenter);
+        selectionList.setAdapter(listAdapter);
+        selectionList.setOnItemListener(new RecyclerViewTV.OnItemListener() {
+            @Override
+            public void onItemPreSelected(RecyclerViewTV parent, View itemView, int position) {
+            }
 
+            @Override
+            public void onItemSelected(RecyclerViewTV parent, View itemView, int position) {
+            }
+
+            @Override
+            public void onReviseFocusFollow(RecyclerViewTV parent, View itemView, int position) {
+            }
+        });
         selectionList.setOnItemClickListener(new RecyclerViewTV.OnItemClickListener() {
             @Override
             public void onItemClick(RecyclerViewTV parent, View itemView, int position) {
@@ -302,8 +308,47 @@ public class VideoPlayerActivity extends BaseActivity {
 
     }
 
-    private void getVideoSourcePath() {
+    //选集列表
+    private void initPageList() {
+        if(videoList == null || videoList.size() < PAGE_SIZE) {
+            selectionPages.setVisibility(View.GONE);
+            return;
+        }
+        LinearLayoutManager linearlayoutManager = new LinearLayoutManager(this); // 解决快速长按焦点丢失问题.
+        linearlayoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
+        linearlayoutManager.setSmoothScrollbarEnabled(false);
+        selectionPages.setLayoutManager(linearlayoutManager);
+        selectionPages.setFocusable(true);
+        selectionPages.addItemDecoration(new SpaceItemDecoration((int)getResources().getDimension(R.dimen.w_20)));
+        pagerPresenter = new VideoPagerPresenter(videoList == null ? 0 : videoList.size(),PAGE_SIZE);
+        pagerAdapter = new GeneralAdapter(pagerPresenter);
+        selectionPages.setAdapter(pagerAdapter);
+        selectionPages.setOnItemListener(new RecyclerViewTV.OnItemListener() {
+            @Override
+            public void onItemPreSelected(RecyclerViewTV parent, View itemView, int position) {
+            }
 
+
+            @Override
+            public void onItemSelected(RecyclerViewTV parent, View itemView, int position) {
+                int start = position * PAGE_SIZE;
+                int end = (position + 1) * PAGE_SIZE ;
+                end = end > videoList.size()  ? videoList.size() : end;
+
+                subVideoList = videoList.subList(start,end);
+                listPresenter.setList(subVideoList);
+                selectionList.getAdapter().notifyDataSetChanged();
+                selectionList.invalidate();
+            }
+
+            @Override
+            public void onReviseFocusFollow(RecyclerViewTV parent, View itemView, int position) {
+            }
+        });
+
+    }
+
+    private void getVideoSourcePath() {
         videoId = videoList.get(playIndex).id;
         String url = HttpAddress.getVideoPath(catId,videoId);
         //获取视频地址
@@ -325,7 +370,8 @@ public class VideoPlayerActivity extends BaseActivity {
         }
         //播放视频
         currentVideoSource = entity.data.videoSource;
-        videoPath = currentVideoSource.get(0).url;
+        segIndex = 0;
+        videoPath = currentVideoSource.get(segIndex).url;
         play();
     }
 
@@ -346,34 +392,49 @@ public class VideoPlayerActivity extends BaseActivity {
         switch (keyCode) {
             //回车
             case KeyEvent.KEYCODE_ENTER:
-                if (isPlay) {
-                    mVideoView.pause();
-                    isPlay = false;
-                } else {
-                    mVideoView.start();
-                    isPlay = true;
+                if(selectionList.getVisibility() == View.GONE) {
+                    if (isPlay) {
+                        mVideoView.pause();
+                        isPlay = false;
+                    } else {
+                        mVideoView.start();
+                        isPlay = true;
+                    }
                 }
                 break;
 
             //左
             case KeyEvent.KEYCODE_DPAD_LEFT:
-                postion = postion - 15000;
-                mVideoView.seekTo(postion);
-                mediaController.setProgress();
+                if(selectionList.getVisibility() == View.GONE) {
+                    postion = postion - 15000;
+                    mVideoView.seekTo(postion);
+                    mediaController.setProgress();
+                }
                 break;
 
             //右
             case KeyEvent.KEYCODE_DPAD_RIGHT:
-                postion = postion + 15000;
-                mVideoView.seekTo(postion);
-                mediaController.setProgress();
+                if(selectionList.getVisibility() == View.GONE) {
+                    postion = postion + 15000;
+                    mVideoView.seekTo(postion);
+                    mediaController.setProgress();
+                }
+                break;
+            //向上键
+            case KeyEvent.KEYCODE_DPAD_UP:
+                if(!mediaController.isShowing()) {
+                    showSelectionLayer();
+                }
+                break;
+            //向下键
+            case KeyEvent.KEYCODE_DPAD_DOWN:
                 break;
 
-            //音量增加键
+            //音量调小键
             case KeyEvent.KEYCODE_VOLUME_DOWN:
 
                 break;
-            //音量减小键
+            //音量调大键
             case KeyEvent.KEYCODE_VOLUME_UP:
 
                 break;
@@ -388,16 +449,26 @@ public class VideoPlayerActivity extends BaseActivity {
                 }
                 break;
             case KeyEvent.KEYCODE_MENU:
-//                super.openOptionsMenu(); //调用这个就可以弹出菜单
-                bottomSelection.setVisibility(View.VISIBLE);
-                selectionList.setDefaultSelect(playIndex);
-                mediaController.hide();
+                showSelectionLayer();
                 break;
 
         }
         return super.onKeyDown(keyCode, event);
     }
 
+    private void showSelectionLayer() {
+        mediaController.hide();
+        bottomSelection.setVisibility(View.VISIBLE);
+        selectionList.requestFocus();
+        Log.d("hjs","getSelectedPosition:" + selectionList.getSelectPostion());
+        if(selectionList.getSelectPostion() == -1) {
+            selectionList.setDefaultSelect(playIndex);
+        }
+    }
+
+    private void hideSelectionLayer() {
+        bottomSelection.setVisibility(View.GONE);
+    }
 
     @Override
     protected void onDestroy() {

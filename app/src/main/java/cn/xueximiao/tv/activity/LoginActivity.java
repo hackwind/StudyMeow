@@ -54,7 +54,7 @@ public class LoginActivity extends BaseActivity {
     };
 
     private void getQRCode() {
-        HttpRequest.get(HttpAddress.getQRCode(),null,LoginActivity.this,"getQRCodeBack",null,this, GetQRCodeEntity.class);
+        HttpRequest.get(HttpAddress.getLoginQRCode(),null,LoginActivity.this,"getQRCodeBack",null,this, GetQRCodeEntity.class);
     }
 
     private void getLoginInfoRepeat() {

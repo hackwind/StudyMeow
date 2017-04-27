@@ -7,7 +7,8 @@ import android.util.Log;
 import android.view.View;
 
 import com.google.gson.Gson;
-import cn.xueximiao.tv.activity.MyApplication;
+
+import cn.xueximiao.tv.activity.MeowApplication;
 import cn.xueximiao.tv.entity.BaseEntity;
 import cn.xueximiao.tv.util.LogUtil;
 import cn.xueximiao.tv.util.ToastUtil;
@@ -62,7 +63,7 @@ public class HttpRequest {
 				}
 				Log.d("hjs","http onError" + arg0.getMessage());
 				arg0.printStackTrace();
-				ToastUtil.showShort(MyApplication.getContext(), "网络连接异常,请检查网络设置");
+				ToastUtil.showShort(MeowApplication.getContext(), "网络连接异常,请检查网络设置");
 				LogUtil.e(arg0.getMessage());
 				Intent intent =new Intent(Util.ACTION_HTTP_ONERROR);
 				context.sendBroadcast(intent);
@@ -144,10 +145,10 @@ public class HttpRequest {
 				if (view != null) {
 					view.setVisibility(View.GONE);
 				}
-				ToastUtil.showShort(MyApplication.getContext(), "网络连接异常,请检查网络设置");
+				ToastUtil.showShort(MeowApplication.getContext(), "网络连接异常,请检查网络设置");
 				LogUtil.e(arg0.getMessage());
 				Intent intent =new Intent(Util.ACTION_HTTP_ONERROR);
-				MyApplication.getContext().sendBroadcast(intent);
+				MeowApplication.getContext().sendBroadcast(intent);
 			}
 
 			@Override
@@ -202,7 +203,7 @@ public class HttpRequest {
 			
 			@Override
 			public void onError(Throwable ex, boolean isOnCallback) {
-				ToastUtil.showShort(MyApplication.getContext(), "文件下载异常");
+				ToastUtil.showShort(MeowApplication.getContext(), "文件下载异常");
 			}
 
 			@Override

@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.widget.ImageView;
 
-import cn.xueximiao.tv.activity.MyApplication;
+import cn.xueximiao.tv.activity.MeowApplication;
 import cn.xueximiao.tv.R;
 import cn.xueximiao.tv.util.LogUtil;
 import cn.xueximiao.tv.util.ToastUtil;
@@ -98,7 +98,7 @@ public class HttpImageAsync1 {
 
 			@Override
 			public void onError(Throwable arg0, boolean arg1) {
-				ToastUtil.showShort(MyApplication.getContext(), "图片保存失败");
+				ToastUtil.showShort(MeowApplication.getContext(), "图片保存失败");
 			}
 
 			@Override
@@ -117,7 +117,7 @@ public class HttpImageAsync1 {
 				Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
 				Uri uri = Uri.fromFile(file);
 				intent.setData(uri);
-				MyApplication.getContext().sendBroadcast(intent);
+				MeowApplication.getContext().sendBroadcast(intent);
 				return false;
 			}
 		});

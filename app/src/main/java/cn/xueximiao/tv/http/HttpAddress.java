@@ -1,5 +1,10 @@
 package cn.xueximiao.tv.http;
 
+import android.content.pm.PackageInfo;
+import android.view.View;
+
+import cn.xueximiao.tv.activity.MeowApplication;
+
 /**
  * Created by Administrator on 2016/11/14.
  */
@@ -47,8 +52,17 @@ public class HttpAddress {
      * 获取微信登陆二维码
      * @return
      */
-    public static String getQRCode() {
+    public static String getLoginQRCode() {
         return  WEB_URL+"m=member&c=app2&a=public_login&auth=" + auth;
+    }
+
+    /**
+     * 获取意见反馈/联系我们微信二维码
+     * @return
+     */
+    public static String getOtherQRCode(int type) {//1:问题反馈;2.联系我们
+        String strType = type == 1 ? "feedback" : "contact";
+        return  WEB_URL+"m=member&c=app2&a=public_erweima&type=" + strType + "&auth=" + auth;
     }
 
     /**
@@ -136,15 +150,6 @@ public class HttpAddress {
     }
 
     /**
-     * 提交视频播放
-     * @param id
-     * @return
-     */
-     public static String postCount(String id){
-         return  WEB_URL+"m=member&c=app2&a=count&id="+id;
-     }
-
-    /**
      * 获取视频地址
      * @param id
      * @return
@@ -153,10 +158,12 @@ public class HttpAddress {
         return  WEB_URL+"m=member&c=app2&a=getViewSource&catid=" + catId + "&id=" + id + "&auth=" + auth;
      }
 
-    /**
-     * 视频列表
-     */
-    public final static String MENU_URL = WEB_URL+"m=member&c=app2&a=category";
-
-    public final static String VEDIO_LIST_URL = WEB_URL+"m=member&c=app2&a=listinfo&catid=4&page=1&pageSize=20";
+     public static String getUpdateUrl() {
+         int versionCode = 1;
+         try {
+             PackageInfo pkg = MeowApplication.getContext().getPackageManager().getPackageInfo(MeowApplication.getContext().getApplicationContext().getPackageName(), 0);
+             versionCode = pkg.versionCode;
+         } catch(Exception e) {}
+         return  WEB_URL+"m=member&c=app2&a=public_update&versionCode=" + versionCode + "&auth=" + auth;
+     }
 }

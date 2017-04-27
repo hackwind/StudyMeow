@@ -37,7 +37,7 @@ public class ContactUsActivity extends BaseActivity {
 
 
     private void getQRCode(int type) {
-        HttpRequest.get(HttpAddress.getQRCode(),null,ContactUsActivity.this,"getQRCodeBack",null,this, GetQRCodeEntity.class);
+        HttpRequest.get(HttpAddress.getOtherQRCode(type),null,ContactUsActivity.this,"getQRCodeBack",null,this, GetQRCodeEntity.class);
     }
 
 

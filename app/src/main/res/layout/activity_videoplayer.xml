@@ -134,7 +134,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/h_320"
         android:layout_alignParentBottom="true"
-        android:background="@color/trans_black"
+        android:background="#A9000000"
         android:visibility="gone"
         android:orientation="vertical">
         <TextView
