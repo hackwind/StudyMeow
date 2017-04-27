@@ -17,8 +17,14 @@ public class VideoListPresenter extends OpenPresenter {
 
     private List<VideoDetailEntity.Video> list;
     private GeneralAdapter mAdapter;
+    private int bgResId;
 
-    public VideoListPresenter(List<VideoDetailEntity.Video> list) {
+    public VideoListPresenter(List<VideoDetailEntity.Video> list,int viewBackgroundResource) {
+        this.list = list;
+        this.bgResId = viewBackgroundResource;
+    }
+
+    public void setList(List<VideoDetailEntity.Video> list) {
         this.list = list;
     }
 
@@ -41,6 +47,7 @@ public class VideoListPresenter extends OpenPresenter {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_video_list, parent, false);
+        view.setBackgroundResource(this.bgResId);
         return new GridViewHolder(view);
     }
 

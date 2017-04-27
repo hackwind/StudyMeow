@@ -164,7 +164,7 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
         videoList.setFocusable(false);
         videoList.setSelectedItemAtCentered(true); // 设置item在中间移动.
         videoList.addItemDecoration(new SpaceItemDecoration((int)getResources().getDimension(R.dimen.w_20)));
-        presenter = new VideoListPresenter(list);
+        presenter = new VideoListPresenter(list,R.drawable.selector_video_detail_list);
         generalAdapter = new GeneralAdapter(presenter);
         videoList.setAdapter(generalAdapter);
 
