@@ -24,7 +24,6 @@ import com.google.gson.Gson;
 import com.open.androidtvwidget.bridge.OpenEffectBridge;
 import com.open.androidtvwidget.bridge.RecyclerViewBridge;
 import com.open.androidtvwidget.leanback.adapter.GeneralAdapter;
-import com.open.androidtvwidget.leanback.recycle.GridLayoutManagerTV;
 import com.open.androidtvwidget.leanback.recycle.LinearLayoutManagerTV;
 import com.open.androidtvwidget.leanback.recycle.RecyclerViewTV;
 import com.open.androidtvwidget.menu.OpenMenuImpl;
@@ -37,6 +36,7 @@ import cn.xueximiao.tv.http.HttpRequest;
 import cn.xueximiao.tv.util.SharePrefUtil;
 import cn.xueximiao.tv.util.ToastUtil;
 import cn.xueximiao.tv.util.Util;
+import cn.xueximiao.tv.widget.MyGridLayoutManagerTV;
 import cn.xueximiao.tv.widget.MyOpenMenuImpl;
 import cn.xueximiao.tv.widget.SpaceItemDecoration;
 
@@ -68,8 +68,8 @@ public class ListActivity extends BaseActivity {
 
     private static String catId;
     private String catName;
-    private int pageCount = 0;
-    private int rowCount = 0;
+    private int totalRowCount = 0;
+    private int alreadyRowCount = 0;
     private int page = 1;
     private int total = 0;
     private static int pageSize = 50;
@@ -81,6 +81,7 @@ public class ListActivity extends BaseActivity {
     private LinearLayout mProgressBar;
     private boolean first = true;
     private int selectedIndex = 0;
+    private boolean isLoadingMore = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +101,7 @@ public class ListActivity extends BaseActivity {
         public void onReceive(Context context, Intent intent) {
             if(intent.getAction().equals(Util.ACTION_HTTP_ONERROR)){
                 first = false;
+                isLoadingMore = false;
             }
         }
     };
@@ -190,7 +192,6 @@ public class ListActivity extends BaseActivity {
                     catName = category.catname;
                     page = 1;
                     total = 0;
-                    pageCount = 0;
                     if(videoList != null) {
                         videoList.clear();
                     }
@@ -252,7 +253,6 @@ public class ListActivity extends BaseActivity {
                 }
                 page = 1;
                 total = 0;
-                pageCount = 0;
                 if(videoList != null) {
                     videoList.clear();
                 }
@@ -299,11 +299,11 @@ public class ListActivity extends BaseActivity {
         }
         contentView = (RecyclerViewTV)findViewById(R.id.recyclerview_content);
         mainUpView1 = (MainUpView)findViewById(R.id.mainUpView1);
-        GridLayoutManagerTV gridlayoutManager = new GridLayoutManagerTV(this, ROW_SIZE);
+        MyGridLayoutManagerTV gridlayoutManager = new MyGridLayoutManagerTV(this, ROW_SIZE);
         gridlayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         gridlayoutManager.setSmoothScrollbarEnabled(false);
         //TODO 通过下面的方法处理焦点乱飞的问题
-//        gridlayoutManager.onFocusSearchFailed()
+        //参考http://blog.csdn.net/beyond181/article/details/52132297
         contentView.setLayoutManager(gridlayoutManager);
         contentView.addItemDecoration(new SpaceItemDecoration((int) getResources().getDimension(R.dimen.h_94)));
         contentView.setFocusable(false);
@@ -352,7 +352,12 @@ public class ListActivity extends BaseActivity {
                 oldView = itemView;
 
                 int row = position / ROW_SIZE + 1;
-                pageCountView.setText(row + "/" + rowCount);
+                pageCountView.setText(row + "/" + totalRowCount);
+                if(alreadyRowCount - row < 3 && !isLoadingMore && videoList.size() < total) { //加载下一页
+                    Log.d("hjs","begin load next page");
+                    page ++;
+                    getPageData();
+                }
 
                 TextView allButton = (TextView)(freeMenu.findViewHolderForAdapterPosition(0).itemView.findViewById(R.id.title_tv));
                 TextView freeButton = (TextView)(freeMenu.findViewHolderForAdapterPosition(1).itemView.findViewById(R.id.title_tv));
@@ -401,6 +406,9 @@ public class ListActivity extends BaseActivity {
         if(forFree) {
             map.put("isFree", forFree ? 1 : 0);
         }
+        if(page > 1) {
+            isLoadingMore = true;
+        }
         HttpRequest.get(HttpAddress.getList(catId,page,pageSize),map,ListActivity.this,"getListBack",page > 1 ? null : mProgressBar,this,ListEntity.class);
     }
 
@@ -411,16 +419,17 @@ public class ListActivity extends BaseActivity {
      */
     public void getListBack(ListEntity entity,String result) {
         Log.d("hjs","getListBack");
+        isLoadingMore = false;
         if(entity == null || entity.data == null ||  entity.data.rows == null) {
             return;
         }
-        isLoadingMore = false;
-        pageCount = entity.data.pageCount;
+
         total = entity.data.total;
         if(videoList == null || videoList.size() == 0) {
-            rowCount = entity.data.total / ROW_SIZE + 1;
-            pageCountView.setText("1/" + rowCount);
+            totalRowCount = entity.data.total % ROW_SIZE == 0 ? entity.data.total / ROW_SIZE : entity.data.total / ROW_SIZE + 1;
+            pageCountView.setText("1/" + totalRowCount);
         }
+
         if(videoList == null) {
             videoList = entity.data.rows;
             initContentView();
@@ -429,25 +438,10 @@ public class ListActivity extends BaseActivity {
             videoList.addAll(entity.data.rows);
 
             contentView.getAdapter().notifyDataSetChanged();
-            mFocusHandler.sendEmptyMessageDelayed(10, 1000);//延迟重获焦点
+            mFocusHandler.sendEmptyMessageDelayed(10, 200);//延迟重获焦点
         }
+        alreadyRowCount = videoList.size() % ROW_SIZE == 0 ? videoList.size() / ROW_SIZE : videoList.size() / ROW_SIZE + 1;
 
-        if(videoList != null && videoList.size() >= total) {
-            Log.d("hjs","loadComplete");
-            contentView.setOnLoadMoreComplete();
-            contentView.setPagingableListener(null);
-        } else if(videoList.size() < total){
-            Log.d("hjs","load not Complete,has more");
-            contentView.setPagingableListener(new RecyclerViewTV.PagingableListener() {
-                @Override
-                public void onLoadMoreItems() {
-                    Log.d("hjs","getNextPage:" + (page + 1));
-                    isLoadingMore = true;
-                    page ++;
-                    getPageData();
-                }
-            });
-        }
         if(first) {
             first = false;
             leftMenu.getChildAt(leftMenuSelectedIndex).setBackgroundResource(R.drawable.left_menu_selected_unfocus);
@@ -458,19 +452,20 @@ public class ListActivity extends BaseActivity {
     Handler mFocusHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+            if(leftMenu.getSelectView() != null) {
+                leftMenu.getSelectView().clearFocus();
+            }
             contentView.setDefaultSelect(selectedIndex);
 
         }
     };
-    private boolean isLoadingMore = false;
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
             //左
             case KeyEvent.KEYCODE_DPAD_DOWN:
-                if(isLoadingMore) {
-                    return true;
-                }
+
                 break;
         }
         return super.onKeyDown(keyCode, event);
