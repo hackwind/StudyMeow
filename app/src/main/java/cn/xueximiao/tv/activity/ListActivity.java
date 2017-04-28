@@ -8,11 +8,14 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -411,6 +414,7 @@ public class ListActivity extends BaseActivity {
         if(entity == null || entity.data == null ||  entity.data.rows == null) {
             return;
         }
+        isLoadingMore = false;
         pageCount = entity.data.pageCount;
         total = entity.data.total;
         if(videoList == null || videoList.size() == 0) {
@@ -423,17 +427,22 @@ public class ListActivity extends BaseActivity {
         }else {
             selectedIndex = contentView.getSelectPostion();
             videoList.addAll(entity.data.rows);
+
             contentView.getAdapter().notifyDataSetChanged();
-            contentView.setDefaultSelect(selectedIndex);//防止光标飞到左侧菜单
+            mFocusHandler.sendEmptyMessageDelayed(10, 1000);//延迟重获焦点
         }
+
         if(videoList != null && videoList.size() >= total) {
+            Log.d("hjs","loadComplete");
             contentView.setOnLoadMoreComplete();
             contentView.setPagingableListener(null);
         } else if(videoList.size() < total){
+            Log.d("hjs","load not Complete,has more");
             contentView.setPagingableListener(new RecyclerViewTV.PagingableListener() {
                 @Override
                 public void onLoadMoreItems() {
                     Log.d("hjs","getNextPage:" + (page + 1));
+                    isLoadingMore = true;
                     page ++;
                     getPageData();
                 }
@@ -444,7 +453,26 @@ public class ListActivity extends BaseActivity {
             leftMenu.getChildAt(leftMenuSelectedIndex).setBackgroundResource(R.drawable.left_menu_selected_unfocus);
         }
 
+
     }
+    Handler mFocusHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            contentView.setDefaultSelect(selectedIndex);
 
-
+        }
+    };
+    private boolean isLoadingMore = false;
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            //左
+            case KeyEvent.KEYCODE_DPAD_DOWN:
+                if(isLoadingMore) {
+                    return true;
+                }
+                break;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }
