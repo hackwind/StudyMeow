@@ -61,7 +61,7 @@ public class GridViewAdapter extends TvBaseAdapter {
         holder.tv.setText(rowsEntity.title);
         HttpImageAsync.loadingImage(holder.iv,rowsEntity.thumb);
 
-        if ((onLoadMoreListener.getPage() - 1) * VideoListFragment.PageSize == position) {
+        if (onLoadMoreListener.getPage() * VideoListFragment.PageSize - VideoListFragment.RowSize * 2 == position) {
             onLoadMoreListener.onLoadMore();
         }
         return convertView;

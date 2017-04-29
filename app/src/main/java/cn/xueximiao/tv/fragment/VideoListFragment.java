@@ -31,6 +31,7 @@ public class VideoListFragment extends Fragment {
     private int page = 1;
     private int total = 0;
     public static int PageSize = 50;
+    public static int RowSize = 5;
 
     private String catId;
     private String catName;

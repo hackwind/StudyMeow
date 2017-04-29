@@ -143,7 +143,7 @@
             android:textSize="@dimen/w_42"
             android:paddingLeft="@dimen/w_78"
             android:text="@string/video_selections"
-            android:layout_marginTop="@dimen/h_40"
+            android:layout_marginTop="@dimen/h_30"
             android:textColor="@color/white"/>
         <com.open.androidtvwidget.leanback.recycle.RecyclerViewTV
             android:id="@+id/video_list"
@@ -159,7 +159,7 @@
             android:id="@+id/video_pages"
             android:layout_width="match_parent"
             android:layout_height="@dimen/h_90"
-            android:layout_marginTop="@dimen/h_30"
+            android:layout_marginTop="@dimen/h_25"
             android:divider="@null"
             android:paddingLeft="@dimen/w_78"
             android:paddingRight="@dimen/w_78"
