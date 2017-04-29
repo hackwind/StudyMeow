@@ -101,7 +101,7 @@
                 android:layout_below="@id/mediacontroller_seekbar"
                 android:layout_alignStart="@id/mediacontroller_seekbar"
                 android:text="33:33:33"
-                android:layout_marginTop="@dimen/h_14"
+                android:layout_marginTop="@dimen/h_10"
                 android:layout_marginLeft="@dimen/w_21"
                 android:textColor="@color/selector"
                 />
@@ -115,7 +115,7 @@
                 android:layout_alignEnd="@id/mediacontroller_seekbar"
                 android:layout_marginRight="15dp"
                 android:text="33:33:33"
-                android:layout_marginTop="@dimen/h_14"
+                android:layout_marginTop="@dimen/h_10"
                 android:textColor="@color/white"/>
 
 

@@ -312,7 +312,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
                     Intent intent = new Intent(MainActivity.this,HistoryActivity.class);
                     startActivity(intent);
                 } else if("category".equals(poster.linkType)) {//打开分类，进入列表
-                    Intent intent = new Intent(MainActivity.this,ListActivity.class);
+                    Intent intent = new Intent(MainActivity.this,VideoListActivity.class);
                     intent.putExtra("catid",poster.linkData);
                     startActivity(intent);
                 } else if("detail".equals(poster.linkType)) {//进入专辑详情页，{“linkData”: “20,3930”}格式:catid,id
@@ -353,7 +353,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
         rvCategory.setOnItemClickListener(new RecyclerViewTV.OnItemClickListener() {
             @Override
             public void onItemClick(RecyclerViewTV parent, View itemView, int position) {
-                Intent intent = new Intent(MainActivity.this,ListActivity.class);
+                Intent intent = new Intent(MainActivity.this,VideoListActivity.class);
                 intent.putExtra("catid",categoryEntity.data.category.get(position).catid);
                 startActivity(intent);
             }

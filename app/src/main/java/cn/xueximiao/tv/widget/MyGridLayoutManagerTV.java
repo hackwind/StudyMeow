@@ -26,22 +26,24 @@ public class MyGridLayoutManagerTV extends GridLayoutManager {
     @Override
     public View onFocusSearchFailed(View focused, int focusDirection, RecyclerView.Recycler recycler, RecyclerView.State state) {
         View nextFocus = super.onFocusSearchFailed(focused, focusDirection, recycler, state);
-        Log.d("hjs","onFocusSearchFailed focusDirection:" + focusDirection);
-
-        if (nextFocus == null) {
-            Log.d("hjs","nextFocus is null return");
-            return null;
-        }
-        /**
-         * 获取当前焦点的位置
-         */
-        int fromPos = getPosition(focused);
-        /**
-         * 获取我们希望的下一个焦点的位置
-         */
-        int nextPos = getNextViewPos(fromPos, focusDirection);
-
-        return findViewByPosition(nextPos);
+        return null;
+//        Log.d("hjs","onFocusSearchFailed focusDirection:" + focusDirection);
+//
+//        if (nextFocus == null) {
+//            Log.d("hjs","nextFocus is null return");
+//            return null;
+//        }
+//        /**
+//         * 获取当前焦点的位置
+//         */
+//        int fromPos = getPosition(focused);
+//        Log.d("hjs","fromPos:" + fromPos);
+//        /**
+//         * 获取我们希望的下一个焦点的位置
+//         */
+//        int nextPos = getNextViewPos(fromPos, focusDirection);
+//        Log.d("hjs","nextPos:" + nextPos);
+//        return findViewByPosition(nextPos);
     }
 
     /**

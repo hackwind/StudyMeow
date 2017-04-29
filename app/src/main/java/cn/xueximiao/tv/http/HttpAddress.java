@@ -104,7 +104,7 @@ public class HttpAddress {
      * @return
      */
     public static String getAgreementUrl(){
-        return  WEB_URL+"m=content&c=index&a=list&catid=29";
+        return  WEB_URL+"m=content&c=index&a=lists&catid=29";
     }
 
     /**

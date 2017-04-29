@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 import com.open.androidtvwidget.bridge.OpenEffectBridge;
 import com.open.androidtvwidget.bridge.RecyclerViewBridge;
 import com.open.androidtvwidget.leanback.adapter.GeneralAdapter;
+import com.open.androidtvwidget.leanback.recycle.GridLayoutManagerTV;
 import com.open.androidtvwidget.leanback.recycle.LinearLayoutManagerTV;
 import com.open.androidtvwidget.leanback.recycle.RecyclerViewTV;
 import com.open.androidtvwidget.menu.OpenMenuImpl;
@@ -389,12 +390,12 @@ public class ListActivity extends BaseActivity {
             }
         });
 
-        contentView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                contentView.setDefaultSelect(0);
-            }
-        },200);
+//        contentView.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                contentView.setDefaultSelect(0);
+//            }
+//        },200);
     }
 
 
@@ -430,15 +431,17 @@ public class ListActivity extends BaseActivity {
             pageCountView.setText("1/" + totalRowCount);
         }
 
-        if(videoList == null) {
+        if(videoList == null) { //第一页加载
             videoList = entity.data.rows;
             initContentView();
-        }else {
+        }else {//其他页加载
             selectedIndex = contentView.getSelectPostion();
             videoList.addAll(entity.data.rows);
 
             contentView.getAdapter().notifyDataSetChanged();
-            mFocusHandler.sendEmptyMessageDelayed(10, 200);//延迟重获焦点
+            if(page > 1) {
+                mFocusHandler.sendEmptyMessageDelayed(10, 200);//延迟重获焦点
+            }
         }
         alreadyRowCount = videoList.size() % ROW_SIZE == 0 ? videoList.size() / ROW_SIZE : videoList.size() / ROW_SIZE + 1;
 

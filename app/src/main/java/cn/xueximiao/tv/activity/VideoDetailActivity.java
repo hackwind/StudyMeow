@@ -188,7 +188,15 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
 
             }
         });
-//        videoList.po
+        videoList.setOnItemClickListener(new RecyclerViewTV.OnItemClickListener() {
+            @Override
+            public void onItemClick(RecyclerViewTV parent, View itemView, int position) {
+                Intent intent = new Intent(VideoDetailActivity.this,VideoPlayerActivity.class);
+                intent.putExtra("videodetail",strVideoDetail);
+                intent.putExtra("index",position);
+                startActivity(intent);
+            }
+        });
         if(list != null && list.size() > 0) {
             VideoDetailEntity.Video video = list.get(0);
             HttpImageAsync.loadingImage(subIcon, video.thumb);
@@ -294,6 +302,7 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
                 }
                 Intent intent = new Intent(this,VideoPlayerActivity.class);
                 intent.putExtra("videodetail",strVideoDetail);
+                intent.putExtra("index",0);
                 startActivity(intent);
                 break;
         }

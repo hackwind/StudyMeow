@@ -149,6 +149,7 @@ public class MyActivity extends BaseActivity {
                 SharePrefUtil.saveString(this,SharePrefUtil.KEY_USER_NAME,"");
                 SharePrefUtil.saveString(this,SharePrefUtil.KEY_GROUP_ID,"");
                 SharePrefUtil.saveString(this,SharePrefUtil.KEY_REG_DATE,"");
+                HttpAddress.auth = "";
 
                 intent = new Intent(MyActivity.this, LoginActivity.class);
                 startActivity(intent);

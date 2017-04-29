@@ -17,7 +17,7 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/w_234"
         android:layout_height="@dimen/h_72"
         android:layout_below="@id/image"
         android:gravity="left|center_vertical"

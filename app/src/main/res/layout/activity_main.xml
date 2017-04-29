@@ -7,8 +7,8 @@
     android:orientation="vertical">
 
     <ImageView
-        android:layout_width="@dimen/w_184"
-        android:layout_height="@dimen/h_50"
+        android:layout_width="@dimen/w_132"
+        android:layout_height="@dimen/h_42"
         android:background="@mipmap/logo"
         android:layout_marginLeft="@dimen/w_80"
         android:layout_marginTop="@dimen/w_40"

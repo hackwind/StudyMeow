@@ -26,5 +26,6 @@ public class VideoSourceEntity extends BaseEntity {
         public String size;//"17057029",//文件大小
         public String audio;//"84614",////音频时长
         public String video;//"84200"//视频时长毫秒数,时长用于快进的。
+        public int playTime;//上次用户播放到的时间，单位毫秒
     }
 }

@@ -265,23 +265,23 @@ public class TvGridView extends RelativeLayout {
 
 		if (cursorRes == 0) {
 			switch (getResources().getDisplayMetrics().widthPixels) {
-			case TvUtil.SCREEN_1280:
-				cursorRes = custom.getResourceId(
-						R.styleable.TvGridView_cursorRes_1280, 0);
-				break;
+				case TvUtil.SCREEN_1280:
+					cursorRes = custom.getResourceId(
+							R.styleable.TvGridView_cursorRes_1280, 0);
+					break;
 
-			case TvUtil.SCREEN_1920:
-				cursorRes = custom.getResourceId(
-						R.styleable.TvGridView_cursorRes_1920, 0);
-				break;
-			case TvUtil.SCREEN_2560:
-				cursorRes = custom.getResourceId(
-						R.styleable.TvGridView_cursorRes_2560, 0);
-				break;
-			case TvUtil.SCREEN_3840:
-				cursorRes = custom.getResourceId(
-						R.styleable.TvGridView_cursorRes_3840, 0);
-				break;
+				case TvUtil.SCREEN_1920:
+					cursorRes = custom.getResourceId(
+							R.styleable.TvGridView_cursorRes_1920, 0);
+					break;
+				case TvUtil.SCREEN_2560:
+					cursorRes = custom.getResourceId(
+							R.styleable.TvGridView_cursorRes_2560, 0);
+					break;
+				case TvUtil.SCREEN_3840:
+					cursorRes = custom.getResourceId(
+							R.styleable.TvGridView_cursorRes_3840, 0);
+					break;
 			}
 		}
 		custom.recycle();
@@ -469,7 +469,7 @@ public class TvGridView extends RelativeLayout {
 
 	}
 
-	private void bindEventOnChild(View child, final int index) {
+	private void bindEventOnChild(final View child, final int index) {
 		child.setFocusable(true);
 		child.setOnFocusChangeListener(new OnFocusChangeListener() {
 
@@ -488,9 +488,10 @@ public class TvGridView extends RelativeLayout {
 					if (onItemSelectListener != null) {
 						onItemSelectListener.onItemSelect(item, index);
 					}
-
+					child.setSelected(true);
 				} else {
-					
+					child.setSelected(false);
+					child.clearFocus();
 					returnCover(item);
 				}
 			}

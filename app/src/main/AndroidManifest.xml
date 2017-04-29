@@ -12,7 +12,7 @@
     <application
         android:name="cn.xueximiao.tv.activity.MeowApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/my_icon"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -44,6 +44,9 @@
             android:screenOrientation="landscape" />
         <activity
             android:name="cn.xueximiao.tv.activity.ListActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name="cn.xueximiao.tv.activity.VideoListActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name="cn.xueximiao.tv.activity.SettingActivity"

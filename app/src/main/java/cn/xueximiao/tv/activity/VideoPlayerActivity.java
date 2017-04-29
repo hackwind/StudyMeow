@@ -112,6 +112,7 @@ public class VideoPlayerActivity extends BaseActivity {
         setContentView(R.layout.activity_videoplayer);
 
         strVideoDetail = getIntent().getStringExtra("videodetail");
+        playIndex = getIntent().getIntExtra("index",0);
         VideoDetailEntity entity = new Gson().fromJson(strVideoDetail,VideoDetailEntity.class);
         if(entity == null) {
             finish();
@@ -375,6 +376,7 @@ public class VideoPlayerActivity extends BaseActivity {
         currentVideoSource = entity.data.videoSource;
         segIndex = 0;
         videoPath = currentVideoSource.get(segIndex).url;
+        title = entity.data.title;
         play();
     }
 
@@ -462,6 +464,7 @@ public class VideoPlayerActivity extends BaseActivity {
     private void showSelectionLayer() {
         mediaController.hide();
         bottomSelection.setVisibility(View.VISIBLE);
+        selectionList.setVisibility(View.VISIBLE);
         selectionList.requestFocus();
         Log.d("hjs","getSelectedPosition:" + selectionList.getSelectPostion());
         if(selectionList.getSelectPostion() == -1) {

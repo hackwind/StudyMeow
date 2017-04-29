@@ -5,12 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
 
 import cn.xueximiao.tv.R;
 import cn.xueximiao.tv.entity.GetLoginInfoEntity;
 import cn.xueximiao.tv.entity.GetQRCodeEntity;
+import cn.xueximiao.tv.entity.TokenEntity;
 import cn.xueximiao.tv.http.HttpAddress;
 import cn.xueximiao.tv.http.HttpImageAsync;
 import cn.xueximiao.tv.http.HttpRequest;
@@ -36,7 +39,11 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         wxImage = (ImageView)findViewById(R.id.wechat_image);
 
-        getQRCode();
+        if(!TextUtils.isEmpty(HttpAddress.auth)) {
+            getQRCode();
+        } else {
+            getToken();
+        }
         //网络连接失败
         IntentFilter intentFilter=new IntentFilter();
         intentFilter.addAction(Util.ACTION_HTTP_ONERROR);
@@ -52,6 +59,22 @@ public class LoginActivity extends BaseActivity {
             }
         }
     };
+
+    private void getToken() {
+        if(TextUtils.isEmpty(SharePrefUtil.getString(this,SharePrefUtil.KEY_USER_ID,""))) { // 还未登陆
+            HttpRequest.get(HttpAddress.getToken(Settings.System.getString(getContentResolver(), Settings.System.ANDROID_ID)), null, LoginActivity.this, "getTokenBack", null, this, TokenEntity.class);
+        } else {
+            HttpAddress.auth = SharePrefUtil.getString(this,SharePrefUtil.KEY_AUTH,"");
+            getQRCode();
+        }
+    }
+    /** 获取token回调 */
+    public void getTokenBack(TokenEntity entity,String totalResult) {
+        String auth = entity.data.auth;
+        HttpAddress.auth = auth;
+        SharePrefUtil.saveString(this, SharePrefUtil.KEY_AUTH, auth);
+        getQRCode();
+    }
 
     private void getQRCode() {
         HttpRequest.get(HttpAddress.getLoginQRCode(),null,LoginActivity.this,"getQRCodeBack",null,this, GetQRCodeEntity.class);

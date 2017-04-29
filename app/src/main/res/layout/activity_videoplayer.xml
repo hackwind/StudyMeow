@@ -153,6 +153,7 @@
             android:divider="@null"
             android:paddingLeft="@dimen/w_78"
             android:paddingRight="@dimen/w_78"
+            android:visibility="gone"
             android:listSelector="@android:color/transparent" />
         <com.open.androidtvwidget.leanback.recycle.RecyclerViewTV
             android:id="@+id/video_pages"
