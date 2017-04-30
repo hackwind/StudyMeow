@@ -31,7 +31,7 @@ public class MyListView extends ListView{
         if (gainFocus) {
             setSelection(lastSelectItem);
         }
-        Log.d("hjs","onFocusChanged:" + gainFocus);
+        Log.d("hjs","MyListView onFocusChanged:" + gainFocus);
     }
 
 

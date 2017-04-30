@@ -43,6 +43,7 @@ public class VideoListFragment extends Fragment {
     private List<ListEntity.VideoRow> videoList;
     private GridViewAdapter gridViewAdapter;
     private View rootView;
+    private View currentMenuView;
 
     public VideoListFragment() {
 
@@ -63,6 +64,12 @@ public class VideoListFragment extends Fragment {
         forFree = free;
     }
 
+    public void setCurrentMenuView(View view) {
+        currentMenuView = view;
+        if(gridView != null) {
+            gridView.setCurrentMenuView(view);
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,6 +89,9 @@ public class VideoListFragment extends Fragment {
             rootView = inflater.inflate(R.layout.fragment_video_list, container, false);
             initViews(rootView);
             getPageData();
+        }
+        if(gridView != null && currentMenuView != null) {
+            gridView.setCurrentMenuView(currentMenuView);
         }
         return rootView;
     }

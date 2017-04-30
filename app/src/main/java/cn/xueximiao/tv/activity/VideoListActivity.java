@@ -1,6 +1,7 @@
 package cn.xueximiao.tv.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -9,6 +10,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
@@ -58,6 +60,11 @@ public class VideoListActivity extends FragmentActivity {
         initViews();
     }
 
+    public boolean dispatchKeyEvent(KeyEvent event) {
+
+        return super.dispatchKeyEvent(event);
+    }
+
     private void initViews(){
         categoryName = (TextView)findViewById(R.id.category_name) ;
         pageCountView = (TextView)findViewById(R.id.category_page) ;
@@ -71,16 +78,24 @@ public class VideoListActivity extends FragmentActivity {
         leftMenu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("hjs","left menu onItemSelected");
+                for(int i = 0 ; i < fragments.length;i++) {
+                    fragments[i].setCurrentMenuView(view);
+                }
                 if(currentTabIndex != position) {
                     changeFragment(position);
                     categoryName.setText(categoryEntity.data.category.get(position).catname);
                 }
+                for(int i = 0 ;i < leftMenu.getChildCount(); i ++) {
+                    leftMenu.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+                }
+                view.setBackgroundResource(R.drawable.left_menu_checkde);
 
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                Log.d("hjs","left menu onNothingSelected");
             }
         });
         menuAdapter = new MenuAdapter(VideoListActivity.this, categoryEntity.data.category);

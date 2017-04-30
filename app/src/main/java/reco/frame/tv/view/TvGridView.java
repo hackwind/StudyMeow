@@ -3,6 +3,7 @@ package reco.frame.tv.view;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.database.DataSetObservable;
@@ -154,6 +155,8 @@ public class TvGridView extends RelativeLayout {
 	private RecycleBin mRecycleBin;
 	private boolean isInit = true;
 	private boolean initFocus;
+
+	private View currentMenuView;
 	/**
 	 * 焦点移出容器
 	 */
@@ -303,6 +306,10 @@ public class TvGridView extends RelativeLayout {
 
 		mRecycleBin = new RecycleBin(getContext().getCacheDir()
 				.getAbsolutePath());
+	}
+
+	public void setCurrentMenuView(View menuView) {
+		currentMenuView = menuView;
 	}
 
 	/**
@@ -475,7 +482,7 @@ public class TvGridView extends RelativeLayout {
 
 			@Override
 			public void onFocusChange(final View item, boolean focus) {
-
+				Log.d("hjs","TVGridView onFocusChange:" + focus + ",index:" + index);
 				if (focus) {
 					new Handler().postDelayed(new Runnable() {
 
@@ -489,10 +496,15 @@ public class TvGridView extends RelativeLayout {
 						onItemSelectListener.onItemSelect(item, index);
 					}
 					child.setSelected(true);
+
+					if(currentMenuView != null) {
+						currentMenuView.setBackgroundResource(R.drawable.left_menu_selected_unfocus);
+					}
 				} else {
 					child.setSelected(false);
 					child.clearFocus();
 					returnCover(item);
+
 				}
 			}
 		});
@@ -649,9 +661,17 @@ public class TvGridView extends RelativeLayout {
 					if (temp != null) {
 						focusIsOut=false;
 						selectIndex = temp;
+						if(currentMenuView != null) {
+							currentMenuView.setBackgroundResource(R.drawable.left_menu_selected_unfocus);
+						}
 					} else {
 						parentLayout = true;
 						focusIsOut=true;
+						if(currentMenuView != null) {
+							currentMenuView.requestFocus();
+							currentMenuView.setSelected(true);
+							currentMenuView.setBackgroundResource(R.drawable.left_menu_checkde);
+						}
 						return super.dispatchKeyEventPreIme(event);
 					}
 					int nextRow = 0;
@@ -688,6 +708,10 @@ public class TvGridView extends RelativeLayout {
 						}
 					}
 
+				} else if(direction == View.FOCUS_LEFT) {
+					if(currentMenuView != null) {
+						currentMenuView.setSelected(true);
+					}
 				}
 
 			}

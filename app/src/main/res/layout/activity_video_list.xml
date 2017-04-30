@@ -11,7 +11,7 @@
         android:id="@+id/lv_menu"
         android:layout_width="@dimen/w_268"
         android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/w_80"
+        android:layout_marginLeft="@dimen/w_70"
         android:paddingTop="@dimen/h_160"
         android:layout_alignParentLeft="true"
         android:background="@android:color/transparent"

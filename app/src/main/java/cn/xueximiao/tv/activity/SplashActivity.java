@@ -25,7 +25,7 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        loadBackground();
+//        loadBackground();
         startTimer();
     }
 
@@ -41,17 +41,17 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void loadBackground() {
-        LinearLayout layout = (LinearLayout)findViewById(R.id.rootview);
-        InputStream is ;
-        BitmapFactory.Options opt = new BitmapFactory.Options();
-        opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        opt.inPurgeable = true;
-        opt.inInputShareable = true;
-        opt.inSampleSize = 2;
-        is= getResources().openRawResource(R.raw.splash);
-        Bitmap bm = BitmapFactory.decodeStream(is, null, opt);
-        BitmapDrawable bd = new BitmapDrawable(getResources(), bm);
-        layout.setBackgroundDrawable(bd);
+//        LinearLayout layout = (LinearLayout)findViewById(R.id.rootview);
+//        InputStream is ;
+//        BitmapFactory.Options opt = new BitmapFactory.Options();
+//        opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
+//        opt.inPurgeable = true;
+//        opt.inInputShareable = true;
+//        opt.inSampleSize = 2;
+//        is= getResources().openRawResource(R.raw.splash);
+//        Bitmap bm = BitmapFactory.decodeStream(is, null, opt);
+//        BitmapDrawable bd = new BitmapDrawable(getResources(), bm);
+//        layout.setBackgroundDrawable(bd);
     }
 
     @Override
