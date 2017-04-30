@@ -166,4 +166,21 @@ public class HttpAddress {
          } catch(Exception e) {}
          return  WEB_URL+"m=member&c=app2&a=public_update&versionCode=" + versionCode + "&auth=" + auth;
      }
+
+    /**
+     * 更新播放时间给服务器
+     * @param sid
+     * @param time
+     * @return
+     */
+     public static String getUpdatePlayTimeUrl(String sid,long time) {
+         return  WEB_URL+"m=member&c=app2&a=updatePlayTime&partsid=" + sid + "&playTime=" + time + "&auth=" + auth;
+     }
+
+    /**
+     * 获取订阅作者的二维码
+     */
+    public static String getSubscribe(String id) {
+        return  WEB_URL+"m=member&c=app2&a=trailer&partsid=" + id + "&auth=" + auth;
+    }
 }

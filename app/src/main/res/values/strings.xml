@@ -40,6 +40,7 @@
     <string name="contact_us">联系我们</string>
     <string name="submit_by_scan">微信扫一扫提交</string>>
     <string name="video_selections">选集</string>>
+    <string name="retry">重试</string>
 
     <!--Vitamio-->
     <string name="vitamio_library_app_name">VitamioLibrary</string>

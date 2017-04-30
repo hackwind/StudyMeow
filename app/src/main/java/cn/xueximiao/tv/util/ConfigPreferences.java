@@ -1,6 +1,7 @@
 package cn.xueximiao.tv.util;
 
 import android.content.Context;
+import android.util.Log;
 
 /**
  * Created by Administrator on 2016/12/6.
@@ -8,11 +9,10 @@ import android.content.Context;
 
 public class ConfigPreferences extends BaseSharedPreferences {
 
-    private static final String NAME = "myappconfig";
+    private static final String NAME = "history";
 
     private static ConfigPreferences mInstance;
 
-    private static final  String VIDEOPOSTION="videopostion";
 
     private ConfigPreferences(Context ctx) {
         super(ctx);
@@ -34,11 +34,13 @@ public class ConfigPreferences extends BaseSharedPreferences {
         return NAME;
     }
 
-    public static void setVideoPostion(long postion){
-        getSp().edit().putLong(VIDEOPOSTION,postion);
+    public static void setVideoPostion(String videoid ,long postion){
+        Log.d("hjs","setVideoPos,videoId,pos:" + videoid + "," + postion);
+        getSp().edit().putLong("id" + videoid,postion).commit();
     }
 
-    public static long getVideoPostion(){
-        return  getSp().getLong(VIDEOPOSTION,0);
+    public static long getVideoPostion(String videoId){
+        Log.d("hjs","getVideoPos,videoId,pos:" + videoId );
+        return  getSp().getLong("id" + videoId,0);
     }
 }

@@ -235,7 +235,7 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
         thumbDesc.setText(entity.data.descript);
         author.setText(entity.data.author);
         updateTime.setText(entity.data.inputtime);
-        sourceFrom.setText(entity.data.source);
+        sourceFrom.setText("来源:" + entity.data.source);
         if(isCollect = entity.data.isCollection) {
             iconCollect.setImageResource(R.drawable.collect_yet);
         } else {

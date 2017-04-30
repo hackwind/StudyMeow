@@ -17,17 +17,23 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import cn.xueximiao.tv.R;
 import cn.xueximiao.tv.adapter.VideoListPresenter;
 import cn.xueximiao.tv.adapter.VideoPagerPresenter;
+import cn.xueximiao.tv.entity.BaseEntity;
+import cn.xueximiao.tv.entity.TrailerEntity;
 import cn.xueximiao.tv.entity.VideoDetailEntity;
 import cn.xueximiao.tv.entity.VideoSourceEntity;
 import cn.xueximiao.tv.http.HttpAddress;
+import cn.xueximiao.tv.http.HttpImageAsync;
 import cn.xueximiao.tv.http.HttpRequest;
+import cn.xueximiao.tv.util.ConfigPreferences;
 import cn.xueximiao.tv.util.SharePrefUtil;
 import cn.xueximiao.tv.util.ToastUtil;
 import cn.xueximiao.tv.util.Util;
@@ -50,6 +56,7 @@ import static cn.xueximiao.tv.util.Util.count;
  * 播放器
  */
 public class VideoPlayerActivity extends BaseActivity {
+    private final static int COUNTDOWN_START = 5;
     private final static int PAGE_SIZE = 10;
     //视频路径
     private String videoPath;
@@ -91,20 +98,25 @@ public class VideoPlayerActivity extends BaseActivity {
 
     private TextView network_buffer;
 
-    private Button error_back;
+    private Button butttonRetry;
     private String strVideoDetail;
-    private List<VideoDetailEntity.Video> videoList;//专辑详情
-    private List<VideoDetailEntity.Video> subVideoList;//专辑详情
+    private List<VideoDetailEntity.Video> videoList;//整个专辑列表
+    private List<VideoDetailEntity.Video> subVideoList;//某个分页段内的专辑列表
     private int playIndex = 0;//当前正在播放的专辑列表索引
-    private int segIndex = 0;//同一个视频的片段
+    private int segIndex = 0;//某一集下正在播放的的片段索引
     private List<VideoSourceEntity.VideoSource> currentVideoSource;
 
-    private RecyclerViewTV selectionList;
-    private RecyclerViewTV selectionPages;
+    private RecyclerViewTV selectionList;//选集
+    private RecyclerViewTV selectionPages;//选集页码段
     private VideoListPresenter listPresenter;
     private GeneralAdapter listAdapter;
     private VideoPagerPresenter pagerPresenter;
     private GeneralAdapter pagerAdapter;
+
+    private RelativeLayout subscribeLayout;//订阅作者的二维码层
+    private TextView subscribeCountDown;
+    private ImageView subscribeQRCode;
+    private int countDownStart = COUNTDOWN_START;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,10 +152,12 @@ public class VideoPlayerActivity extends BaseActivity {
             bottomSelection.setVisibility(View.GONE);
             return;
         }
+        updatePlayTime();
         super.onBackPressed();
     }
 
-    private void play() {
+    private void play(long seekPos) {
+        Log.d("hjs","begin play, seek position:" + seekPos);
         mediaController = new MyMediaController(VideoPlayerActivity.this, mVideoView, VideoPlayerActivity.this);
         mediaController.setVideoName(title);
         mediaController.show(5000);
@@ -159,7 +173,7 @@ public class VideoPlayerActivity extends BaseActivity {
         } else {
 
             //设置硬件解码
-            mVideoView.setHardwareDecoder(true);
+            mVideoView.setHardwareDecoder(false);
             //设置缓冲大小
             mVideoView.setBufferSize(512 * 1024);
             //mVideoView.setVideoPath("http://pl-ali.youku.com/playlist/m3u8?ts=1491379421&keyframe=1&vid=51774769&type=hd2&sid=049137942172720424e20&token=5496&oip=1696944366&did=898d39a045c9ba106aadb7948a82db41&ctype=20&ev=1&ep=8dSpcv4XiMQqYrmnnzZUQtLwiiT4LnBKV%2ByLYxVL26AF5USSf8P4s7i4KEcpvH8L&website=[cloud.ckjiexi.com]--2");
@@ -168,6 +182,7 @@ public class VideoPlayerActivity extends BaseActivity {
             mVideoView.setMediaController(mediaController);
             mVideoView.requestFocus();
             mVideoView.setVideoQuality(MediaPlayer.VIDEOQUALITY_HIGH);//高品质
+            mVideoView.seekTo(seekPos);//根据播放记录跳
             //视频预处理完成之后调用
             mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
@@ -203,10 +218,10 @@ public class VideoPlayerActivity extends BaseActivity {
                     if(segIndex < currentVideoSource.size() - 1) { //同一个视频有多个片段
                         segIndex ++;
                         videoPath = currentVideoSource.get(segIndex).url;
-                        play();
+                        play(0);
                     } else  if(playIndex < videoList.size() - 1) {//多集
-                        playIndex++;
-                        getVideoSourcePath();
+                        getSubscribeQRCode();//先查看订阅作者的二维码
+
                     }
                 }
             });
@@ -239,6 +254,7 @@ public class VideoPlayerActivity extends BaseActivity {
                     return true;
                 }
             });
+
         }
     }
 
@@ -249,15 +265,12 @@ public class VideoPlayerActivity extends BaseActivity {
         title_pro = (TextView) findViewById(R.id.title_pro);
         source_pro = (TextView) findViewById(R.id.source_pro);
         mVideoView = (VideoView) findViewById(R.id.mVideoView);
-        mVideo_error = (LinearLayout) findViewById(R.id.video_error);
-        loading = (LinearLayout) findViewById(R.id.loading);
-        title_pro = (TextView) findViewById(R.id.title_pro);
-        source_pro = (TextView) findViewById(R.id.source_pro);
+
         netWork_pro= (TextView) findViewById(R.id.netWork_pro);
         error_text= (TextView) findViewById(R.id.error_text);
         linear_buffer= (LinearLayout) findViewById(R.id.linear_buffer);
         network_buffer= (TextView) findViewById(R.id.netWork_buffer);
-        error_back= (Button) findViewById(R.id.back);
+        butttonRetry = (Button) findViewById(R.id.button_retry);
         title_pro.setText(title);
         source_pro.setText("来源:" + source);
 
@@ -265,10 +278,14 @@ public class VideoPlayerActivity extends BaseActivity {
         selectionList = (RecyclerViewTV)findViewById(R.id.video_list) ;
         selectionPages = (RecyclerViewTV)findViewById(R.id.video_pages) ;
 
-        error_back.setOnClickListener(new View.OnClickListener() {
+        subscribeLayout = (RelativeLayout)findViewById(R.id.subscribe_layout);
+        subscribeCountDown = (TextView) subscribeLayout.findViewById(R.id.countdown);
+        subscribeQRCode = (ImageView)  subscribeLayout.findViewById(R.id.qrcode_image);
+
+        butttonRetry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                VideoPlayerActivity.this.finish();
+                getVideoSourcePath();
             }
         });
         initVideoList();
@@ -375,9 +392,24 @@ public class VideoPlayerActivity extends BaseActivity {
         //播放视频
         currentVideoSource = entity.data.videoSource;
         segIndex = 0;
+        long  historyPos = ConfigPreferences.getInstance(this).getVideoPostion(videoId);
+//        Log.d("hjs","get history position:" + historyPos);
+        long seekPos = 0;
+        if(historyPos > 0) {
+            long totalLen = 0;
+            for(int i = 0; i < currentVideoSource.size(); i ++) {
+                totalLen += Long.parseLong(currentVideoSource.get(i).video);
+                if(totalLen >= historyPos) {
+                    segIndex = i;
+                    seekPos = Long.parseLong(currentVideoSource.get(i).video) - (totalLen - historyPos);
+                    break;
+                }
+            }
+        }
+
         videoPath = currentVideoSource.get(segIndex).url;
         title = entity.data.title;
-        play();
+        play(seekPos);
     }
 
     Runnable  mRunnable = new Runnable(){
@@ -391,9 +423,47 @@ public class VideoPlayerActivity extends BaseActivity {
         }
     };
 
+    private void getSubscribeQRCode() {
+        HttpRequest.get(HttpAddress.getSubscribe(videoId), null, VideoPlayerActivity.this, "getSubscribeBack", loading,VideoPlayerActivity.this,TrailerEntity.class);
+    }
+
+    public void getSubscribeBack(TrailerEntity entity ,String totalResult) {
+        if(entity == null || entity.status == false) {
+            playIndex++;
+            getVideoSourcePath();
+        } else {
+            subscribeLayout.setVisibility(View.VISIBLE);
+            HttpImageAsync.loadingImage(subscribeQRCode,entity.data.erweima);
+            countDownStart = COUNTDOWN_START;
+            subscribeCountDown.setText("" + countDownStart);
+            startCountDownTimer();
+        }
+    }
+
+    private void startCountDownTimer(){
+
+        subscribeLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(countDownStart > 1) {
+                    subscribeCountDown.setText(--countDownStart + "");
+                    subscribeLayout.postDelayed(this,1000);
+                } else {
+                    subscribeLayout.setVisibility(View.GONE);
+                    playIndex++;
+                    getVideoSourcePath();
+                }
+            }
+        },1000);
+    }
+
+    long firstChangeime;
+    int changeCount = 0;
+    long curPosition = 0;
+    Runnable runnable;
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        long postion = mVideoView.getCurrentPosition();
+        curPosition = mVideoView.getCurrentPosition();
         switch (keyCode) {
             //回车
             case KeyEvent.KEYCODE_ENTER:
@@ -411,8 +481,8 @@ public class VideoPlayerActivity extends BaseActivity {
             //左
             case KeyEvent.KEYCODE_DPAD_LEFT:
                 if(selectionList.getVisibility() == View.GONE) {
-                    postion = postion - 15000;
-                    mVideoView.seekTo(postion);
+                    curPosition = curPosition - 15000;
+                    mVideoView.seekTo(curPosition);
                     mediaController.setProgress();
                 }
                 break;
@@ -420,9 +490,28 @@ public class VideoPlayerActivity extends BaseActivity {
             //右
             case KeyEvent.KEYCODE_DPAD_RIGHT:
                 if(selectionList.getVisibility() == View.GONE) {
-                    postion = postion + 15000;
-                    mVideoView.seekTo(postion);
-                    mediaController.setProgress();
+                    if(changeCount == 0) {
+                        firstChangeime = System.currentTimeMillis();
+                        changeCount ++;
+                        runnable = new Runnable() {
+                            @Override
+                            public void run() {
+                                curPosition = curPosition + 15000 * changeCount;
+                                mVideoView.seekTo(curPosition);
+                                mediaController.setProgress();
+                            }
+                        };
+                        mVideoView.postDelayed(runnable,1000);//延迟一秒再seek
+                    } else if(System.currentTimeMillis() - firstChangeime < 1000) {//一秒以内连续按
+                        changeCount ++;
+                        mVideoView.removeCallbacks(runnable);
+                        mVideoView.postDelayed(runnable,1000);//延迟一秒再seek
+
+                    } else {//前后两次时间够长
+                        changeCount = 0;
+                        mVideoView.postDelayed(runnable,1000);//延迟一秒再seek
+                    }
+
                 }
                 break;
             //向上键
@@ -462,6 +551,10 @@ public class VideoPlayerActivity extends BaseActivity {
     }
 
     private void showSelectionLayer() {
+        if(bottomSelection.getVisibility() == View.VISIBLE) {
+            bottomSelection.setVisibility(View.GONE);
+            return;
+        }
         mediaController.hide();
         bottomSelection.setVisibility(View.VISIBLE);
         selectionList.setVisibility(View.VISIBLE);
@@ -492,7 +585,9 @@ public class VideoPlayerActivity extends BaseActivity {
         super.onPause();
         MobclickAgent.onPause(this);
         //保存进度
-//      ConfigPreferences.getInstance(VideoPlayerActivity.this).setVideoPostion(mVideoView.getCurrentPosition());
+        if(!TextUtils.isEmpty(videoId) && mVideoView != null) {
+            ConfigPreferences.getInstance(VideoPlayerActivity.this).setVideoPostion(videoId, mVideoView.getCurrentPosition());
+        }
     }
 
     @Override
@@ -519,6 +614,18 @@ public class VideoPlayerActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
+    }
+
+    public void updatePlayTime() {
+        if(videoList == null || videoList.size() == 0 || currentVideoSource == null) {
+            return;
+        }
+        long totalTime = mVideoView.getCurrentPosition();//当前片段已播放时间,单位毫秒
+        for(int i = 0; i < segIndex; i ++) {
+            totalTime += Long.parseLong(currentVideoSource.get(i).video);//之前片段已播放时间
+        }
+        ConfigPreferences.getInstance(VideoPlayerActivity.this).setVideoPostion(videoId,totalTime);//保存单位也是毫秒
+        HttpRequest.get(HttpAddress.getUpdatePlayTimeUrl(videoId,totalTime / 1000), null, VideoPlayerActivity.this, "getPathResult", loading,VideoPlayerActivity.this,BaseEntity.class);
     }
 
     private BroadcastReceiver MyNetErrorReceiver =new BroadcastReceiver(){

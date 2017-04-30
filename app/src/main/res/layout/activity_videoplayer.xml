@@ -34,10 +34,10 @@
        >
     </TextView>
         <Button
-            android:id="@+id/back"
+            android:id="@+id/button_retry"
             android:layout_width="80dp"
             android:layout_height="30dp"
-            android:text="返回"
+            android:text="@string/retry"
             android:textColor="@drawable/course_btn_play_color"
             android:textSize="18sp"
             android:layout_marginTop="10dp"
@@ -165,5 +165,41 @@
             android:paddingRight="@dimen/w_78"
             android:listSelector="@android:color/transparent" />
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/subscribe_layout"
+        android:layout_width="@dimen/w_600"
+        android:layout_height="@dimen/w_600"
+        android:layout_centerInParent="true"
+        android:background="#A9000000"
+        android:visibility="gone"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/subscrib_top"
+            android:text="微信扫一扫关注作者"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textSize="@dimen/w_60"
+            android:layout_marginTop="@dimen/h_40"
+            android:layout_marginBottom="@dimen/h_40"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/trans_white"/>
+        <TextView
+            android:id="@+id/countdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5"
+            android:layout_alignParentRight="true"
+            android:textColor="#FF0000"/>
+        <ImageView
+            android:id="@+id/qrcode_image"
+            android:layout_width="@dimen/w_424"
+            android:layout_height="@dimen/w_424"
+            android:layout_gravity="center_horizontal"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/h_36"
+            android:layout_below="@id/subscrib_top">
+        </ImageView>
+    </RelativeLayout>
 
 </RelativeLayout>

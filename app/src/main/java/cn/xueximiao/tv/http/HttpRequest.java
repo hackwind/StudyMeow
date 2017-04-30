@@ -81,6 +81,9 @@ public class HttpRequest {
 				if (view != null) {
 					view.setVisibility(View.GONE);
 				}
+				if(mothod == null) {
+					return;
+				}
 				Log.d("hjs","onSuccess:" + result);
 				Gson gson = new Gson();
 				BaseEntity entity = gson.fromJson(result,BaseEntity.class);
