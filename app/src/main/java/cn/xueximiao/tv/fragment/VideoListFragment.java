@@ -27,7 +27,7 @@ import reco.frame.tv.view.TvGridView;
  */
 
 public class VideoListFragment extends Fragment {
-
+    private final static int ROW_SIZE = 5;
     private int page = 1;
     private int total = 0;
     public static int PageSize = 50;
@@ -44,6 +44,7 @@ public class VideoListFragment extends Fragment {
     private GridViewAdapter gridViewAdapter;
     private View rootView;
     private View currentMenuView;
+    private OnGridItemSelectListener itemSelectListener;
 
     public VideoListFragment() {
 
@@ -113,11 +114,19 @@ public class VideoListFragment extends Fragment {
         gridView.setOnItemSelectListener(new TvGridView.OnItemSelectListener() {
             @Override
             public void onItemSelect(View item, int position) {
-
+                if(itemSelectListener != null) {
+                    int rowCount = total % ROW_SIZE == 0 ? total / ROW_SIZE : total / ROW_SIZE + 1;
+                    int row =  position / ROW_SIZE + 1;
+                    itemSelectListener.onItemSelect(row,rowCount);
+                }
             }
         });
 
 
+    }
+
+    public void setOnGridItemSelectListener(OnGridItemSelectListener listener) {
+        this.itemSelectListener = listener;
     }
 
     private void getPageData() {
@@ -140,14 +149,17 @@ public class VideoListFragment extends Fragment {
         }
 
         total = entity.data.total;
-//        if (videoList == null || videoList.size() == 0) {
-//            totalRowCount = entity.data.total % ROW_SIZE == 0 ? entity.data.total / ROW_SIZE : entity.data.total / ROW_SIZE + 1;
-//            pageCountView.setText("1/" + totalRowCount);
-//        }
+
         gridView.setVisibility(View.VISIBLE);
         if (videoList == null) { //第一页加载
             videoList = entity.data.rows;
             setData();
+
+            if(itemSelectListener != null) {
+                int rowCount = total % ROW_SIZE == 0 ? total / ROW_SIZE : total / ROW_SIZE + 1;
+                int row = 1;
+                itemSelectListener.onItemSelect(row, rowCount);
+            }
         } else {//其他页加载
             videoList.addAll(entity.data.rows);
             gridViewAdapter.notifyDataSetChanged();
@@ -169,5 +181,9 @@ public class VideoListFragment extends Fragment {
                     return page;
                 }
             });
+        }
+
+        public interface OnGridItemSelectListener {
+            public void onItemSelect(int row,int rowCount);
         }
 }

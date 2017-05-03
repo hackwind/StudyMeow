@@ -56,7 +56,6 @@ import static cn.xueximiao.tv.util.Util.count;
  * 播放器
  */
 public class VideoPlayerActivity extends BaseActivity {
-    private final static int COUNTDOWN_START = 5;
     private final static int PAGE_SIZE = 10;
     //视频路径
     private String videoPath;
@@ -113,10 +112,11 @@ public class VideoPlayerActivity extends BaseActivity {
     private VideoPagerPresenter pagerPresenter;
     private GeneralAdapter pagerAdapter;
 
-    private RelativeLayout subscribeLayout;//订阅作者的二维码层
-    private TextView subscribeCountDown;
+    private RelativeLayout subscribeLayout;//一集播放完毕订阅作者的二维码层
     private ImageView subscribeQRCode;
-    private int countDownStart = COUNTDOWN_START;
+
+    private RelativeLayout pauseLayout;//暂停时订阅作者的二维码层
+    private ImageView pauseQRCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -279,8 +279,10 @@ public class VideoPlayerActivity extends BaseActivity {
         selectionPages = (RecyclerViewTV)findViewById(R.id.video_pages) ;
 
         subscribeLayout = (RelativeLayout)findViewById(R.id.subscribe_layout);
-        subscribeCountDown = (TextView) subscribeLayout.findViewById(R.id.countdown);
         subscribeQRCode = (ImageView)  subscribeLayout.findViewById(R.id.qrcode_image);
+
+        pauseLayout = (RelativeLayout)findViewById(R.id.pause_layout);
+        pauseQRCode = (ImageView) pauseLayout.findViewById(R.id.pause_qrcode_image);
 
         butttonRetry.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -393,7 +395,6 @@ public class VideoPlayerActivity extends BaseActivity {
         currentVideoSource = entity.data.videoSource;
         segIndex = 0;
         long  historyPos = ConfigPreferences.getInstance(this).getVideoPostion(videoId);
-//        Log.d("hjs","get history position:" + historyPos);
         long seekPos = 0;
         if(historyPos > 0) {
             long totalLen = 0;
@@ -434,27 +435,21 @@ public class VideoPlayerActivity extends BaseActivity {
         } else {
             subscribeLayout.setVisibility(View.VISIBLE);
             HttpImageAsync.loadingImage(subscribeQRCode,entity.data.erweima);
-            countDownStart = COUNTDOWN_START;
-            subscribeCountDown.setText("" + countDownStart);
-            startCountDownTimer();
+
         }
     }
 
-    private void startCountDownTimer(){
+    private void getPauseQRCode() {
+        HttpRequest.get(HttpAddress.getSubscribe(videoId), null, VideoPlayerActivity.this, "getPauseQRCodeBack", loading,VideoPlayerActivity.this,TrailerEntity.class);
+    }
 
-        subscribeLayout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(countDownStart > 1) {
-                    subscribeCountDown.setText(--countDownStart + "");
-                    subscribeLayout.postDelayed(this,1000);
-                } else {
-                    subscribeLayout.setVisibility(View.GONE);
-                    playIndex++;
-                    getVideoSourcePath();
-                }
-            }
-        },1000);
+    public void getPauseQRCodeBack(TrailerEntity entity ,String totalResult) {
+        if(entity == null || entity.status == false) {
+
+        } else {
+            pauseLayout.setVisibility(View.VISIBLE);
+            HttpImageAsync.loadingImage(pauseQRCode,entity.data.erweima);
+        }
     }
 
     long firstChangeime;
@@ -463,6 +458,12 @@ public class VideoPlayerActivity extends BaseActivity {
     Runnable runnable;
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(subscribeLayout.getVisibility() == View.VISIBLE) {//关注页面显示，按任意键播放下一集
+            subscribeLayout.setVisibility(View.GONE);
+            playIndex++;
+            getVideoSourcePath();
+            return true;
+        }
         curPosition = mVideoView.getCurrentPosition();
         switch (keyCode) {
             //回车
@@ -471,9 +472,11 @@ public class VideoPlayerActivity extends BaseActivity {
                     if (isPlay) {
                         mVideoView.pause();
                         isPlay = false;
+                        getPauseQRCode();
                     } else {
                         mVideoView.start();
                         isPlay = true;
+                        pauseLayout.setVisibility(View.GONE);
                     }
                 }
                 break;
@@ -537,9 +540,11 @@ public class VideoPlayerActivity extends BaseActivity {
                 if (isPlay) {
                     mVideoView.pause();
                     isPlay = false;
+                    getPauseQRCode();
                 } else {
                     mVideoView.start();
                     isPlay = true;
+                    pauseLayout.setVisibility(View.GONE);
                 }
                 break;
             case KeyEvent.KEYCODE_MENU:
@@ -585,7 +590,7 @@ public class VideoPlayerActivity extends BaseActivity {
         super.onPause();
         MobclickAgent.onPause(this);
         //保存进度
-        if(!TextUtils.isEmpty(videoId) && mVideoView != null) {
+        if(!TextUtils.isEmpty(videoId) && mVideoView != null && mVideoView.getCurrentPosition() != 0) {
             ConfigPreferences.getInstance(VideoPlayerActivity.this).setVideoPostion(videoId, mVideoView.getCurrentPosition());
         }
     }
@@ -624,8 +629,10 @@ public class VideoPlayerActivity extends BaseActivity {
         for(int i = 0; i < segIndex; i ++) {
             totalTime += Long.parseLong(currentVideoSource.get(i).video);//之前片段已播放时间
         }
-        ConfigPreferences.getInstance(VideoPlayerActivity.this).setVideoPostion(videoId,totalTime);//保存单位也是毫秒
-        HttpRequest.get(HttpAddress.getUpdatePlayTimeUrl(videoId,totalTime / 1000), null, VideoPlayerActivity.this, "getPathResult", loading,VideoPlayerActivity.this,BaseEntity.class);
+        if(totalTime != 0) {
+            ConfigPreferences.getInstance(VideoPlayerActivity.this).setVideoPostion(videoId, totalTime);//保存单位也是毫秒
+            HttpRequest.get(HttpAddress.getUpdatePlayTimeUrl(videoId, totalTime / 1000), null, VideoPlayerActivity.this, "getPathResult", loading, VideoPlayerActivity.this, BaseEntity.class);
+        }
     }
 
     private BroadcastReceiver MyNetErrorReceiver =new BroadcastReceiver(){

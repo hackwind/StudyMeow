@@ -205,7 +205,12 @@ public class VideoListActivity extends FragmentActivity {
         fragments = new VideoListFragment[msg.size()];
         for (int i = 0; i < msg.size(); i++) {
             VideoListFragment videoListFragment = VideoListFragment.newInstance(msg.get(i).catid,msg.get(i).catname,msg.get(i).icon);
-
+            videoListFragment.setOnGridItemSelectListener(new VideoListFragment.OnGridItemSelectListener() {
+                @Override
+                public void onItemSelect(int row, int rowCount) {
+                    pageCountView.setText(row + "/" + rowCount);
+                }
+            });
             if (msg.get(i).catid.equals(catId)) {
                 Log.d("hjs","match the catid position:" + i);
                 currentTabIndex = i;

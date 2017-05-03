@@ -83,15 +83,11 @@
         </meta-data>
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="58732e8e7666133921000e98" >
+            android:value="59098696f29d984526002043" >
         </meta-data>
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="Leshi" >
-        </meta-data>
-        <meta-data
-            android:name="UMENG_MESSAGE_SECRET"
-            android:value="0feb07e2191266c4ca8f9457225c0e0f">
+            android:value="xueximiao" >
         </meta-data>
     </application>
 </manifest>

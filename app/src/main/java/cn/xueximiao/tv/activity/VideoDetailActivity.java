@@ -76,6 +76,7 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
     private String orderNo;
     private Timer timer;
     private boolean checkingSubscribe = false;
+    private boolean needBuy = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,10 +192,16 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
         videoList.setOnItemClickListener(new RecyclerViewTV.OnItemClickListener() {
             @Override
             public void onItemClick(RecyclerViewTV parent, View itemView, int position) {
-                Intent intent = new Intent(VideoDetailActivity.this,VideoPlayerActivity.class);
-                intent.putExtra("videodetail",strVideoDetail);
-                intent.putExtra("index",position);
-                startActivity(intent);
+                if(needBuy) {
+                    checkingSubscribe = true;
+                    buyContainer.setVisibility(View.VISIBLE);
+                    getBuyQRCode();
+                } else {
+                    Intent intent = new Intent(VideoDetailActivity.this, VideoPlayerActivity.class);
+                    intent.putExtra("videodetail", strVideoDetail);
+                    intent.putExtra("index", position);
+                    startActivity(intent);
+                }
             }
         });
         if(list != null && list.size() > 0) {
@@ -218,12 +225,14 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
         HttpImageAsync.loadingImage(thumbImage,entity.data.thumb);
         thumbName.setText(entity.data.title);
         if(entity.data.money == 0 || entity.data.validityDay > 0) {
+            needBuy = false;
             buttonBuy.setVisibility(View.GONE);
             buttonPlay.setVisibility(View.VISIBLE);
             if(entity.data.money > 0) {
                 bugYet.setVisibility(View.VISIBLE);
             }
         } else {
+            needBuy = true;
             buttonPlay.setVisibility(View.GONE);
             buttonBuy.setVisibility(View.VISIBLE);
             bugYet.setVisibility(View.GONE);
@@ -235,7 +244,9 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
         thumbDesc.setText(entity.data.descript);
         author.setText(entity.data.author);
         updateTime.setText(entity.data.inputtime);
-        sourceFrom.setText("来源:" + entity.data.source);
+        if(!TextUtils.isEmpty(entity.data.source)) {
+            sourceFrom.setText("来源:" + entity.data.source);
+        }
         if(isCollect = entity.data.isCollection) {
             iconCollect.setImageResource(R.drawable.collect_yet);
         } else {
@@ -369,10 +380,11 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
     public void checkSubScribeBack(BaseEntity entity,String result) {
         if(entity != null && entity.status) {//支付成功
             checkingSubscribe = false;
-            buttonBuy.setVisibility(View.GONE);
-            buttonPlay.setVisibility(View.VISIBLE);
-            bugYet.setVisibility(View.VISIBLE);
-            buyContainer.setVisibility(View.GONE);
+//            buttonBuy.setVisibility(View.GONE);
+//            buttonPlay.setVisibility(View.VISIBLE);
+//            bugYet.setVisibility(View.VISIBLE);
+//            buyContainer.setVisibility(View.GONE);
+            getVideoDetail();//重新获取一次
         } else {
             if(buyContainer.getVisibility() == View.VISIBLE) {
                 startTimer();
