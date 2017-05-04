@@ -18,10 +18,12 @@ public class VideoListPresenter extends OpenPresenter {
     private List<VideoDetailEntity.Video> list;
     private GeneralAdapter mAdapter;
     private int bgResId;
+    private int freeStatus = 1;//1 免费,2,收费,3,已购买
 
-    public VideoListPresenter(List<VideoDetailEntity.Video> list,int viewBackgroundResource) {
+    public VideoListPresenter(List<VideoDetailEntity.Video> list,int viewBackgroundResource,int freeStatus) {
         this.list = list;
         this.bgResId = viewBackgroundResource;
+        this.freeStatus = freeStatus;
     }
 
     public void setList(List<VideoDetailEntity.Video> list) {
@@ -55,10 +57,12 @@ public class VideoListPresenter extends OpenPresenter {
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         GridViewHolder gridViewHolder = (GridViewHolder) viewHolder;
         gridViewHolder.title.setText(list.get(position).title);
-        if("99".equals(list.get(position).status)) {//可以观看
+        if(freeStatus == 1) {//可以观看
             gridViewHolder.free.setText(R.string.free);
-        } else {
+        } else if(freeStatus == 2){
             gridViewHolder.free.setText(R.string.charge);
+        } else if(freeStatus == 3) {
+            gridViewHolder.free.setText(R.string.buy_yet);
         }
     }
 

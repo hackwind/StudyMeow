@@ -117,6 +117,7 @@ public class VideoPlayerActivity extends BaseActivity {
 
     private RelativeLayout pauseLayout;//暂停时订阅作者的二维码层
     private ImageView pauseQRCode;
+    private int freeStatus = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +134,14 @@ public class VideoPlayerActivity extends BaseActivity {
         source = entity.data.source;
         catId = entity.data.id;
         videoList = entity.data.videoList;//专辑列表
+
+        if(entity.data.money == 0) {
+            freeStatus = 1;
+        } else if(entity.data.validityDay > 0) {
+            freeStatus = 3;
+        } else {
+            freeStatus = 2;
+        }
 
         //网络连接失败
         IntentFilter intentFilter = new IntentFilter();
@@ -302,7 +311,8 @@ public class VideoPlayerActivity extends BaseActivity {
         selectionList.setFocusable(true);
         selectionList.addItemDecoration(new SpaceItemDecoration((int)getResources().getDimension(R.dimen.w_16)));
         subVideoList = videoList.subList(0,PAGE_SIZE  > videoList.size() ? videoList.size() : PAGE_SIZE );
-        listPresenter = new VideoListPresenter(subVideoList,R.drawable.selector_video_play_list);
+
+        listPresenter = new VideoListPresenter(subVideoList,R.drawable.selector_video_play_list,freeStatus);
         listAdapter = new GeneralAdapter(listPresenter);
         selectionList.setAdapter(listAdapter);
         selectionList.setOnItemListener(new RecyclerViewTV.OnItemListener() {

@@ -157,7 +157,7 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
         buttonBuy.setOnClickListener(this);
     }
 
-    private void initVideoListRecyclerView() {
+    private void initVideoListRecyclerView(int freeStatus) {
         LinearLayoutManager gridlayoutManager = new LinearLayoutManager(this); // 解决快速长按焦点丢失问题.
         gridlayoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
         gridlayoutManager.setSmoothScrollbarEnabled(false);
@@ -165,7 +165,7 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
         videoList.setFocusable(false);
         videoList.setSelectedItemAtCentered(true); // 设置item在中间移动.
         videoList.addItemDecoration(new SpaceItemDecoration((int)getResources().getDimension(R.dimen.w_20)));
-        presenter = new VideoListPresenter(list,R.drawable.selector_video_detail_list);
+        presenter = new VideoListPresenter(list,R.drawable.selector_video_detail_list,freeStatus);
         generalAdapter = new GeneralAdapter(presenter);
         videoList.setAdapter(generalAdapter);
 
@@ -254,7 +254,15 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
         }
 
         list = entity.data.videoList;
-        initVideoListRecyclerView();
+        int freeStatus = 1;
+        if(entity.data.money == 0) {
+            freeStatus = 1;
+        } else if(entity.data.validityDay > 0) {
+            freeStatus = 3;
+        } else {
+            freeStatus = 2;
+        }
+        initVideoListRecyclerView(freeStatus);
 
     }
 

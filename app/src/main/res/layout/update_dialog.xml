@@ -64,6 +64,8 @@
                 android:text="取消"
                 android:visibility="visible"
                 android:textColor="#444444"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:background="@drawable/left_menu_bg_selector"
                 android:textSize="14sp" />
 
@@ -78,6 +80,8 @@
                 android:gravity="center"
                 android:text="升级"
                 android:textColor="@color/white"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:background="@drawable/left_menu_bg_selector"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -102,6 +106,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:textSize="16sp" />
 
         <ProgressBar
@@ -129,6 +135,8 @@
             android:paddingBottom="10dp"
             android:paddingRight="50dp"
             android:text="取消"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:background="@drawable/left_menu_bg_selector"
             android:textColor="@color/white" />
     </LinearLayout>

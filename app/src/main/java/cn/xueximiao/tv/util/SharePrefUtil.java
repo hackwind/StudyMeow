@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -26,10 +27,12 @@ public class SharePrefUtil {
 	public static String KEY_THUMB = "thumb";
 	public static String KEY_GROUP_ID = "group";
 	public static String KEY_REG_DATE = "regdate";
+	public static String KEY_UPDATE_TIME = "updatetime";
 
 	private final static String SERIALPORT_NAME = "android_serialport_api.sample_preferences";
 	private static SharedPreferences sp;
 	private static SharedPreferences serialport_sp;
+
 
 	/**
 	 * 保存布尔值
@@ -52,6 +55,7 @@ public class SharePrefUtil {
 	 * @param value
 	 */
 	public static void saveString(Context context, String key, String value) {
+		Log.d("hjs","save string:" + value);
 		if (sp == null)
 			sp = context.getSharedPreferences(SP_NAME, 0);
 		sp.edit().putString(key, value).commit();

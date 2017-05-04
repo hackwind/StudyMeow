@@ -106,9 +106,8 @@ public class SettingActivity extends BaseActivity {
     }
 
     private void checkUpdate() {
-        if(updateUtil == null) {
-            updateUtil = new VersionCheckUtils(this);
-        }
+        updateUtil = new VersionCheckUtils(this,false);
+
         updateUtil.checkFromServer();
     }
 

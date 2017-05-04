@@ -17,6 +17,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +48,7 @@ import java.util.TimerTask;
 import cn.xueximiao.tv.adapter.CategoryRecyclerViewPresenter;
 import cn.xueximiao.tv.adapter.RecommendPresenter;
 import cn.xueximiao.tv.adapter.TreeMenuPresenter;
+import cn.xueximiao.tv.util.VersionCheckUtils;
 
 public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemListener{
     private final static int ROW_SIZE = 6;
@@ -55,6 +57,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
     private int keyBackClickCount = 0;
     private MainUpView mainUpView1;
     private View oldView;
+    private ProgressBar progressBar;
 
     private RecyclerViewTV rvMy;
     private RecyclerViewTV rvCategory;
@@ -64,10 +67,9 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
     private GeneralAdapter mCategoryGeneralAdapter;
     private RecyclerViewBridge mRecyclerViewBridge;
     private ScrollView scrollView;
-    private TextView txtMy;
-    private TextView txtCategory;
     private ImageView userIcon;
     private TextView userNick;
+    private VersionCheckUtils versionCheckUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +78,11 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
 
         initViews();
         getToken();
+        checkUpdate();
+    }
+    private void checkUpdate() {
+        versionCheckUtils = new VersionCheckUtils(this,true);
+        versionCheckUtils.checkFromServer();
     }
     private void getToken() {
         if(TextUtils.isEmpty(SharePrefUtil.getString(this,SharePrefUtil.KEY_USER_ID,""))) { // 还未登陆
@@ -92,7 +99,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
     }
 
     private void getRecommend() {
-        HttpRequest.get(HttpAddress.getRecommend(),null,MainActivity.this,"getRecommendBack",null,this, RecommendEntity.class);
+        HttpRequest.get(HttpAddress.getRecommend(),null,MainActivity.this,"getRecommendBack",progressBar,this, RecommendEntity.class);
     }
 
     /** 获取token回调 */
@@ -123,8 +130,8 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
 
     private void initViews(){
         scrollView = (ScrollView)findViewById(R.id.content_scroll_view);
-        txtMy = (TextView)findViewById(R.id.text_my);
-        txtCategory = (TextView)findViewById(R.id.text_category);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
         initLoginView();
         initLeftMenu();
         initRightViews();
@@ -247,8 +254,6 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
     private void initRightViews(){
         rvMy = (RecyclerViewTV)findViewById(R.id.recyclerview_my);
         rvCategory = (RecyclerViewTV)findViewById(R.id.recyclerview_category);
-        txtMy = (TextView)findViewById(R.id.text_my);
-        txtCategory = (TextView)findViewById(R.id.text_category);
     }
 
     private void initMyRecyclerViewGridLayout(final RecommendEntity entity) {

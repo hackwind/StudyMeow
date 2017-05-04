@@ -28,6 +28,8 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import cn.xueximiao.tv.R;
@@ -45,7 +47,7 @@ import cn.xueximiao.tv.http.HttpRequest;
  */
 public class VersionCheckUtils {
     private final String TAG = VersionCheckUtils.class.getSimpleName();
-    private final String DESTFILE_PATH = Environment.getExternalStorageDirectory().getPath() + "/android/data/+" + MeowApplication.getContext().getPackageName() + "/apk/";
+    private final String DESTFILE_PATH = Environment.getExternalStorageDirectory().getPath() + "/android/data/" + MeowApplication.getContext().getPackageName() + "/apk/";
     private final String DESTFILE_NAME = "xueximiao.apk";//默认保存的文件名，实际会先根据url截取最后一个"/"之后的部分作为文件名
     private final static int WHAT_PERCENT = 100;
     private final static int WHAT_DOWNLOAD_FAIL = WHAT_PERCENT + 1;
@@ -60,15 +62,15 @@ public class VersionCheckUtils {
     private boolean isMustUpdate;
     private String fileName;
 
-    private String md5;
+    private boolean isFirstPage = false;//是否是首页在调用，首页不需要每次都弹出对话框
 
-    public static int requestStatus = 0;//0:还没请求;1.请求中；2.请求成功；3.请求失败
 
     /**
      * @param context
      */
-    public VersionCheckUtils(Context context) {
+    public VersionCheckUtils(Context context,boolean isFirstPage) {
         this.context = context;
+        this.isFirstPage = isFirstPage;
     }
 
     /**
@@ -93,12 +95,11 @@ public class VersionCheckUtils {
     }
 
     public void checkFromServer() {
-            if (requestStatus == 1 || requestStatus == 2) {
-                Log.d(TAG, "is requesting or request return success");
+            String  updateTime = SharePrefUtil.getString(context,SharePrefUtil.KEY_UPDATE_TIME,"");
+            String today = getTodayDay();
+            if(isFirstPage && today.equals(updateTime)){//首页今天已经取消过一次更新对话框
                 return;
             }
-
-            requestStatus = 1;
             HttpRequest.get(HttpAddress.getUpdateUrl(), null, VersionCheckUtils.this, "checkVersionBack", null, context, VersionCheckEntity.class);
         }
 
@@ -120,6 +121,7 @@ public class VersionCheckUtils {
                 }
             } else if(entity.status == false){
                 //已经是最新
+                ToastUtil.showShort(context,"已经是最新版本");
             }
 
     }
@@ -138,9 +140,29 @@ public class VersionCheckUtils {
             contentTv.setText(content);
             contentTv.setMovementMethod(ScrollingMovementMethod.getInstance());
             final Button cancelBtn = (Button) root.findViewById(R.id.leftbutton);
-            Button exitBtn = (Button) root.findViewById(R.id.cancel);
+            final Button exitBtn = (Button) root.findViewById(R.id.cancel);
             ((TextView) root.findViewById(R.id.title)).setText("检测到新版本".concat(version_name));
             ((TextView) root.findViewById(R.id.title2)).setText("升级".concat(version_name));
+            cancelBtn.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean focus) {
+                    if(focus) {
+                        view.setSelected(true);
+                    } else {
+                        view.setSelected(false);
+                    }
+                }
+            });
+            exitBtn.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean focus) {
+                    if(focus) {
+                        view.setSelected(true);
+                    } else {
+                        view.setSelected(false);
+                    }
+                }
+            });
             if (isMust) {
                 cancelBtn.setVisibility(View.GONE);
                 nbDialog.setCanceledOnTouchOutside(false);
@@ -168,6 +190,7 @@ public class VersionCheckUtils {
                     @Override
                     public void onClick(View v) {
                         nbDialog.dismiss();
+                        SharePrefUtil.saveString(context,SharePrefUtil.KEY_UPDATE_TIME,getTodayDay());
                     }
                 });
                 exitBtn.setOnClickListener(
@@ -176,6 +199,7 @@ public class VersionCheckUtils {
                               public void onClick(View v) {
                                   manager.remove(myDownloadReference);
                                   nbDialog.dismiss();
+                                  SharePrefUtil.saveString(context,SharePrefUtil.KEY_UPDATE_TIME,getTodayDay());
                               }
                         }
                 );
@@ -187,12 +211,24 @@ public class VersionCheckUtils {
                 },200);
             }
             final Button commitBtn = (Button) root.findViewById(R.id.rightbutton);
+            commitBtn.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean focus) {
+                    if(focus) {
+                        view.setSelected(true);
+                    } else {
+                        view.setSelected(false);
+                    }
+                }
+            });
+            commitBtn.setNextFocusLeftId(cancelBtn.getId());
+            cancelBtn.setNextFocusRightId(commitBtn.getId());
             commitBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     root.findViewById(R.id.msg1).setVisibility(View.GONE);
                     root.findViewById(R.id.msg2).setVisibility(View.VISIBLE);
-                    String localPath = queryFinishedDownloadTask(url,md5);
+                    String localPath = queryFinishedDownloadTask(url);
                     if(localPath != null) {
                         nbDialog.dismiss();
                         installAPK(localPath);
@@ -200,19 +236,29 @@ public class VersionCheckUtils {
                             exit();
                         }
                     } else {
-                        downLoadAPK(url,md5);
+                        downLoadAPK(url);
+                        exitBtn.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                exitBtn.setSelected(true);
+                                exitBtn.requestFocus();
+                            }
+                        },200);
                     }
 
                 }
             });
+
+            nbDialog.show();
+            nbDialog.setContentView(root);
+
             commitBtn.postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    commitBtn.setSelected(true);
                     commitBtn.requestFocus();
                 }
             },200);
-            nbDialog.show();
-            nbDialog.setContentView(root);
         }
 
         if (!nbDialog.isShowing()) {
@@ -230,7 +276,7 @@ public class VersionCheckUtils {
     private DownloadChangeObserver downloadObserver;
     DownloadManager manager;
 
-    protected void downLoadAPK(String url,String md5) {
+    protected void downLoadAPK(String url) {
         try {
             Uri uri = Uri.parse(url);
             DownloadManager.Request down = new DownloadManager.Request(uri);
@@ -249,9 +295,6 @@ public class VersionCheckUtils {
             File file = new File(DESTFILE_PATH + fileName);
             Uri dstUri = Uri.fromFile(file);
             down.setDestinationUri(dstUri);
-            if(!TextUtils.isEmpty(md5)) {
-                down.setDescription(md5.toLowerCase());
-            }
             // 将下载请求放入队列
             myDownloadReference = manager.enqueue(down);
             myDownloadUrl = url;
@@ -296,11 +339,15 @@ public class VersionCheckUtils {
     };
 
     private void updatePercent(Message msg) {
+        if(msg.arg2 == 0) {
+            return;
+        }
         int progress = msg.arg1 * 100 / msg.arg2;
         ((ProgressBar) root.findViewById(R.id.progress)).setProgress(progress);
         ((TextView) root.findViewById(R.id.progressnum)).setText(progress + "%");
         if (msg.arg1 == msg.arg2) {
             nbDialog.dismiss();
+            step(myDownloadReference);
         }
     }
 
@@ -376,11 +423,11 @@ public class VersionCheckUtils {
 
 
     public void step(long reference) {
-        if (reference != myDownloadReference || myDownloadUrl == null || md5 == null)
+        if (reference != myDownloadReference || myDownloadUrl == null)
             return;
         String path = "file://" + DESTFILE_PATH + fileName;
 
-        String localPath = queryFinishedDownloadTask(myDownloadUrl,md5);
+        String localPath = queryFinishedDownloadTask(myDownloadUrl);
         if(localPath != null) {
             nbDialog.dismiss();
             installAPK(localPath);
@@ -412,7 +459,7 @@ public class VersionCheckUtils {
      * @param url
      * @return
      */
-    private String queryFinishedDownloadTask(String url,String md5) {
+    private String queryFinishedDownloadTask(String url) {
         if(url == null) {
             return null;
         }
@@ -433,7 +480,7 @@ public class VersionCheckUtils {
                     String uri = c.getString(uriIdx);
                     String des = c.getString(desIdx);
                     Log.d(TAG, "uri:" + uri);
-                    if(!url.equals(uri) || !des.equals(md5)) {
+                    if(!url.equals(uri)) {
                         Log.d(TAG,"url not match or md5 not match.");
                         c.moveToNext();
                         continue;
@@ -481,6 +528,10 @@ public class VersionCheckUtils {
         if(nbDialog != null) {
             nbDialog.dismiss();
         }
-        requestStatus = 0;
+    }
+
+    private static String getTodayDay() {
+        SimpleDateFormat format = new SimpleDateFormat("MM-dd");
+        return format.format(new Date(System.currentTimeMillis()));
     }
 }

@@ -170,7 +170,7 @@
         android:id="@+id/subscribe_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#F2000000"
+        android:background="#CC000000"
         android:visibility="gone"
         android:gravity="center_horizontal|center_vertical"
         android:orientation="vertical">
@@ -225,7 +225,7 @@
         android:id="@+id/pause_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#F2000000"
+        android:background="#CC000000"
         android:visibility="gone"
         android:gravity="bottom|right">
         <ImageView
