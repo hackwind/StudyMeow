@@ -36,6 +36,8 @@ public class WebActivity extends BaseActivity {
     private void initView() {
         pbProgress = (ProgressBar) findViewById(R.id.pb_progress);
         webview = (WebView)findViewById(R.id.webview);
+        webview.setBackgroundColor(0);
+// //       webview.getBackground().setAlpha(0);//这个在5.1以及以后系统会报空指针错误
         WebSettings settings = webview.getSettings();
         settings.setDefaultTextEncodingName("UTF-8");
         settings.setSupportZoom(true);

@@ -100,7 +100,7 @@ public class VideoListActivity extends FragmentActivity {
         });
         menuAdapter = new MenuAdapter(VideoListActivity.this, categoryEntity.data.category);
         leftMenu.setAdapter(menuAdapter);
-        leftMenu.setSelection(currentTabIndex);
+
         initFragments(categoryEntity.data.category);
     }
 
@@ -219,5 +219,6 @@ public class VideoListActivity extends FragmentActivity {
             }
             fragments[i] = videoListFragment;
         }
+        leftMenu.setSelection(currentTabIndex);
     }
 }

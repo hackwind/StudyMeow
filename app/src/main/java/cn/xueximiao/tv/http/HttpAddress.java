@@ -183,4 +183,11 @@ public class HttpAddress {
     public static String getSubscribe(String id) {
         return  WEB_URL+"m=member&c=app2&a=trailer&partsid=" + id + "&auth=" + auth;
     }
+
+    /**
+     * 获取上报播放错误
+     */
+    public static String getReportErrorUrl(String partsid) {
+        return  WEB_URL+"m=member&c=app2&a=sourceError&partsid=" + partsid + "&auth=" + auth;
+    }
 }

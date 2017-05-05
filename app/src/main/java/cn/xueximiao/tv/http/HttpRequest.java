@@ -3,6 +3,7 @@ package cn.xueximiao.tv.http;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -14,6 +15,7 @@ import cn.xueximiao.tv.util.LogUtil;
 import cn.xueximiao.tv.util.ToastUtil;
 import cn.xueximiao.tv.util.Util;
 
+import org.w3c.dom.Text;
 import org.xutils.common.Callback;
 import org.xutils.common.Callback.CommonCallback;
 import org.xutils.http.RequestParams;
@@ -89,6 +91,9 @@ public class HttpRequest {
 				BaseEntity entity = gson.fromJson(result,BaseEntity.class);
 				T responseResult = gson.fromJson(result, clazz);
 				Class objClass = obj.getClass();
+				if(TextUtils.isEmpty(mothod)) {
+					return;
+				}
 				Method method = null;
 				try {
 					method = objClass.getDeclaredMethod(mothod, clazz,String.class);

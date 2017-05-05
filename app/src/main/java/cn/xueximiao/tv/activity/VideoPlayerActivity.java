@@ -118,6 +118,7 @@ public class VideoPlayerActivity extends BaseActivity {
     private RelativeLayout pauseLayout;//暂停时订阅作者的二维码层
     private ImageView pauseQRCode;
     private int freeStatus = 1;
+    private int pageIndex = 0;//集数分页，当前所在页
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,6 +206,7 @@ public class VideoPlayerActivity extends BaseActivity {
             mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
                 @Override
                 public boolean onError(MediaPlayer mp, int what, int extra) {
+                    reportError();
                     mVideo_error.setVisibility(View.VISIBLE);
                     loading.setVisibility(View.GONE);
                     if (what == 200) {
@@ -251,7 +253,7 @@ public class VideoPlayerActivity extends BaseActivity {
                         //缓冲完成继续播放
                         case MediaPlayer.MEDIA_INFO_BUFFERING_END:
                             linear_buffer.setVisibility(View.GONE);
-                            if(needResume){
+                            if(needResume && isPlay){
                                mVideoView.start();
                             }
                             break;
@@ -322,6 +324,9 @@ public class VideoPlayerActivity extends BaseActivity {
 
             @Override
             public void onItemSelected(RecyclerViewTV parent, View itemView, int position) {
+                if(selectionPages.getVisibility() == View.VISIBLE) {
+                    resetTextColor();
+                }
             }
 
             @Override
@@ -334,6 +339,7 @@ public class VideoPlayerActivity extends BaseActivity {
                 if(isPlay) {
                     mVideoView.pause();
                 }
+                bottomSelection.setVisibility(View.VISIBLE);
                 playIndex = position;
                 getVideoSourcePath();
             }
@@ -364,6 +370,7 @@ public class VideoPlayerActivity extends BaseActivity {
 
             @Override
             public void onItemSelected(RecyclerViewTV parent, View itemView, int position) {
+                pageIndex = position;
                 int start = position * PAGE_SIZE;
                 int end = (position + 1) * PAGE_SIZE ;
                 end = end > videoList.size()  ? videoList.size() : end;
@@ -372,6 +379,8 @@ public class VideoPlayerActivity extends BaseActivity {
                 listPresenter.setList(subVideoList);
                 selectionList.getAdapter().notifyDataSetChanged();
                 selectionList.invalidate();
+
+                resetTextColor();
             }
 
             @Override
@@ -379,6 +388,21 @@ public class VideoPlayerActivity extends BaseActivity {
             }
         });
 
+    }
+
+    private void resetTextColor() {
+        View child = null;
+        for(int i = 0;i < selectionPages.getChildCount();i ++) {
+            child = selectionPages.getChildAt(i).findViewById(R.id.title);
+            if(child == null) {
+                continue;
+            }
+            if(i != pageIndex){
+                ((TextView)child).setTextColor(getResources().getColor(R.color.trans_white));
+            } else {
+                ((TextView)child).setTextColor(getResources().getColor(R.color.white));
+            }
+        }
     }
 
     private void getVideoSourcePath() {
@@ -462,10 +486,8 @@ public class VideoPlayerActivity extends BaseActivity {
         }
     }
 
-    long firstChangeime;
-    int changeCount = 0;
+
     long curPosition = 0;
-    Runnable runnable;
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(subscribeLayout.getVisibility() == View.VISIBLE) {//关注页面显示，按任意键播放下一集
@@ -503,28 +525,9 @@ public class VideoPlayerActivity extends BaseActivity {
             //右
             case KeyEvent.KEYCODE_DPAD_RIGHT:
                 if(selectionList.getVisibility() == View.GONE) {
-                    if(changeCount == 0) {
-                        firstChangeime = System.currentTimeMillis();
-                        changeCount ++;
-                        runnable = new Runnable() {
-                            @Override
-                            public void run() {
-                                curPosition = curPosition + 15000 * changeCount;
-                                mVideoView.seekTo(curPosition);
-                                mediaController.setProgress();
-                            }
-                        };
-                        mVideoView.postDelayed(runnable,1000);//延迟一秒再seek
-                    } else if(System.currentTimeMillis() - firstChangeime < 1000) {//一秒以内连续按
-                        changeCount ++;
-                        mVideoView.removeCallbacks(runnable);
-                        mVideoView.postDelayed(runnable,1000);//延迟一秒再seek
-
-                    } else {//前后两次时间够长
-                        changeCount = 0;
-                        mVideoView.postDelayed(runnable,1000);//延迟一秒再seek
-                    }
-
+                        curPosition = curPosition + 15000 ;
+                        mVideoView.seekTo(curPosition);
+                        mediaController.setProgress();
                 }
                 break;
             //向上键
@@ -566,10 +569,6 @@ public class VideoPlayerActivity extends BaseActivity {
     }
 
     private void showSelectionLayer() {
-        if(bottomSelection.getVisibility() == View.VISIBLE) {
-            bottomSelection.setVisibility(View.GONE);
-            return;
-        }
         mediaController.hide();
         bottomSelection.setVisibility(View.VISIBLE);
         selectionList.setVisibility(View.VISIBLE);
@@ -578,10 +577,6 @@ public class VideoPlayerActivity extends BaseActivity {
         if(selectionList.getSelectPostion() == -1) {
             selectionList.setDefaultSelect(playIndex);
         }
-    }
-
-    private void hideSelectionLayer() {
-        bottomSelection.setVisibility(View.GONE);
     }
 
     @Override
@@ -643,6 +638,10 @@ public class VideoPlayerActivity extends BaseActivity {
             ConfigPreferences.getInstance(VideoPlayerActivity.this).setVideoPostion(videoId, totalTime);//保存单位也是毫秒
             HttpRequest.get(HttpAddress.getUpdatePlayTimeUrl(videoId, totalTime / 1000), null, VideoPlayerActivity.this, "getPathResult", loading, VideoPlayerActivity.this, BaseEntity.class);
         }
+    }
+
+    public void reportError() {
+        HttpRequest.get(HttpAddress.getReportErrorUrl(videoId), null, VideoPlayerActivity.this, "", null, VideoPlayerActivity.this, BaseEntity.class);
     }
 
     private BroadcastReceiver MyNetErrorReceiver =new BroadcastReceiver(){

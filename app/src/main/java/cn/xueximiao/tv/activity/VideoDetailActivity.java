@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.open.androidtvwidget.leanback.adapter.GeneralAdapter;
 import com.open.androidtvwidget.leanback.recycle.RecyclerViewTV;
 import cn.xueximiao.tv.R;
+import cn.xueximiao.tv.adapter.VideoPagerPresenter;
 import cn.xueximiao.tv.entity.BaseEntity;
 import cn.xueximiao.tv.entity.GetSubScribeQRCodeEntity;
 import cn.xueximiao.tv.entity.VideoDetailEntity;
@@ -39,6 +40,7 @@ import cn.xueximiao.tv.adapter.VideoListPresenter;
  */
 
 public class VideoDetailActivity extends BaseActivity implements View.OnFocusChangeListener,View.OnClickListener{
+    private final static int PAGE_SIZE = 10;
     private ImageView thumbImage;
     private TextView thumbName;
     private TextView sourceFrom;
@@ -51,9 +53,12 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
     private LinearLayout buttonBuy;
     private LinearLayout buttonCollect;
     private RecyclerViewTV videoList;
+    private RecyclerViewTV selectionPages;//选集页码段
     private ProgressBar progressBar;
     private VideoListPresenter presenter;
     private GeneralAdapter generalAdapter;
+    private VideoPagerPresenter pagerPresenter;
+    private GeneralAdapter pagerAdapter;
 
     private TextView subTitle;
     private TextView subDesc;
@@ -68,6 +73,7 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
 
     private int selectedVideoIndex = 0;
     private List<VideoDetailEntity.Video> list;
+    private List<VideoDetailEntity.Video> subVideoList;//某个分页段内的专辑列表
 
     private String strVideoDetail;
     private boolean isCollect = false;
@@ -77,6 +83,7 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
     private Timer timer;
     private boolean checkingSubscribe = false;
     private boolean needBuy = false;
+    private int pageIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,6 +145,7 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
         buttonBuy = (LinearLayout)findViewById(R.id.button_buy);
         buttonCollect = (LinearLayout)findViewById(R.id.button_collect);
         videoList = (RecyclerViewTV)findViewById(R.id.video_list);
+        selectionPages = (RecyclerViewTV)findViewById(R.id.video_pages);
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
         iconCollect = (ImageView) findViewById(R.id.collect_icon);
 
@@ -165,7 +173,8 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
         videoList.setFocusable(false);
         videoList.setSelectedItemAtCentered(true); // 设置item在中间移动.
         videoList.addItemDecoration(new SpaceItemDecoration((int)getResources().getDimension(R.dimen.w_20)));
-        presenter = new VideoListPresenter(list,R.drawable.selector_video_detail_list,freeStatus);
+        subVideoList = list.subList(0,PAGE_SIZE  > list.size() ? list.size() : PAGE_SIZE );
+        presenter = new VideoListPresenter(subVideoList,R.drawable.selector_video_detail_list,freeStatus);
         generalAdapter = new GeneralAdapter(presenter);
         videoList.setAdapter(generalAdapter);
 
@@ -178,10 +187,20 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
             public void onItemSelected(RecyclerViewTV parent, View itemView, int position) {
                 selectedVideoIndex = position;
                 VideoDetailEntity.Video video = list.get(position);
-                HttpImageAsync.loadingImage(subIcon,video.thumb);
+                if(TextUtils.isEmpty(video.thumb)) {
+                    subIcon.setVisibility(View.GONE);
+                } else {
+                    subIcon.setVisibility(View.VISIBLE);
+                    HttpImageAsync.loadingImage(subIcon,video.thumb);
+                }
+
                 subTitle.setText(video.title);
                 subDesc.setText(video.describe);
 
+                //页码部分变色
+                if(selectionPages.getVisibility() == View.VISIBLE) {
+                    resetTextColor();
+                }
             }
 
             @Override
@@ -206,9 +225,70 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
         });
         if(list != null && list.size() > 0) {
             VideoDetailEntity.Video video = list.get(0);
-            HttpImageAsync.loadingImage(subIcon, video.thumb);
+            if(TextUtils.isEmpty(video.thumb)) {
+                subIcon.setVisibility(View.GONE);
+            } else {
+                subIcon.setVisibility(View.VISIBLE);
+                HttpImageAsync.loadingImage(subIcon,video.thumb);
+            }
             subTitle.setText(video.title);
             subDesc.setText(video.describe);
+        }
+    }
+    //选集列表
+    private void initPageList() {
+        if(list == null || list.size() < PAGE_SIZE) {
+            selectionPages.setVisibility(View.GONE);
+            return;
+        }
+        LinearLayoutManager linearlayoutManager = new LinearLayoutManager(this); // 解决快速长按焦点丢失问题.
+        linearlayoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
+        linearlayoutManager.setSmoothScrollbarEnabled(false);
+        selectionPages.setLayoutManager(linearlayoutManager);
+        selectionPages.setFocusable(true);
+        selectionPages.addItemDecoration(new SpaceItemDecoration((int)getResources().getDimension(R.dimen.w_20)));
+        pagerPresenter = new VideoPagerPresenter(list == null ? 0 : list.size(),PAGE_SIZE);
+        pagerAdapter = new GeneralAdapter(pagerPresenter);
+        selectionPages.setAdapter(pagerAdapter);
+        selectionPages.setOnItemListener(new RecyclerViewTV.OnItemListener() {
+            @Override
+            public void onItemPreSelected(RecyclerViewTV parent, View itemView, int position) {
+            }
+
+
+            @Override
+            public void onItemSelected(RecyclerViewTV parent, View itemView, int position) {
+                pageIndex = position;
+                int start = position * PAGE_SIZE;
+                int end = (position + 1) * PAGE_SIZE ;
+                end = end > list.size()  ? list.size() : end;
+
+                subVideoList = list.subList(start,end);
+                presenter.setList(subVideoList);
+                videoList.getAdapter().notifyDataSetChanged();
+                videoList.invalidate();
+
+                resetTextColor();
+            }
+
+            @Override
+            public void onReviseFocusFollow(RecyclerViewTV parent, View itemView, int position) {
+            }
+        });
+
+    }
+    private void resetTextColor() {
+        View child = null;
+        for(int i = 0;i < selectionPages.getChildCount();i ++) {
+            child = selectionPages.getChildAt(i).findViewById(R.id.title);
+            if(child == null) {
+                continue;
+            }
+            if(i != pageIndex){
+                ((TextView)child).setTextColor(getResources().getColor(R.color.trans_white));
+            } else {
+                ((TextView)child).setTextColor(getResources().getColor(R.color.white));
+            }
         }
     }
 
@@ -263,7 +343,7 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
             freeStatus = 2;
         }
         initVideoListRecyclerView(freeStatus);
-
+        initPageList();
     }
 
     @Override
@@ -388,10 +468,10 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
     public void checkSubScribeBack(BaseEntity entity,String result) {
         if(entity != null && entity.status) {//支付成功
             checkingSubscribe = false;
-//            buttonBuy.setVisibility(View.GONE);
-//            buttonPlay.setVisibility(View.VISIBLE);
-//            bugYet.setVisibility(View.VISIBLE);
-//            buyContainer.setVisibility(View.GONE);
+            buttonBuy.setVisibility(View.GONE);
+            buttonPlay.setVisibility(View.VISIBLE);
+            bugYet.setVisibility(View.VISIBLE);
+            buyContainer.setVisibility(View.GONE);
             getVideoDetail();//重新获取一次
         } else {
             if(buyContainer.getVisibility() == View.VISIBLE) {

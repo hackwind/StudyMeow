@@ -179,13 +179,23 @@
         android:layout_height="@dimen/h_90"
         android:layout_below="@id/thumb_list_text"
         android:divider="@null"
-        android:paddingLeft="@dimen/w_90"
-        android:paddingRight="@dimen/w_90"
+        android:layout_marginLeft="@dimen/w_90"
+        android:layout_marginRight="@dimen/w_90"
+        android:listSelector="@android:color/transparent" />
+    <com.open.androidtvwidget.leanback.recycle.RecyclerViewTV
+        android:id="@+id/video_pages"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/h_90"
+        android:layout_marginTop="@dimen/h_25"
+        android:layout_below="@id/video_list"
+        android:divider="@null"
+        android:layout_marginLeft="@dimen/w_90"
+        android:layout_marginRight="@dimen/w_90"
         android:listSelector="@android:color/transparent" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/video_list"
+        android:layout_below="@id/video_pages"
         android:layout_marginTop="@dimen/h_60"
         android:paddingLeft="@dimen/w_90"
         android:paddingRight="@dimen/w_90"
