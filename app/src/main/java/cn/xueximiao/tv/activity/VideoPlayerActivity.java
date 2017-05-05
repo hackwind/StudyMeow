@@ -519,6 +519,7 @@ public class VideoPlayerActivity extends BaseActivity {
                     curPosition = curPosition - 15000;
                     mVideoView.seekTo(curPosition);
                     mediaController.setProgress();
+                    pauseLayout.setVisibility(View.GONE);
                 }
                 break;
 
@@ -528,6 +529,7 @@ public class VideoPlayerActivity extends BaseActivity {
                         curPosition = curPosition + 15000 ;
                         mVideoView.seekTo(curPosition);
                         mediaController.setProgress();
+                        pauseLayout.setVisibility(View.GONE);
                 }
                 break;
             //向上键

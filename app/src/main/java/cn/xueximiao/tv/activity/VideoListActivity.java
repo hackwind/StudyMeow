@@ -182,13 +182,7 @@ public class VideoListActivity extends FragmentActivity {
 
             }
         });
-        freeMenu.setOnItemClickListener(new RecyclerViewTV.OnItemClickListener() {
-            @Override
-            public void onItemClick(RecyclerViewTV parent, View itemView, int position) {
-                Intent intent = new Intent(VideoListActivity.this,LoginActivity.class);
-                startActivity(intent);
-            }
-        });
+
         freeMenu.postDelayed(new Runnable() {
             @Override
             public void run() {
