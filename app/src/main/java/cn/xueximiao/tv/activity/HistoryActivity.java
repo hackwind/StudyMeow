@@ -119,13 +119,16 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
             public void onAnimationStart(OpenEffectBridge bridge, View view,
                                          Animator animation) {
                 mHistoryBridge.setVisibleWidget(false);
+                mainUpView.setVisibility(View.GONE);
             }
 
             @Override
             public void onAnimationEnd(OpenEffectBridge bridge, View view,
                                        Animator animation) {
-                if (view.hasFocus())
+                if (view.hasFocus()) {
                     mHistoryBridge.setVisibleWidget(false);
+                    mainUpView.setVisibility(View.VISIBLE);
+                }
             }
         });
 
