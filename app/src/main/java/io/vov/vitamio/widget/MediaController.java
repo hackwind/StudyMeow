@@ -418,6 +418,36 @@ public class MediaController extends FrameLayout {
       mCurrentTime.setText(StringUtils.generateTime(position));
     return position;
   }
+  //用来连续快进快退，先移动进度条再seek
+  public long setProgress(long position) {
+    mDragging = true;
+    if (mPlayer == null )
+      return 0;
+
+//    long position = mPlayer.getCurrentPosition();
+    long duration = mPlayer.getDuration();
+    if (mProgress != null) {
+      if (duration > 0) {
+        long pos = 1000L * position / duration;
+          android.util.Log.d("hjs","progress:" + pos);
+        mProgress.setProgress(0);
+        mProgress.setProgress((int) pos);
+      }
+      int percent = mPlayer.getBufferPercentage();
+      mProgress.setSecondaryProgress(percent * 10);
+    }
+
+    mDuration = duration;
+//    mEndTime.setText(""+totalTime);
+//
+    if (mEndTime != null)
+      mEndTime.setText(StringUtils.generateTime(mDuration));
+    if (mCurrentTime != null)
+      mCurrentTime.setText(StringUtils.generateTime(position));
+      android.util.Log.d("hjs","curTime:" + mCurrentTime.getText());
+    invalidate();
+    return position;
+  }
 
   @Override
   public boolean onTouchEvent(MotionEvent event) {
@@ -450,7 +480,7 @@ public class MediaController extends FrameLayout {
       hide();
       return true;
     } else {
-      show(sDefaultTimeout);
+//      show(sDefaultTimeout);
     }
     return super.dispatchKeyEvent(event);
   }

@@ -488,6 +488,15 @@ public class VideoPlayerActivity extends BaseActivity {
 
 
     long curPosition = 0;
+    int count = 0;
+    long startTime;
+    long duration;
+    Runnable runnable  = new Runnable() {
+        @Override
+        public void run() {
+            mVideoView.seekTo(curPosition);
+        }
+    };
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(subscribeLayout.getVisibility() == View.VISIBLE) {//关注页面显示，按任意键播放下一集
@@ -497,6 +506,7 @@ public class VideoPlayerActivity extends BaseActivity {
             return true;
         }
         curPosition = mVideoView.getCurrentPosition();
+        duration =  mVideoView.getDuration();
         switch (keyCode) {
             //回车
             case KeyEvent.KEYCODE_ENTER:
@@ -515,21 +525,37 @@ public class VideoPlayerActivity extends BaseActivity {
 
             //左
             case KeyEvent.KEYCODE_DPAD_LEFT:
-                if(selectionList.getVisibility() == View.GONE) {
-                    curPosition = curPosition - 15000;
-                    mVideoView.seekTo(curPosition);
-                    mediaController.setProgress();
-                    pauseLayout.setVisibility(View.GONE);
+                if(selectionList.getVisibility() == View.GONE && pauseLayout.getVisibility() == View.GONE) {
+                    if(count == 0 || System.currentTimeMillis() - startTime <= 1000) {
+                        startTime = System.currentTimeMillis();
+                        count ++;
+                    } else if(System.currentTimeMillis() - startTime > 1000) {
+                        count = 0;
+                    }
+                    mediaController.show();
+                    curPosition = curPosition - (duration / 100) * (count * count + 1) ;//指数级加速
+                    mediaController.setProgress(curPosition);
+
+                    mVideoView.removeCallbacks(runnable);
+                    mVideoView.postDelayed(runnable,1000);
                 }
                 break;
 
             //右
             case KeyEvent.KEYCODE_DPAD_RIGHT:
-                if(selectionList.getVisibility() == View.GONE) {
-                        curPosition = curPosition + 15000 ;
-                        mVideoView.seekTo(curPosition);
-                        mediaController.setProgress();
-                        pauseLayout.setVisibility(View.GONE);
+                if(selectionList.getVisibility() == View.GONE && pauseLayout.getVisibility() == View.GONE) {
+                    if(count == 0 || System.currentTimeMillis() - startTime <= 1000) {
+                        startTime = System.currentTimeMillis();
+                        count ++;
+                    } else if(System.currentTimeMillis() - startTime > 1000) {
+                        count = 0;
+                    }
+                    mediaController.show();
+                    curPosition = curPosition + (duration  / 100) * (count * count + 1) ;
+                    mediaController.setProgress(curPosition);
+
+                    mVideoView.removeCallbacks(runnable);
+                    mVideoView.postDelayed(runnable,1000);
                 }
                 break;
             //向上键

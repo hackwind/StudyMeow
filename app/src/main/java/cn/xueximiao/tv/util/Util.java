@@ -21,9 +21,13 @@ public class Util {
      * @return
      */
     public  static int getNetSpeed(int count) {
-        long traffic_data = TrafficStats.getTotalRxBytes() - total_data;
-        total_data = TrafficStats.getTotalRxBytes();
-        return (int) traffic_data / count;
+        if(count > 0) {
+            long traffic_data = TrafficStats.getTotalRxBytes() - total_data;
+            total_data = TrafficStats.getTotalRxBytes();
+            return (int) traffic_data / count;
+        } else {
+            return 0;
+        }
     }
 
     /**

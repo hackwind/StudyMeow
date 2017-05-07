@@ -138,8 +138,8 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
           seekTo(mSeekWhenPrepared);
         start();
         if (mMediaController != null) {
-          if (mMediaController.isShowing())
-            mMediaController.hide();
+//          if (mMediaController.isShowing())
+//            mMediaController.hide();
           mMediaController.show();
         }
       }
@@ -570,7 +570,7 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
 
   private void toggleMediaControlsVisiblity() {
     if (mMediaController.isShowing()) {
-      mMediaController.hide();
+//      mMediaController.hide();
     } else {
       mMediaController.show();
     }
