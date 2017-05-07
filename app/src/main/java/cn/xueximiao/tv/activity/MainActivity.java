@@ -227,6 +227,10 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
             @Override
             public void onItemClick(RecyclerViewTV parent, View itemView, int position) {
                 onViewItemClick(itemView, position,true);
+                if(position == 1) {//分类
+                    Intent intent = new Intent(MainActivity.this,VideoListActivity.class);
+                    startActivity(intent);
+                }
             }
         });
         menuListView.setDefaultSelect(0);

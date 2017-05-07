@@ -218,7 +218,7 @@ public class VideoDetailActivity extends BaseActivity implements View.OnFocusCha
                 } else {
                     Intent intent = new Intent(VideoDetailActivity.this, VideoPlayerActivity.class);
                     intent.putExtra("videodetail", strVideoDetail);
-                    intent.putExtra("index", position);
+                    intent.putExtra("index", position + pageIndex * PAGE_SIZE);
                     startActivity(intent);
                 }
             }

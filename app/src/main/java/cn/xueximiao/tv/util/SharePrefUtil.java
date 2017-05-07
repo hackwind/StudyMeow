@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import cn.xueximiao.tv.activity.MeowApplication;
+
 
 /**
  * SharePreferences操作工具类
@@ -43,7 +45,7 @@ public class SharePrefUtil {
 	 */
 	public static void saveBoolean(Context context, String key, boolean value) {
 		if (sp == null)
-			sp = context.getSharedPreferences(SP_NAME, 0);
+			sp = MeowApplication.getContext().getSharedPreferences(SP_NAME, 0);
 		    sp.edit().putBoolean(key, value).commit();
 	}
 
@@ -57,26 +59,26 @@ public class SharePrefUtil {
 	public static void saveString(Context context, String key, String value) {
 		Log.d("hjs","save string:" + value);
 		if (sp == null)
-			sp = context.getSharedPreferences(SP_NAME, 0);
+			sp = MeowApplication.getContext().getSharedPreferences(SP_NAME, 0);
 		sp.edit().putString(key, value).commit();
 		
 	}
 
 	public static void saveSerialportString(Context context, String key, String value) {
 		if (serialport_sp == null)
-			serialport_sp = context.getSharedPreferences(SERIALPORT_NAME, 0);
+			serialport_sp = MeowApplication.getContext().getSharedPreferences(SERIALPORT_NAME, 0);
 		serialport_sp.edit().putString(key, value).commit();
 	}
 
 	public static String getSerialportString(Context context, String key, String defValue) {
 		if (serialport_sp == null)
-			serialport_sp = context.getSharedPreferences(SERIALPORT_NAME, 0);
+			serialport_sp = MeowApplication.getContext().getSharedPreferences(SERIALPORT_NAME, 0);
 		return serialport_sp.getString(key, defValue);
 	}
 
 	public static void clear(Context context){
 		if (sp == null)
-			sp = context.getSharedPreferences(SP_NAME, 0);
+			sp = MeowApplication.getContext().getSharedPreferences(SP_NAME, 0);
 		sp.edit().clear().commit();
 	}
 
@@ -89,7 +91,7 @@ public class SharePrefUtil {
 	 */
 	public static void saveLong(Context context, String key, long value) {
 		if (sp == null)
-			sp = context.getSharedPreferences(SP_NAME, 0);
+			sp = MeowApplication.getContext().getSharedPreferences(SP_NAME, 0);
 		sp.edit().putLong(key, value).commit();
 	}
 
@@ -102,7 +104,7 @@ public class SharePrefUtil {
 	 */
 	public static void saveInt(Context context, String key, int value) {
 		if (sp == null)
-			sp = context.getSharedPreferences(SP_NAME, 0);
+			sp = MeowApplication.getContext().getSharedPreferences(SP_NAME, 0);
 		sp.edit().putInt(key, value).commit();
 	}
 
@@ -115,7 +117,7 @@ public class SharePrefUtil {
 	 */
 	public static void saveFloat(Context context, String key, float value) {
 		if (sp == null)
-			sp = context.getSharedPreferences(SP_NAME, 0);
+			sp = MeowApplication.getContext().getSharedPreferences(SP_NAME, 0);
 		sp.edit().putFloat(key, value).commit();
 	}
 
@@ -129,7 +131,7 @@ public class SharePrefUtil {
 	 */
 	public static String getString(Context context, String key, String defValue) {
 		if (sp == null)
-			sp = context.getSharedPreferences(SP_NAME, 0);
+			sp = MeowApplication.getContext().getSharedPreferences(SP_NAME, 0);
 		return sp.getString(key, defValue);
 	}
 
@@ -143,7 +145,7 @@ public class SharePrefUtil {
 	 */
 	public static int getInt(Context context, String key, int defValue) {
 		if (sp == null)
-			sp = context.getSharedPreferences(SP_NAME, 0);
+			sp = MeowApplication.getContext().getSharedPreferences(SP_NAME, 0);
 		return sp.getInt(key, defValue);
 	}
 
@@ -157,7 +159,7 @@ public class SharePrefUtil {
 	 */
 	public static long getLong(Context context, String key, long defValue) {
 		if (sp == null)
-			sp = context.getSharedPreferences(SP_NAME, 0);
+			sp = MeowApplication.getContext().getSharedPreferences(SP_NAME, 0);
 		return sp.getLong(key, defValue);
 	}
 
@@ -171,7 +173,7 @@ public class SharePrefUtil {
 	 */
 	public static float getFloat(Context context, String key, float defValue) {
 		if (sp == null)
-			sp = context.getSharedPreferences(SP_NAME, 0);
+			sp = MeowApplication.getContext().getSharedPreferences(SP_NAME, 0);
 		return sp.getFloat(key, defValue);
 	}
 
@@ -186,7 +188,7 @@ public class SharePrefUtil {
 	public static boolean getBoolean(Context context, String key,
 			boolean defValue) {
 		if (sp == null)
-			sp = context.getSharedPreferences(SP_NAME, 0);
+			sp = MeowApplication.getContext().getSharedPreferences(SP_NAME, 0);
 		return sp.getBoolean(key, defValue);
 	}
 	
@@ -199,7 +201,7 @@ public class SharePrefUtil {
 	 */
 	public static void saveObj(Context context, String key, Object object) {
 		if (sp == null)
-			sp = context.getSharedPreferences(SP_NAME, 0);
+			sp = MeowApplication.getContext().getSharedPreferences(SP_NAME, 0);
 		
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ObjectOutputStream oos = null;
@@ -228,7 +230,7 @@ public class SharePrefUtil {
 	 */
 	public static Object getObj(Context context, String key) {
 		if (sp == null)
-			sp = context.getSharedPreferences(SP_NAME, 0);
+			sp = MeowApplication.getContext().getSharedPreferences(SP_NAME, 0);
 		String objBase64 = sp.getString(key, null);
 		if (TextUtils.isEmpty(objBase64))
 			return null;

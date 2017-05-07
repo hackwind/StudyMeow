@@ -87,7 +87,7 @@
         </meta-data>
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="xueximiao" >
+            android:value="ali" >
         </meta-data>
     </application>
 </manifest>

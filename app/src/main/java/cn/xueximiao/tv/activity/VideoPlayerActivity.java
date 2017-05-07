@@ -340,7 +340,7 @@ public class VideoPlayerActivity extends BaseActivity {
                     mVideoView.pause();
                 }
                 bottomSelection.setVisibility(View.VISIBLE);
-                playIndex = position;
+                playIndex = position + pageIndex * PAGE_SIZE;
                 getVideoSourcePath();
             }
         });

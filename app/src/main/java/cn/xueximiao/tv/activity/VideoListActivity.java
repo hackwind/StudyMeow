@@ -197,6 +197,9 @@ public class VideoListActivity extends FragmentActivity {
     private void initFragments(List<CategoryEntity.Category> msg) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         fragments = new VideoListFragment[msg.size()];
+        if(catId == null) {
+            catId = msg.get(0).catid;
+        }
         for (int i = 0; i < msg.size(); i++) {
             VideoListFragment videoListFragment = VideoListFragment.newInstance(msg.get(i).catid,msg.get(i).catname,msg.get(i).icon);
             videoListFragment.setOnGridItemSelectListener(new VideoListFragment.OnGridItemSelectListener() {
