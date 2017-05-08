@@ -339,7 +339,7 @@ public class VideoPlayerActivity extends BaseActivity {
                 if(isPlay) {
                     mVideoView.pause();
                 }
-                bottomSelection.setVisibility(View.VISIBLE);
+                bottomSelection.setVisibility(View.GONE);
                 playIndex = position + pageIndex * PAGE_SIZE;
                 getVideoSourcePath();
             }
@@ -510,7 +510,7 @@ public class VideoPlayerActivity extends BaseActivity {
         switch (keyCode) {
             //回车
             case KeyEvent.KEYCODE_ENTER:
-                if(selectionList.getVisibility() == View.GONE) {
+                if(bottomSelection.getVisibility() == View.GONE) {
                     if (isPlay) {
                         mVideoView.pause();
                         isPlay = false;
@@ -525,7 +525,7 @@ public class VideoPlayerActivity extends BaseActivity {
 
             //左
             case KeyEvent.KEYCODE_DPAD_LEFT:
-                if(selectionList.getVisibility() == View.GONE && pauseLayout.getVisibility() == View.GONE) {
+                if(bottomSelection.getVisibility() == View.GONE && pauseLayout.getVisibility() == View.GONE) {
                     if(count == 0 || System.currentTimeMillis() - startTime <= 1000) {
                         startTime = System.currentTimeMillis();
                         count ++;
@@ -543,7 +543,7 @@ public class VideoPlayerActivity extends BaseActivity {
 
             //右
             case KeyEvent.KEYCODE_DPAD_RIGHT:
-                if(selectionList.getVisibility() == View.GONE && pauseLayout.getVisibility() == View.GONE) {
+                if(bottomSelection.getVisibility() == View.GONE && pauseLayout.getVisibility() == View.GONE) {
                     if(count == 0 || System.currentTimeMillis() - startTime <= 1000) {
                         startTime = System.currentTimeMillis();
                         count ++;
