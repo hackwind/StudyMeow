@@ -9,6 +9,9 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <uses-feature android:name="android.hardware.type.television" android:required="true" >
+    </uses-feature>
+
     <application
         android:name="cn.xueximiao.tv.activity.MeowApplication"
         android:allowBackup="true"

@@ -81,6 +81,9 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
         checkUpdate();
     }
     private void checkUpdate() {
+        if("xiaomi".equals(MeowApplication.getChannel(this))) {
+            return;
+        }
         versionCheckUtils = new VersionCheckUtils(this,true);
         versionCheckUtils.checkFromServer();
     }

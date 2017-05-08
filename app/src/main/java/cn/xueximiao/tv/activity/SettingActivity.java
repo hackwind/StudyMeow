@@ -38,7 +38,9 @@ public class SettingActivity extends BaseActivity {
     private void initView() {
         OpenMenuImpl openMenu = new OpenMenuImpl();
         openMenu.add("问题反馈").setIconRes(R.drawable.selector_setting_feedback);
-        openMenu.add("检查更新").setIconRes(R.drawable.selector_setting_checkupdate);
+        if(!"xiaomi".equals(MeowApplication.getChannel(this))) {
+            openMenu.add("检查更新").setIconRes(R.drawable.selector_setting_checkupdate);
+        }
         openMenu.add("联系我们").setIconRes(R.drawable.selector_setting_contactus);
         openMenu.add("版本信息").setIconRes(R.drawable.selector_setting_versioninfo);
         final MainUpView mainUpView = new MainUpView(this);

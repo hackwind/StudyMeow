@@ -200,6 +200,7 @@ public class VideoPlayerActivity extends BaseActivity {
                     //最大范围2.0f
                     mp.setPlaybackSpeed(1.0f);
                     loading.setVisibility(View.GONE);
+                    mVideo_error.setVisibility(View.GONE);
                     mVideoView.start();
                 }
             });
