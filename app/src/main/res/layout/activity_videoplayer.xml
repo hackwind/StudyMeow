@@ -30,6 +30,8 @@
         android:text="视频加载失败"
         android:textColor="@color/color_gray_text"
         android:textSize="18sp"
+        android:focusableInTouchMode="true"
+        android:focusable="true"
         android:id="@+id/error_text"
        >
     </TextView>
