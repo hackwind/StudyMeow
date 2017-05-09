@@ -489,13 +489,16 @@ public class VideoPlayerActivity extends BaseActivity {
 
 
     long curPosition = 0;
-    int count = 0;
-    long startTime;
+    int rightCount = 0;
+    int leftCount = 0;
+    long rightStartTime;
+    long leftStartTime;
     long duration;
     Runnable runnable  = new Runnable() {
         @Override
         public void run() {
             mVideoView.seekTo(curPosition);
+            mediaController.setmDraggingEnd();
         }
     };
     @Override
@@ -506,7 +509,7 @@ public class VideoPlayerActivity extends BaseActivity {
             getVideoSourcePath();
             return true;
         }
-        curPosition = mVideoView.getCurrentPosition();
+
         duration =  mVideoView.getDuration();
         switch (keyCode) {
             //回车
@@ -527,14 +530,28 @@ public class VideoPlayerActivity extends BaseActivity {
             //左
             case KeyEvent.KEYCODE_DPAD_LEFT:
                 if(bottomSelection.getVisibility() == View.GONE && pauseLayout.getVisibility() == View.GONE) {
-                    if(count == 0 || System.currentTimeMillis() - startTime <= 1000) {
-                        startTime = System.currentTimeMillis();
-                        count ++;
-                    } else if(System.currentTimeMillis() - startTime > 1000) {
-                        count = 0;
+                    rightCount = 0;
+                    if(leftCount == 0 || System.currentTimeMillis() - leftStartTime <= 1000) {
+                        leftStartTime = System.currentTimeMillis();
+                        leftCount ++;
+                        if(curPosition > mVideoView.getCurrentPosition() || System.currentTimeMillis() - rightStartTime < 1000) { //上一次快进还没执行，针对连续快进马上又快退情况
+                            //,use old curPositio
+                            mVideoView.removeCallbacks(runnable);
+                        } else {
+                            curPosition = mVideoView.getCurrentPosition();
+                        }
+
+                    } else if(System.currentTimeMillis() - leftStartTime > 1000) {
+                        leftCount = 0;
+                        curPosition = mVideoView.getCurrentPosition();
                     }
                     mediaController.show();
-                    curPosition = curPosition - (duration / 100) * (count * count + 1) ;//指数级加速
+                    Log.d("hjs","left before position:" + curPosition);
+                    Log.d("hjs","left before leftcount，duration:" + leftCount + "," + duration);
+                    curPosition = curPosition - (duration / 100) * (leftCount * leftCount + 1) ;//指数级加速
+                    Log.d("hjs","left after position1:" + curPosition);
+                    curPosition = (curPosition < 0 ? 0 : curPosition);
+                    Log.d("hjs","left after position2:" + curPosition);
                     mediaController.setProgress(curPosition);
 
                     mVideoView.removeCallbacks(runnable);
@@ -544,15 +561,26 @@ public class VideoPlayerActivity extends BaseActivity {
 
             //右
             case KeyEvent.KEYCODE_DPAD_RIGHT:
+                leftCount = 0;
                 if(bottomSelection.getVisibility() == View.GONE && pauseLayout.getVisibility() == View.GONE) {
-                    if(count == 0 || System.currentTimeMillis() - startTime <= 1000) {
-                        startTime = System.currentTimeMillis();
-                        count ++;
-                    } else if(System.currentTimeMillis() - startTime > 1000) {
-                        count = 0;
+                    if(rightCount == 0 || System.currentTimeMillis() - rightStartTime <= 1000) {
+                        rightStartTime = System.currentTimeMillis();
+                        rightCount ++;
+                        if(curPosition < mVideoView.getCurrentPosition() || System.currentTimeMillis() - leftStartTime < 1000) {//上一次快退还没执行玩，针对连续快退后马上快进情况
+                            mVideoView.removeCallbacks(runnable);
+                        } else {
+                            curPosition = mVideoView.getCurrentPosition();
+                        }
+
+                    } else if(System.currentTimeMillis() - rightStartTime > 1000) {
+                        rightCount = 0;
+                        curPosition = mVideoView.getCurrentPosition();
                     }
                     mediaController.show();
-                    curPosition = curPosition + (duration  / 100) * (count * count + 1) ;
+                    Log.d("hjs","right before position:" + curPosition);
+                    curPosition = curPosition + (duration  / 100) * (rightCount * rightCount + 1) ;
+                    curPosition = curPosition > duration ? duration : curPosition;
+                    Log.d("hjs","right after position:" + curPosition);
                     mediaController.setProgress(curPosition);
 
                     mVideoView.removeCallbacks(runnable);

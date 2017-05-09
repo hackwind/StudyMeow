@@ -40,6 +40,7 @@ import cn.xueximiao.tv.http.HttpRequest;
 import cn.xueximiao.tv.util.SharePrefUtil;
 import cn.xueximiao.tv.util.ToastUtil;
 import com.umeng.analytics.MobclickAgent;
+import com.xiaomi.mistatistic.sdk.MiStatInterface;
 
 import java.util.List;
 import java.util.Timer;
@@ -407,6 +408,8 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
     protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
+        MiStatInterface.recordPageStart(this, "MainActivity");
+
         if(TextUtils.isEmpty(SharePrefUtil.getString(this,SharePrefUtil.KEY_USER_ID,""))) {//未登录
             userIcon.setImageResource(R.mipmap.login);
             userNick.setText(R.string.login);
@@ -422,6 +425,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+        MiStatInterface.recordPageEnd();
     }
 
     @Override

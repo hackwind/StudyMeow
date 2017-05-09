@@ -26,19 +26,20 @@ import cn.xueximiao.tv.util.VersionCheckUtils;
 public class SettingActivity extends BaseActivity {
     private RecyclerViewTV settingListView;
     private VersionCheckUtils updateUtil;
+    private boolean isXiaomi = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-
+        isXiaomi = "xiaomi".equals(MeowApplication.getChannel(this));
         initView();
     }
 
     private void initView() {
         OpenMenuImpl openMenu = new OpenMenuImpl();
         openMenu.add("问题反馈").setIconRes(R.drawable.selector_setting_feedback);
-        if(!"xiaomi".equals(MeowApplication.getChannel(this))) {
+        if(!isXiaomi) {
             openMenu.add("检查更新").setIconRes(R.drawable.selector_setting_checkupdate);
         }
         openMenu.add("联系我们").setIconRes(R.drawable.selector_setting_contactus);
@@ -95,12 +96,20 @@ public class SettingActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case 1:
-                checkUpdate();
+                if(!isXiaomi) {
+                    checkUpdate();
+                } else {
+                    intent = new Intent(SettingActivity.this, ContactUsActivity.class);
+                    intent.putExtra("type",2);
+                    startActivity(intent);
+                }
                 break;
             case 2:
-                intent = new Intent(SettingActivity.this, ContactUsActivity.class);
-                intent.putExtra("type",2);
-                startActivity(intent);
+                if(!isXiaomi) {
+                    intent = new Intent(SettingActivity.this, ContactUsActivity.class);
+                    intent.putExtra("type", 2);
+                    startActivity(intent);
+                }
                 break;
 
         }

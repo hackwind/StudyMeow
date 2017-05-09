@@ -19,10 +19,13 @@ import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
 import cn.xueximiao.tv.http.HttpImageAsync;
 import com.umeng.analytics.MobclickAgent;
+import com.xiaomi.mistatistic.sdk.MiStatInterface;
 
 import org.xutils.x;
 
 import io.vov.vitamio.Vitamio;
+
+import static com.xiaomi.mistatistic.sdk.MiStatInterface.UPLOAD_POLICY_REALTIME;
 
 /**
  * Created by Administrator on 2016/11/14.
@@ -47,6 +50,9 @@ public class MeowApplication extends Application {
         //设置日志是否加密
         MobclickAgent.enableEncrypt(false);
 
+        //小米统计
+        MiStatInterface.initialize(this, "2882303761517573998", "5641757372998", "xiaomi_tv_store");
+        MiStatInterface.setUploadPolicy(UPLOAD_POLICY_REALTIME, 0);
     }
 
     public static Context getContext(){

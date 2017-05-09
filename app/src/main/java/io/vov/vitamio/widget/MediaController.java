@@ -449,6 +449,10 @@ public class MediaController extends FrameLayout {
     return position;
   }
 
+  public void setmDraggingEnd() {
+    mDragging = false;
+  }
+
   @Override
   public boolean onTouchEvent(MotionEvent event) {
     show(sDefaultTimeout);
