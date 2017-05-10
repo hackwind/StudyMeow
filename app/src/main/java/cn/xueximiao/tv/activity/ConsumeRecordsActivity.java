@@ -129,7 +129,13 @@ public class ConsumeRecordsActivity extends BaseActivity {
             }
         });
 
-        rvRecordsList.setDefaultSelect(0);
+        rvRecordsList.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                rvRecordsList.setDefaultSelect(0);
+            }
+        },500);
+
     }
 
     private void getRecordsList() {

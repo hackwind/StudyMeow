@@ -289,7 +289,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
         mainUpView1.setEffectBridge(new RecyclerViewBridge());
         // 注意这里，需要使用 RecyclerViewBridge 的移动边框 Bridge.
         mRecyclerViewBridge = (RecyclerViewBridge) mainUpView1.getEffectBridge();
-        mRecyclerViewBridge.setUpRectResource(R.drawable.select_cover);
+        mRecyclerViewBridge.setUpRectResource(R.drawable.select_cover2);
         RectF receF = new RectF(getResources().getDimension(R.dimen.w_44) ,
                 getResources().getDimension(R.dimen.w_17) ,
                 getResources().getDimension(R.dimen.w_44)  ,

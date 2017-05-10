@@ -63,6 +63,7 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
     private List<ListEntity.VideoRow> collectionList;
     private FrameLayout historyFrame;
     private FrameLayout collectionFrame;
+    private int index = 1;//1 处在历史记录页面，2处在播放记录页面
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -276,7 +277,23 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("hjs","HistoryActivity Resume,index:" + index);
+        if(index == 1) {
+            buttonPlayHistory.requestFocus();
+        } else if(index == 2) {
+            buttonSubjectCollection.requestFocus();
+//            getCollectionData();
+        }
+    }
+
     private void getHistoryData() {
+        if(historyList != null) {
+            historyList.clear();
+        }
+        historyList = null;
         HttpRequest.get(HttpAddress.getHistoryUrl(pageHistory,PAGE_SIZE),null,HistoryActivity.this,"getHistoryBack",pageHistory > 1 ? null : progressBar,this,ListEntity.class);
     }
 
@@ -307,6 +324,8 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
             pageView1.setVisibility(View.GONE);
         } else {
             layerNoHistory.setVisibility(View.GONE);
+            rvHistory.setVisibility(View.VISIBLE);
+            pageView1.setVisibility(View.VISIBLE);
         }
         Log.d("hjs","histList size and total:" + historyList.size() + "," + totalHistory);
         if(historyList != null && historyList.size() == totalHistory ) {
@@ -316,6 +335,10 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
     }
 
     private void getCollectionData() {
+        if(collectionList != null) {
+            collectionList.clear();
+        }
+        collectionList = null;
         HttpRequest.get(HttpAddress.getSubjectCollection(pageCollection,PAGE_SIZE),null,HistoryActivity.this,"getCollectionBack",pageCollection > 1 ? null : progressBar,this,ListEntity.class);
     }
 
@@ -347,6 +370,8 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
             pageView2.setVisibility(View.GONE);
         } else {
             layerNoCollection.setVisibility(View.GONE);
+            rvCollection.setVisibility(View.VISIBLE);
+            pageView2.setVisibility(View.VISIBLE);
         }
         if(collectionList != null && collectionList.size() == entity.data.total) {
             rvCollection.setOnLoadMoreComplete();
@@ -365,22 +390,22 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
                 if(hasFocus) {
                     buttonPlayHistory.setBackgroundResource(R.drawable.shape_rectange_round_selected_bg);
                     buttonSubjectCollection.setBackgroundResource(R.drawable.shape_rectange_round_unselected_bg);
-                    if (historyList == null) {
-                        getHistoryData();
-                    }
+                    getHistoryData();
+
                     collectionFrame.setVisibility(View.GONE);
                     historyFrame.setVisibility(View.VISIBLE);
+                    index = 1;
                 }
                 break;
             case R.id.collection:
                 if(hasFocus) {
                     buttonPlayHistory.setBackgroundResource(R.drawable.shape_rectange_round_unselected_bg);
                     buttonSubjectCollection.setBackgroundResource(R.drawable.shape_rectange_round_selected_bg);
-                    if (collectionList == null) {
-                        getCollectionData();
-                    }
+                    getCollectionData();
+
                     collectionFrame.setVisibility(View.VISIBLE);
                     historyFrame.setVisibility(View.GONE);
+                    index = 2;
                 }
                 break;
         }

@@ -13,18 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="visible" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="该分类暂时没有内容"
-        android:textSize="35px"
-        android:visibility="gone"
-        android:id="@+id/none"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:textColor="@color/color_gray_text"
-        >
-    </TextView>
 
     <!-- 此处有五个自定义参数:
       cursorRes指定光标图片
@@ -40,13 +28,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tv:cursorRes="@drawable/select_cover"
-        tv:itemWidth="@dimen/w_280"
-        tv:itemHeight="@dimen/h_400"
+        tv:itemWidth="@dimen/px280"
+        tv:itemHeight="@dimen/px400"
         tv:columns="5"
-        tv:boarderRight="@dimen/px25"
-        tv:boarderTop="@dimen/px10"
-        tv:boarderLeft="@dimen/px10"
-        tv:boarderBottom="@dimen/px35"
+        tv:boarderRight="@dimen/px58"
+        tv:boarderTop="@dimen/px16"
+        tv:boarderLeft="@dimen/px30"
+        tv:boarderBottom="@dimen/px65"
         android:visibility="visible"
         tv:paddingLeft="@dimen/px40"
         tv:paddingTop="@dimen/px30"
