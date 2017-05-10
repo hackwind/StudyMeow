@@ -98,7 +98,7 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
         rvHistory.setLayoutManager(gridlayoutManager);
         rvHistory.addItemDecoration(new SpaceItemDecoration((int) getResources().getDimension(R.dimen.h_64)));
         rvHistory.setFocusable(false);
-        rvHistory.setSelectedItemAtCentered(true); // 设置item在中间移动.
+        rvHistory.setSelectedItemAtCentered(false); // 设置item在中间移动.
         mHistoryPresenter = new VideoListRecyclerViewPresenter(historyList);
         mHistoryAdapter = new GeneralAdapter(mHistoryPresenter);
         rvHistory.setAdapter(mHistoryAdapter);
@@ -192,7 +192,7 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
         rvCollection.setLayoutManager(gridlayoutManager);
         rvCollection.addItemDecoration(new SpaceItemDecoration((int) getResources().getDimension(R.dimen.h_64)));
         rvCollection.setFocusable(false);
-        rvCollection.setSelectedItemAtCentered(true); // 设置item在中间移动.
+        rvCollection.setSelectedItemAtCentered(false); // 设置item在中间移动.
         mCollectionPresenter = new VideoListRecyclerViewPresenter(collectionList);
         mCollectionAdapter = new GeneralAdapter(mCollectionPresenter);
         rvCollection.setAdapter(mCollectionAdapter);

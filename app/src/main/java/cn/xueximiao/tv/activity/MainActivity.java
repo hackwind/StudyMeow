@@ -165,6 +165,9 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
                     if(mainUpView1 != null) {
                         mainUpView1.setVisibility(View.GONE);
                     }
+                    menuListView.getChildAt(0).setBackgroundColor(Color.TRANSPARENT);
+                    menuListView.getChildAt(1).setBackgroundColor(Color.TRANSPARENT);
+                    menuListView.getChildAt(2).setBackgroundColor(Color.TRANSPARENT);
                 } else {
                     loginView.setBackgroundResource(R.drawable.left_menu_nocheckde);
                 }
@@ -262,6 +265,9 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
     private void initRightViews(){
         rvMy = (RecyclerViewTV)findViewById(R.id.recyclerview_my);
         rvCategory = (RecyclerViewTV)findViewById(R.id.recyclerview_category);
+
+        rvMy.setLayoutManager(new GridLayoutManagerTV(this, 6));
+        rvCategory.setLayoutManager(new GridLayoutManagerTV(this, 6));
     }
 
     private void initMyRecyclerViewGridLayout(final RecommendEntity entity) {

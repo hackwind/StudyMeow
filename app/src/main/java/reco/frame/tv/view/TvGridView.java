@@ -482,7 +482,6 @@ public class TvGridView extends RelativeLayout {
 
 			@Override
 			public void onFocusChange(final View item, boolean focus) {
-				Log.d("hjs","TVGridView onFocusChange:" + focus + ",index:" + index);
 				if (focus) {
 					new Handler().postDelayed(new Runnable() {
 
@@ -500,6 +499,7 @@ public class TvGridView extends RelativeLayout {
 					if(currentMenuView != null) {
 						currentMenuView.setBackgroundResource(R.drawable.left_menu_selected_unfocus);
 					}
+
 				} else {
 					child.setSelected(false);
 					child.clearFocus();
@@ -624,7 +624,6 @@ public class TvGridView extends RelativeLayout {
 
 	@Override
 	public boolean dispatchKeyEventPreIme(KeyEvent event) {
-
 		if (event.getAction() == KeyEvent.ACTION_DOWN) {
 			
 			if (!mScroller.isFinished()) {
@@ -649,7 +648,6 @@ public class TvGridView extends RelativeLayout {
 
 			View focused = this.findFocus();
 			if (focused != null && direction != 0) {
-				
 				View next = focused.focusSearch(direction);
 				// 根据下标算出所在行
 				if (next != null) {
@@ -678,7 +676,6 @@ public class TvGridView extends RelativeLayout {
 
 					selectRow = focusIndex / columns;
 					nextRow = selectIndex / columns;
-
 					// 向下到达最后一完整行时,可滚动; 向上到达最上一行完整行时,可滚动
 
 					if (nextRow > selectRow) {

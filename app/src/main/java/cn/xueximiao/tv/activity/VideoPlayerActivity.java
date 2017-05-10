@@ -147,6 +147,7 @@ public class VideoPlayerActivity extends BaseActivity {
         //网络连接失败
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Util.ACTION_HTTP_ONERROR);
+        intentFilter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);//按了home键监听
         registerReceiver(MyNetErrorReceiver,intentFilter);
 
         //播放页是在一个独立的进程，需要再次赋值给auth
@@ -503,6 +504,7 @@ public class VideoPlayerActivity extends BaseActivity {
     };
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.d("hjs","oDown keycode:" + keyCode);
         if(subscribeLayout.getVisibility() == View.VISIBLE) {//关注页面显示，按任意键播放下一集
             subscribeLayout.setVisibility(View.GONE);
             playIndex++;
@@ -620,7 +622,6 @@ public class VideoPlayerActivity extends BaseActivity {
             case KeyEvent.KEYCODE_MENU:
                 showSelectionLayer();
                 break;
-
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -647,15 +648,16 @@ public class VideoPlayerActivity extends BaseActivity {
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(this);
-        //保存进度
-        if(!TextUtils.isEmpty(videoId) && mVideoView != null && mVideoView.getCurrentPosition() != 0) {
-            ConfigPreferences.getInstance(VideoPlayerActivity.this).setVideoPostion(videoId, mVideoView.getCurrentPosition());
-        }
-    }
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        Log.d("hjs","VideoPlayActivity onPause");
+//        MobclickAgent.onPause(this);
+//        //保存进度
+//        if(!TextUtils.isEmpty(videoId) && mVideoView != null && mVideoView.getCurrentPosition() != 0) {
+//            ConfigPreferences.getInstance(VideoPlayerActivity.this).setVideoPostion(videoId, mVideoView.getCurrentPosition());
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -709,9 +711,22 @@ public class VideoPlayerActivity extends BaseActivity {
                 linear_buffer.setVisibility(View.GONE);
                 mVideo_error.setVisibility(View.VISIBLE);
                 error_text.setText("网络连接异常");
-            }
+            } else if(intent.getAction().equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
+                String reason = intent.getStringExtra("reason");
+                if (TextUtils.equals(reason, "homekey")) {
+                    //表示按了home键,程序到了后台
+                    Log.d("hjs","VideoPlayActivity onKeyCode Home");
+                    MobclickAgent.onPause(VideoPlayerActivity.this);
+                    //保存进度
+                    if(!TextUtils.isEmpty(videoId) && mVideoView != null && mVideoView.getCurrentPosition() != 0) {
+                        ConfigPreferences.getInstance(VideoPlayerActivity.this).setVideoPostion(videoId, mVideoView.getCurrentPosition());
+                    }
+                }else if(TextUtils.equals(reason, "recentapps")){
+                    //表示长按home键,显示最近使用的程序列表
+                }
+
         }
-    };
+    }};
 
     class SpaceItemDecoration extends RecyclerViewTV.ItemDecoration{
         private int space;
