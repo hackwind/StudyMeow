@@ -124,13 +124,14 @@ public class VideoPlayerActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_videoplayer);
-
+        Log.d("VideoPlayerActivity","oncreate begin");
         strVideoDetail = getIntent().getStringExtra("videodetail");
         playIndex = getIntent().getIntExtra("index",0);
         VideoDetailEntity entity = new Gson().fromJson(strVideoDetail,VideoDetailEntity.class);
         if(entity == null) {
             finish();
         }
+        Log.d("VideoPlayerActivity","after Gson parse entity");
         title = entity.data.title;
         source = entity.data.source;
         catId = entity.data.id;
@@ -168,7 +169,8 @@ public class VideoPlayerActivity extends BaseActivity {
     }
 
     private void play(long seekPos) {
-        Log.d("hjs","begin play, seek position:" + seekPos);
+//        Log.d("VideoPlayerActivity","begin play");
+
         mediaController = new MyMediaController(VideoPlayerActivity.this, mVideoView, VideoPlayerActivity.this);
         mediaController.setVideoName(title);
         mediaController.show(5000);
@@ -194,13 +196,15 @@ public class VideoPlayerActivity extends BaseActivity {
             mVideoView.requestFocus();
             mVideoView.setVideoQuality(MediaPlayer.VIDEOQUALITY_HIGH);//高品质
             mVideoView.seekTo(seekPos);//根据播放记录跳
+            linear_buffer.setVisibility(View.VISIBLE);
             //视频预处理完成之后调用
             mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
+//                    Log.d("VideoPlayerActivity","setOnPreparedListener");
+                    linear_buffer.setVisibility(View.GONE);
                     //最大范围2.0f
                     mp.setPlaybackSpeed(1.0f);
-                    loading.setVisibility(View.GONE);
                     mVideo_error.setVisibility(View.GONE);
                     mVideoView.start();
                 }
@@ -272,6 +276,7 @@ public class VideoPlayerActivity extends BaseActivity {
     }
 
     private void initview() {
+        Log.d("VideoPlayerActivity","begin initview");
         mVideoView = (VideoView) findViewById(R.id.mVideoView);
         mVideo_error = (LinearLayout) findViewById(R.id.video_error);
         loading = (LinearLayout) findViewById(R.id.loading);
@@ -305,6 +310,7 @@ public class VideoPlayerActivity extends BaseActivity {
         });
         initVideoList();
         initPageList();
+        Log.d("VideoPlayerActivity","after initview");
     }
     //选集列表
     private void initVideoList() {
@@ -408,6 +414,7 @@ public class VideoPlayerActivity extends BaseActivity {
     }
 
     private void getVideoSourcePath() {
+        Log.d("VideoPlayerActivity","begin getVideoSourcePath");
         videoId = videoList.get(playIndex).id;
         String url = HttpAddress.getVideoPath(catId,videoId);
         //获取视频地址
@@ -418,6 +425,7 @@ public class VideoPlayerActivity extends BaseActivity {
 
     /** 获取视频源接口返回 */
     public void getPathResult(VideoSourceEntity entity ,String str) {
+        Log.d("VideoPlayerActivity","getVideoSourcePath back");
         if(entity == null) {
             return;
         }

@@ -109,10 +109,10 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
         mHistoryBridge = (RecyclerViewBridge) mainUpView.getEffectBridge();
         mHistoryBridge.setUpRectResource(R.drawable.select_cover);
         //
-        RectF receF = new RectF(getResources().getDimension(R.dimen.w_44) ,
-                getResources().getDimension(R.dimen.w_17) ,
-                getResources().getDimension(R.dimen.w_42)  ,
-                getResources().getDimension(R.dimen.h_42) );
+        RectF receF = new RectF(getResources().getDimension(R.dimen.rect_left) ,
+                getResources().getDimension(R.dimen.rect_top) ,
+                getResources().getDimension(R.dimen.rect_right)  ,
+                getResources().getDimension(R.dimen.rect_bottom) );
         mHistoryBridge.setDrawUpRectPadding(receF);
         //防止切换焦点时，亮框移动幅度太大
         mHistoryBridge.setOnAnimatorListener(new OpenEffectBridge.NewAnimatorListener() {
@@ -203,10 +203,10 @@ public class HistoryActivity extends BaseActivity implements View.OnFocusChangeL
         mCollectionBridge = (RecyclerViewBridge) mainUpView.getEffectBridge();
         mCollectionBridge.setUpRectResource(R.drawable.select_cover);
         //
-        RectF receF = new RectF(getResources().getDimension(R.dimen.w_44) ,
-                getResources().getDimension(R.dimen.w_17) ,
-                getResources().getDimension(R.dimen.w_42)  ,
-                getResources().getDimension(R.dimen.h_42) );
+        RectF receF = new RectF(getResources().getDimension(R.dimen.rect_left) ,
+                getResources().getDimension(R.dimen.rect_top) ,
+                getResources().getDimension(R.dimen.rect_right)  ,
+                getResources().getDimension(R.dimen.rect_bottom) );
         mCollectionBridge.setDrawUpRectPadding(receF);
         //防止切换焦点时，亮框移动幅度太大
         mCollectionBridge.setOnAnimatorListener(new OpenEffectBridge.NewAnimatorListener() {
