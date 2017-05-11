@@ -290,10 +290,10 @@ public class MainActivity extends BaseActivity implements RecyclerViewTV.OnItemL
         // 注意这里，需要使用 RecyclerViewBridge 的移动边框 Bridge.
         mRecyclerViewBridge = (RecyclerViewBridge) mainUpView1.getEffectBridge();
         mRecyclerViewBridge.setUpRectResource(R.drawable.select_cover2);
-        RectF receF = new RectF(getResources().getDimension(R.dimen.w_44) ,
-                getResources().getDimension(R.dimen.w_17) ,
-                getResources().getDimension(R.dimen.w_44)  ,
-                getResources().getDimension(R.dimen.h_42) );
+        RectF receF = new RectF(getResources().getDimension(R.dimen.rect_left) ,
+                getResources().getDimension(R.dimen.rect_top) ,
+                getResources().getDimension(R.dimen.rect_right)  ,
+                getResources().getDimension(R.dimen.rect_bottom) );
         mRecyclerViewBridge.setDrawUpRectPadding(receF);
         //防止切换焦点时，亮框移动幅度太大
         mRecyclerViewBridge.setOnAnimatorListener(new OpenEffectBridge.NewAnimatorListener() {

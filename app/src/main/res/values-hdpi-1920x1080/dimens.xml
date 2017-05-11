@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="rect_left">@dimen/w_44</dimen>
+    <dimen name="rect_top">@dimen/w_17</dimen>
+    <dimen name="rect_right">@dimen/w_44</dimen>
+    <dimen name="rect_bottom">@dimen/h_42</dimen>
+</resources>
